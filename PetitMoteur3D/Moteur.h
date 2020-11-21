@@ -57,8 +57,8 @@ public:
 		InitialisationsSpecific();
 
 		// * Initialisation du dispositif de rendu
-		//pDispositif = CreationDispositifSpecific(CDS_FENETRE);
-		pDispositif = CreationDispositifSpecific(CDS_PLEIN_ECRAN);
+		pDispositif = CreationDispositifSpecific(CDS_FENETRE);
+		//pDispositif = CreationDispositifSpecific(CDS_PLEIN_ECRAN);
 
 		// * Initialisation de la scène
 		InitScene();

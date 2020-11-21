@@ -1,0 +1,2 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(477,5): warning MSB8004: Le répertoire Output ne se termine pas par une barre oblique finale. Cette instance de build ajoutera une barre oblique, comme requis, pour permettre l'évaluation correcte du répertoire Output.
+  PetitMoteur3D.vcxproj -> C:\Users\angla\Desktop\CoursDDJV\Projet1\Rush2\PetitMoteur3D\DLL\PetitMoteur3D.exe
