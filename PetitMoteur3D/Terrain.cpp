@@ -17,12 +17,12 @@ namespace PM3D {
 	struct ShadersParams {
 		XMMATRIX matWorldViewProj; // la matrice totale
 		XMMATRIX matWorld;    // matrice de transformation dans le monde
-		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
-		XMVECTOR vCamera;    // la position de la caméra
-		XMVECTOR vAEcl;   // la valeur ambiante de l’éclairage
-		XMVECTOR vAMat;     // la valeur ambiante du matériau
-		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
-		XMVECTOR vDMat;     // la valeur diffuse du matériau
+		XMVECTOR vLumiere;    // la position de la source dï¿½ï¿½clairage (Point)
+		XMVECTOR vCamera;    // la position de la camï¿½ra
+		XMVECTOR vAEcl;   // la valeur ambiante de lï¿½ï¿½clairage
+		XMVECTOR vAMat;     // la valeur ambiante du matï¿½riau
+		XMVECTOR vDEcl;     // la valeur diffuse de lï¿½ï¿½clairage
+		XMVECTOR vDMat;     // la valeur diffuse du matï¿½riau
 	};
 
 	Terrain::Terrain(char* filenameBMP, XMFLOAT3 scale, CDispositifD3D11* pDispositif_)
@@ -39,10 +39,10 @@ namespace PM3D {
 	{
 		this->scale = scale;
 		typeTag = "Terrain";
-		int error;
-		unsigned long long count;
-		BITMAPFILEHEADER bitmapFileHeader;
-		BITMAPINFOHEADER bitmapInfoHeader;
+		int error = 0;
+		unsigned long long count = 0L;
+		BITMAPFILEHEADER bitmapFileHeader = BITMAPFILEHEADER();
+		BITMAPINFOHEADER bitmapInfoHeader = BITMAPINFOHEADER();
 
 		//Lecture du fichier BMP
 		FILE* filePtr;
@@ -64,16 +64,17 @@ namespace PM3D {
 		nbPolygones = (height - 1) * (width - 1) * 2;
 
 		this->sommets = new CSommetTerrain[nbSommets];
-		int imageSize, index;
-		bool extrabit = ((nbSommets) % 2 != 0);
+		int imageSize = 0;
+		int index = 0;
+		const bool extrabit = ((nbSommets) % 2 != 0);
 		if (!extrabit) imageSize = height * (width * 3);
 		else imageSize = height * ((width * 3) + 1);
 
-		// Création du tableau pour stocker les valeurs du BMP
+		// Crï¿½ation du tableau pour stocker les valeurs du BMP
 		unsigned char* bitmapImage = new unsigned char[imageSize];
 		if (!bitmapImage) return;
 
-		// Lecture des données de l'image BMP
+		// Lecture des donnï¿½es de l'image BMP
 		fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
 		count = fread(bitmapImage, 1, imageSize, filePtr);
 		if (count != imageSize) return;
@@ -84,16 +85,16 @@ namespace PM3D {
 
 		int k{};
 
-		XMFLOAT3 normale(0.0f, 1.0f, 0.0f);
+		const XMFLOAT3 normale(0.0f, 1.0f, 0.0f);
 
 		for (int j = 0; j < height; j++) {
 			for (int i = 0; i < width; i++) {
-				// association des coordonnées en x,z avec les hauteurs récupérées
+				// association des coordonnï¿½es en x,z avec les hauteurs rï¿½cupï¿½rï¿½es
 				index = (width * (height - 1 - j)) + i;
 
-				int heightValue = bitmapImage[k];
+				const int heightValue = bitmapImage[k];
 				
-				// Création des sommmets aux bonnes coordonnées (avec une normale par défaut qui sera calculée plus tard)
+				// Crï¿½ation des sommmets aux bonnes coordonnï¿½es (avec une normale par dï¿½faut qui sera calculï¿½e plus tard)
 				sommets[index] = CSommetTerrain(XMFLOAT3((float)((i - width/2)* scale.x), (float)(heightValue* scale.y), (float)((j-height/2)* scale.z)),normale);
 
 				k += 3;
@@ -106,17 +107,20 @@ namespace PM3D {
 			for (int i = 0; i < width ; i++) {
 
 				// Calcul des normales
-				XMVECTOR n1, n2, n3, n4;
-				XMVECTOR v1, v2, v3, v4;
-				int index0, index1, index2, index3, index4;
+				XMVECTOR n1 = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+				XMVECTOR n2 = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+				XMVECTOR n3 = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+				XMVECTOR n4 = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+				int index0 = (width * (height - 1 - j)) + i;
+				int index1 = (width * (height - 1 - (j + 1))) + i;
+				int index2 = (width * (height - 1 - j)) + (i + 1);
+				int index3 = (width * (height - 1 - (j - 1))) + i;
+				int index4 = (width * (height - 1 - j)) + (i - 1);
 
-				n1 = n2 = n3 = n4 = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
-				index0 = (width * (height - 1 - j)) + i;
-				index1 = (width * (height - 1 - (j+1))) + i;
-				index2 = (width * (height - 1 - j)) + (i+1);
-				index3 = (width * (height - 1 - (j-1))) + i;
-				index4 = (width * (height - 1 - j)) + (i-1);
+				XMVECTOR v1 = XMVECTOR();
+				XMVECTOR v2 = XMVECTOR();
+				XMVECTOR v3 = XMVECTOR();
+				XMVECTOR v4 = XMVECTOR();
 
 				if (j < width - 1)	v1 = XMVectorSet(sommets[index1].getPosition().x, sommets[index1].getPosition().y, sommets[index1].getPosition().z, 0.0f) - XMVectorSet(sommets[index0].getPosition().x, sommets[index0].getPosition().y, sommets[index0].getPosition().z, 0.0f);
 				if (i < height - 1) v2 = XMVectorSet(sommets[index2].getPosition().x, sommets[index2].getPosition().y, sommets[index2].getPosition().z, 0.0f) - XMVectorSet(sommets[index0].getPosition().x, sommets[index0].getPosition().y, sommets[index0].getPosition().z, 0.0f);
@@ -138,12 +142,12 @@ namespace PM3D {
 			}
 		}
 
-		pIndices = new unsigned int[nbPolygones * 3];
+		pIndices = new unsigned int[(long)(nbPolygones) * 3];
 
 		k = 0;
 		for (int j = 0; j < height - 1; j++) {
 			for (int i = 0; i < width - 1; i++) {
-				// Création des indexs pour rendu
+				// Crï¿½ation des indexs pour rendu
 				pIndices[k++] = j* width + i;
 				pIndices[k++] = j * width + (i + 1);
 				pIndices[k++] = (j + 1) * width + (i + 1);
@@ -153,7 +157,7 @@ namespace PM3D {
 			}
 		}
 
-		// Création du vertex buffer et copie des sommets
+		// Crï¿½ation du vertex buffer et copie des sommets
 		ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
 		D3D11_BUFFER_DESC bd;
@@ -170,11 +174,12 @@ namespace PM3D {
 
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer), DXE_CREATIONVERTEXBUFFER);
 
-		// Création de l'index buffer et copie des indices
+		// Crï¿½ation de l'index buffer et copie des indices
 		ZeroMemory(&bd, sizeof(bd));
 
 		bd.Usage = D3D11_USAGE_IMMUTABLE;
-		bd.ByteWidth = sizeof(unsigned int)*(nbPolygones*3);
+		bd.ByteWidth = sizeof(unsigned int);
+		bd.ByteWidth*=(nbPolygones*3);
 		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 
@@ -192,7 +197,7 @@ namespace PM3D {
 		// Compilation et chargement du vertex shader
 		ID3D11Device* pD3DDevice = pDispositif-> GetD3DDevice(); 
 
-		// Création d’un tampon pour les constantes du VS
+		// Crï¿½ation dï¿½un tampon pour les constantes du VS
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory( &bd, sizeof(bd) ); 
 
@@ -202,7 +207,7 @@ namespace PM3D {
 		bd.CPUAccessFlags = 0;
 		pD3DDevice->CreateBuffer(&bd, NULL, &pConstantBuffer);
 
-		// Pour l’effet
+		// Pour lï¿½effet
 		ID3DBlob* pFXBlob = NULL;
 		DXEssayer( D3DCompileFromFile( L"MiniPhong.fx", 0, 0, 0, "fx_5_0", 0, 0, &pFXBlob, 0), DXE_ERREURCREATION_FX);
 		D3DX11CreateEffectFromMemory(  pFXBlob->GetBufferPointer(), pFXBlob->GetBufferSize(), 0, pD3DDevice, &pEffet);
@@ -211,7 +216,7 @@ namespace PM3D {
 		pTechnique = pEffet->GetTechniqueByIndex(0);
 		pPasse = pTechnique->GetPassByIndex(0);
 
-		// Créer l’organisation des sommets pour le VS de notre effet
+		// Crï¿½er lï¿½organisation des sommets pour le VS de notre effet
 		D3DX11_PASS_SHADER_DESC effectVSDesc;
 		pPasse->GetVertexShaderDesc(&effectVSDesc); 
 
@@ -226,21 +231,21 @@ namespace PM3D {
 	}
 
 	/*
-		Interpole les hauteurs des points suivants pour approximer la hauteur du terrain aux coordonnées envoyées en paramètres
+		Interpole les hauteurs des points suivants pour approximer la hauteur du terrain aux coordonnï¿½es envoyï¿½es en paramï¿½tres
 	*/
 
-	float Terrain::getHeight(float x, float z)
+	float Terrain::getHeight(float x, float z) noexcept
 	{
-		x = ((x) / (scale.x) + (width / 2));  // on remet les coordonnées dans le référenciel de la heightmap
-		z = ((z) / (scale.z) + (height / 2));	// on remet les coordonnées dans le référenciel de la heightmap
+		x = ((x) / (scale.x) + (width / 2.0f));  // on remet les coordonnï¿½es dans le rï¿½fï¿½renciel de la heightmap
+		z = ((z) / (scale.z) + (height / 2.0f));	// on remet les coordonnï¿½es dans le rï¿½fï¿½renciel de la heightmap
 		int intX = static_cast<int>(x);
 		int intZ = static_cast<int>(z);
-		float dx = x - intX;
-		float dz = z - intZ;
+		const float dx = x - intX;
+		const float dz = z - intZ;
 		
 		float counter = 1.0f;
 
-		float hxz = sommets[(width * (height - 1 - intZ)) + intX].getPosition().y;
+		const float hxz = sommets[(width * (height - 1 - intZ)) + intX].getPosition().y;
 		float y = hxz;
 
 		if (intX < width - 1) {
@@ -254,14 +259,14 @@ namespace PM3D {
 		}
 
 		if ((intX < width - 1) && (intZ < height - 1)) {
-			y += hxz + (sqrt(pow(dx, 2) + pow(dz, 2)) * (sommets[(width * (height - 1 - (intZ + 1))) + (intX + 1)].getPosition().y - hxz));
+			y += (float) (hxz + (sqrt(pow(dx, 2.f) + pow(dz, 2.f)) * (sommets[(width * (height - 1 - (intZ + 1))) + (intX + 1)].getPosition().y - hxz)));
 			++counter;
 		}
 		
 		return y / counter;
 	}
 
-	void Terrain::Anime(float tempsEcoule)
+	void Terrain::Anime(float tempsEcoule) noexcept
 	{
 		tempsEcoule;
 
@@ -278,32 +283,32 @@ namespace PM3D {
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie(); 
 		
-		// Vérifier l’état de la touche gauche
+		// Vï¿½rifier lï¿½ï¿½tat de la touche gauche
 		if ( rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT))  {
 			rotation = rotation + ( (XM_PI * 2.0f) / 7.0f * tempsEcoule ); 
-			// modifier la matrice de l’objet X
+			// modifier la matrice de lï¿½objet X
 			matWorld = XMMatrixRotationY( rotation );
 		} 
 		
-		// Vérifier l’état de la touche droite
+		// Vï¿½rifier lï¿½ï¿½tat de la touche droite
 		if ( rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT))  {
 			rotation = rotation - ( (XM_PI * 2.0f) / 7.0f * tempsEcoule ); 
-			// modifier la matrice de l’objet X
+			// modifier la matrice de lï¿½objet X
 			matWorld = XMMatrixRotationY( rotation );
 		}
 		
 		// ******** POUR LA SOURIS ************  
-		//Vérifier si déplacement vers la gauche
+		//Vï¿½rifier si dï¿½placement vers la gauche
 		if ( (rGestionnaireDeSaisie.EtatSouris().rgbButtons[0]&0x80) && (rGestionnaireDeSaisie.EtatSouris().lX < 0))  {
 			rotation = rotation + ( (XM_PI * 2.0f) / 4.0f * tempsEcoule ); 
-			// modifier la matrice de l’objet X
+			// modifier la matrice de lï¿½objet X
 			matWorld = XMMatrixRotationY(  rotation );
 		} 
 		
-		// Vérifier si déplacement vers la droite
+		// Vï¿½rifier si dï¿½placement vers la droite
 		if ( (rGestionnaireDeSaisie.EtatSouris().rgbButtons[0]&0x80) && (rGestionnaireDeSaisie.EtatSouris().lX > 0)) {
 			rotation = rotation - ((XM_PI * 2.0f) / 4.0f * tempsEcoule);
-			// modifier la matrice de l’objet X
+			// modifier la matrice de lï¿½objet X
 			matWorld = XMMatrixRotationY(  rotation );
 		} 
 
@@ -320,8 +325,8 @@ namespace PM3D {
 		pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		// Source des sommets
-		const UINT stride = sizeof(CSommetBloc);
-		const UINT offset = 0;
+		constexpr UINT stride = sizeof(CSommetBloc);
+		constexpr UINT offset = 0;
 		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
 		// Source des index
@@ -330,9 +335,9 @@ namespace PM3D {
 		// input layout des sommets
 		pImmediateContext->IASetInputLayout(pVertexLayout);
 
-		// Initialiser et sélectionner les «constantes» du VS
-		ShadersParams sp;
-		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+		// Initialiser et sï¿½lectionner les ï¿½constantesï¿½ du VS
+		ShadersParams sp = ShadersParams();
+		const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 		sp.vLumiere = XMVectorSet(0.0f, 1000.0f, 0.0f, 1.0f);
@@ -344,11 +349,11 @@ namespace PM3D {
 
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 
-		// Nous n’avons qu’un seul CBuffer
-		ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");
+		// Nous nï¿½avons quï¿½un seul CBuffer
+		ID3DX11EffectConstantBuffer* pCB  = pEffet->GetConstantBufferByName("param");
 		pCB->SetConstantBuffer(pConstantBuffer);
 		
-		// **** Rendu de l’objet
+		// **** Rendu de lï¿½objet
 		pPasse->Apply(0, pImmediateContext);
 		pImmediateContext->DrawIndexed(nbPolygones * 3, 0, 0);
 	}
@@ -383,7 +388,7 @@ namespace PM3D {
 			&pVertexShader),
 			DXE_CREATION_VS);
 
-		// Créer l'organisation des sommets
+		// Crï¿½er l'organisation des sommets
 		pVertexLayout = nullptr;
 		DXEssayer(pD3DDevice->CreateInputLayout(CSommetTerrain::layout,
 			CSommetTerrain::numElements,
@@ -394,7 +399,7 @@ namespace PM3D {
 
 		pVSBlob->Release(); //  On n'a plus besoin du blob
 
-		// Création d'un tampon pour les constantes du VS
+		// Crï¿½ation d'un tampon pour les constantes du VS
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 

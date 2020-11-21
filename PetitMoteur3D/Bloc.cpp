@@ -9,21 +9,21 @@
 
 namespace PM3D
 {
-//  FONCTION : CBloc, constructeur paramètré 
+//  FONCTION : CBloc, constructeur paramï¿½trï¿½ 
 //  BUT :	Constructeur d'une classe de bloc
-//  PARAMÈTRES:
+//  PARAMï¿½TRES:
 //		dx, dy, dz:	dimension en x, y, et z
 //		pDispositif: pointeur sur notre objet dispositif
 
 struct ShadersParams {
 	XMMATRIX matWorldViewProj; // la matrice totale
 	XMMATRIX matWorld;    // matrice de transformation dans le monde
-	XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
-	XMVECTOR vCamera;    // la position de la caméra
-	XMVECTOR vAEcl;		// la valeur ambiante de l’éclairage
-	XMVECTOR vAMat;     // la valeur ambiante du matériau
-	XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
-	XMVECTOR vDMat;     // la valeur diffuse du matériau
+	XMVECTOR vLumiere;    // la position de la source dï¿½ï¿½clairage (Point)
+	XMVECTOR vCamera;    // la position de la camï¿½ra
+	XMVECTOR vAEcl;		// la valeur ambiante de lï¿½ï¿½clairage
+	XMVECTOR vAMat;     // la valeur ambiante du matï¿½riau
+	XMVECTOR vDEcl;     // la valeur diffuse de lï¿½ï¿½clairage
+	XMVECTOR vDMat;     // la valeur diffuse du matï¿½riau
 };
 
 
@@ -55,7 +55,7 @@ CBloc::CBloc(const float dx, const float dy, const float dz,
 
 	// Calculer les normales
 	const XMFLOAT3 n0(0.0f, 0.0f, -1.0f); // devant
-	const XMFLOAT3 n1(0.0f, 0.0f, 1.0f); // arrière
+	const XMFLOAT3 n1(0.0f, 0.0f, 1.0f); // arriï¿½re
 	const XMFLOAT3 n2(0.0f, -1.0f, 0.0f); // dessous
 	const XMFLOAT3 n3(0.0f, 1.0f, 0.0f); // dessus
 	const XMFLOAT3 n4(-1.0f, 0.0f, 0.0f); // face gauche
@@ -69,7 +69,7 @@ CBloc::CBloc(const float dx, const float dy, const float dz,
 		CSommetBloc(point[2], n0),
 		CSommetBloc(point[3], n0),
 
-		// L'arrière du bloc
+		// L'arriï¿½re du bloc
 		CSommetBloc(point[4], n1),
 		CSommetBloc(point[5], n1),
 		CSommetBloc(point[6], n1),
@@ -100,7 +100,7 @@ CBloc::CBloc(const float dx, const float dy, const float dz,
 		CSommetBloc(point[2], n5)
 	};
 
-	// Création du vertex buffer et copie des sommets
+	// Crï¿½ation du vertex buffer et copie des sommets
 	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
 	D3D11_BUFFER_DESC bd;
@@ -117,7 +117,7 @@ CBloc::CBloc(const float dx, const float dy, const float dz,
 
 	DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer), DXE_CREATIONVERTEXBUFFER);
 
-	// Création de l'index buffer et copie des indices
+	// Crï¿½ation de l'index buffer et copie des indices
 	ZeroMemory(&bd, sizeof(bd));
 
 	bd.Usage = D3D11_USAGE_IMMUTABLE;
@@ -135,7 +135,7 @@ CBloc::CBloc(const float dx, const float dy, const float dz,
 	InitShaders();
 }
 
-void CBloc::Anime(float tempsEcoule)
+void CBloc::Anime(float tempsEcoule) noexcept
 {
 	rotation = rotation + ((XM_PI * 2.0f) / 3.0f * tempsEcoule);
 
@@ -152,8 +152,8 @@ void CBloc::Draw()
 	pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Source des sommets
-	const UINT stride = sizeof(CSommetBloc);
-	const UINT offset = 0;
+	constexpr UINT stride = sizeof(CSommetBloc);
+	constexpr UINT offset = 0;
 	pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
 	// Source des index
@@ -165,9 +165,9 @@ void CBloc::Draw()
 	// Activer le VS
 	pImmediateContext->VSSetShader(pVertexShader, nullptr, 0);
 
-	// Initialiser et sélectionner les «constantes» du VS
-	ShadersParams sp;
-	XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+	// Initialiser et sï¿½lectionner les ï¿½constantesï¿½ du VS
+	ShadersParams sp = ShadersParams();
+	const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 	sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 	sp.matWorld = XMMatrixTranspose(matWorld);
 	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -10.0f, 1.0f);
@@ -222,7 +222,7 @@ void CBloc::InitShaders()
 		&pVertexShader),
 		DXE_CREATION_VS);
 
-	// Créer l'organisation des sommets
+	// Crï¿½er l'organisation des sommets
 	pVertexLayout = nullptr;
 	DXEssayer(pD3DDevice->CreateInputLayout(CSommetBloc::layout,
 		CSommetBloc::numElements,
@@ -233,7 +233,7 @@ void CBloc::InitShaders()
 
 	pVSBlob->Release(); //  On n'a plus besoin du blob
 
-	// Création d'un tampon pour les constantes du VS
+	// Crï¿½ation d'un tampon pour les constantes du VS
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 

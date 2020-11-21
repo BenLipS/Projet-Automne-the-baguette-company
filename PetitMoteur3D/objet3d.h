@@ -15,7 +15,7 @@ class CObjet3D
 public:
 	virtual ~CObjet3D() = default;
 
-	virtual void Anime(float) {};
+	virtual void Anime(float) noexcept {};
 	virtual void Draw() = 0;
 
 	std::string typeTag;

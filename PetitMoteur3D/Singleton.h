@@ -3,14 +3,14 @@
 namespace PM3D
 {
     //
-	//   TEMPLATE : CSingleton
+	//   TEMPLATEï¿½: CSingleton
 	//
-	//   BUT : Template servant à construire un objet unique
+	//   BUTï¿½: Template servant ï¿½ construire un objet unique
 	//
-	//   COMMENTAIRES :
+	//   COMMENTAIRESï¿½:
 	//
-	//        Comme plusieurs de nos objets représenteront des éléments uniques 
-	//		  du système (ex: le moteur lui-même, le lien vers 
+	//        Comme plusieurs de nos objets reprï¿½senteront des ï¿½lï¿½ments uniques 
+	//		  du systï¿½me (ex: le moteur lui-mï¿½me, le lien vers 
 	//        le dispositif Direct3D), l'utilisation d'un singleton 
 	//        nous simplifiera plusieurs aspects.
 	//
@@ -19,26 +19,26 @@ namespace PM3D
 	{
 	public:
         // Renvoie l'instance unique de la classe
-        static T& GetInstance()
+        static T& GetInstance() noexcept
         {
             return Instance;
         }
 
 	protected :
 
-        // Constructeur par défaut
-		CSingleton(void){}
+        // Constructeur par dï¿½faut
+		CSingleton(void) noexcept{}
 	
         // Destructeur
 		~CSingleton(void){}
 
 	private :
 
-        // Données membres
+        // Donnï¿½es membres
         static T Instance; // Instance de la classe
 
-		// Déclarer les opérations de copie sans les
-		// définir, pour empêcher leur utilisation
+		// Dï¿½clarer les opï¿½rations de copie sans les
+		// dï¿½finir, pour empï¿½cher leur utilisation
         CSingleton(CSingleton&);
         void operator =(CSingleton&);
   

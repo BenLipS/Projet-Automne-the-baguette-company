@@ -22,8 +22,8 @@ namespace PM3D
 		// Destructeur
 		virtual ~CBlocEffect1();
 
-		virtual void Anime(float tempsEcoule) override;
-		virtual void Draw() override;
+		void Anime(float tempsEcoule) noexcept override;
+		void Draw() override;
 
 	private:
 		CDispositifD3D11* pDispositif;
@@ -41,7 +41,7 @@ namespace PM3D
 		ID3D11PixelShader* pPixelShader;
 		ID3D11InputLayout* pVertexLayout;
 
-		// Définitions des valeurs d'animation
+		// Dï¿½finitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;
 		XMMATRIX matWorld;
 		float rotation;

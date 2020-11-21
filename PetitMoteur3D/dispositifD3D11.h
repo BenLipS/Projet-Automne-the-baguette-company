@@ -19,16 +19,16 @@ public:
 
 	virtual void PresentSpecific() override;
 
-	// Fonction d'accès aux membres protégés
-	ID3D11Device*           GetD3DDevice() { return pD3DDevice; }
-	ID3D11DeviceContext*    GetImmediateContext() { return pImmediateContext; }
-	IDXGISwapChain*         GetSwapChain() { return pSwapChain; }
-	ID3D11RenderTargetView* GetRenderTargetView() { return pRenderTargetView; }
+	// Fonction d'accï¿½s aux membres protï¿½gï¿½s
+	ID3D11Device*           GetD3DDevice() noexcept { return pD3DDevice; }
+	ID3D11DeviceContext*    GetImmediateContext() noexcept { return pImmediateContext; }
+	IDXGISwapChain*         GetSwapChain() noexcept { return pSwapChain; }
+	ID3D11RenderTargetView* GetRenderTargetView() noexcept { return pRenderTargetView; }
 
 	uint32_t GetLargeur() const;
 	uint32_t GetHauteur() const;
 
-	ID3D11DepthStencilView* GetDepthStencilView() { return pDepthStencilView; }
+	ID3D11DepthStencilView* GetDepthStencilView() noexcept { return pDepthStencilView; }
 
 private:
 	ID3D11Device * pD3DDevice;
@@ -46,7 +46,7 @@ protected:
 	uint32_t largeurEcran;
 	uint32_t hauteurEcran;
 
-	// Variables d’état
+	// Variables dï¿½ï¿½tat
 	ID3D11RasterizerState* mSolidCullBackRS; 
 };
 

@@ -15,19 +15,19 @@
 namespace PM3D
 {
 
-const int IMAGESPARSECONDE = 60;
-const double EcartTemps = 1.0 / static_cast<double>(IMAGESPARSECONDE);
+constexpr int IMAGESPARSECONDE = 60;
+constexpr double EcartTemps = 1.0 / static_cast<double>(IMAGESPARSECONDE);
 
 //
-//   TEMPLATE : CMoteur
+//   TEMPLATEï¿½: CMoteur
 //
-//   BUT : Template servant à construire un objet Moteur qui implantera les
-//         aspects "génériques" du moteur de jeu
+//   BUTï¿½: Template servant ï¿½ construire un objet Moteur qui implantera les
+//         aspects "gï¿½nï¿½riques" du moteur de jeu
 //
-//   COMMENTAIRES :
+//   COMMENTAIRESï¿½:
 //
-//        Comme plusieurs de nos objets représenteront des éléments uniques 
-//        du système (ex: le moteur lui-même, le lien vers 
+//        Comme plusieurs de nos objets reprï¿½senteront des ï¿½lï¿½ments uniques 
+//        du systï¿½me (ex: le moteur lui-mï¿½me, le lien vers 
 //        le dispositif Direct3D), l'utilisation d'un singleton 
 //        nous simplifiera plusieurs aspects.
 //
@@ -40,7 +40,7 @@ public:
 
 		while (bBoucle)
 		{
-			// Propre à la plateforme - (Conditions d'arrêt, interface, messages)
+			// Propre ï¿½ la plateforme - (Conditions d'arrï¿½t, interface, messages)
 			bBoucle = RunSpecific();
 
 			// appeler la fonction d'animation
@@ -53,18 +53,18 @@ public:
 
 	virtual int Initialisations()
 	{
-		// Propre à la plateforme
+		// Propre ï¿½ la plateforme
 		InitialisationsSpecific();
 
 		// * Initialisation du dispositif de rendu
 		pDispositif = CreationDispositifSpecific(CDS_FENETRE);
 		//pDispositif = CreationDispositifSpecific(CDS_PLEIN_ECRAN);
 
-		// * Initialisation de la scène
+		// * Initialisation de la scï¿½ne
 		InitScene();
 
-		// * Initialisation des paramètres de l'animation et 
-		//   préparation de la première image
+		// * Initialisation des paramï¿½tres de l'animation et 
+		//   prï¿½paration de la premiï¿½re image
 		InitAnimation();
 
 		return 0;
@@ -72,22 +72,22 @@ public:
 
 	virtual bool Animation()
 	{
-		// méthode pour lire l'heure et calculer le 
-		// temps écoulé
+		// mï¿½thode pour lire l'heure et calculer le 
+		// temps ï¿½coulï¿½
 		const int64_t TempsCompteurCourant = GetTimeSpecific();
 		const double TempsEcoule = GetTimeIntervalsInSec(TempsCompteurPrecedent, TempsCompteurCourant);
 
 		// Est-il temps de rendre l'image?
 		if (TempsEcoule > EcartTemps)
 		{
-			// Affichage optimisé
-			pDispositif->Present(); // On enlevera «//» plus tard
+			// Affichage optimisï¿½
+			pDispositif->Present(); // On enlevera ï¿½//ï¿½ plus tard
 
-			// On prépare la prochaine image
+			// On prï¿½pare la prochaine image
 			AnimeScene(static_cast<float>(TempsEcoule));
 
 			// On rend l'image sur la surface de travail
-			// (tampon d'arrière plan)
+			// (tampon d'arriï¿½re plan)
 			RenderScene();
 
 			// Calcul du temps du prochain affichage
@@ -101,16 +101,16 @@ public:
 
 	const XMMATRIX& GetMatView() const { return m_MatView; }
 	const XMMATRIX& GetMatProj() const { return m_MatProj; }
-	const XMMATRIX& GetMatViewProj() const { return m_MatViewProj; }
+	const XMMATRIX& GetMatViewProj() const noexcept { return m_MatViewProj; }
 
 protected:
 
-	virtual ~CMoteur()
+	~CMoteur()
 	{
 		Cleanup();
 	}
 
-	// Spécifiques - Doivent être implantés
+	// Spï¿½cifiques - Doivent ï¿½tre implantï¿½s
 	virtual bool RunSpecific() = 0;
 	virtual int InitialisationsSpecific() = 0;
 
@@ -127,23 +127,23 @@ protected:
 		TempsSuivant = GetTimeSpecific();
 		TempsCompteurPrecedent = TempsSuivant;
 
-		// première Image
+		// premiï¿½re Image
 		RenderScene();
 
 		return true;
 	}
 
-	// Fonctions de rendu et de présentation de la scène
+	// Fonctions de rendu et de prï¿½sentation de la scï¿½ne
 	virtual bool RenderScene()
 	{
 		BeginRenderSceneSpecific();
 
-		// Appeler les fonctions de dessin de chaque objet de la scène
+		// Appeler les fonctions de dessin de chaque objet de la scï¿½ne
 		for (auto& object3D : ListeScene)
 		{
 			object3D->Draw();
 			if (object3D->typeTag == "Terrain") {
-				terrain = static_cast<Terrain*>(object3D.get());
+				terrain = dynamic_cast<Terrain*>(object3D.get());
 			}
 		}
 
@@ -151,12 +151,12 @@ protected:
 		return true;
 	}
 
-	virtual void Cleanup()
+	virtual void Cleanup() noexcept
 	{
-		// détruire les objets
+		// dï¿½truire les objets
 		ListeScene.clear();
 
-		// Détruire le dispositif
+		// Dï¿½truire le dispositif
 		if (pDispositif)
 		{
 			delete pDispositif;
@@ -166,7 +166,7 @@ protected:
 
 	virtual int InitScene()
 	{
-		// Initialisation des objets 3D - création et/ou chargement
+		// Initialisation des objets 3D - crï¿½ation et/ou chargement
 		if (!InitObjets())
 		{
 			return 1;
@@ -180,14 +180,14 @@ protected:
 			XMVectorSet(2.0f, 2.0f, 2.0f, 1.0f),
 			XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
-		// Calcul de VP à l'avance
+		// Calcul de VP ï¿½ l'avance
 		m_MatViewProj = m_MatView * m_MatProj;
 		*/
 
-		const float champDeVision = XM_PI / 4; 	// 45 degrés
+		constexpr float champDeVision = XM_PI / 4; 	// 45 degrï¿½s
 		const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
-		const float planRapproche = 2.0f;
-		const float planEloigne = 10000.0f;
+		constexpr float planRapproche = 2.0f;
+		constexpr float planEloigne = 10000.0f;
 
 		m_MatProj = XMMatrixPerspectiveFovLH(
 			champDeVision,
@@ -203,7 +203,7 @@ protected:
 
 	bool InitObjets()
 	{
-		// Puis, il est ajouté à la scène
+		// Puis, il est ajoutï¿½ ï¿½ la scï¿½ne
 		//ListeScene.emplace_back(std::make_unique<CBloc>(2.0f, 2.0f, 2.0f, pDispositif));
 		char* filename = new char[50]("./src/Heightmap.bmp");
 		ListeScene.emplace_back(std::make_unique<Terrain>(filename,XMFLOAT3(20.0f,3.0f,20.0f),pDispositif));
@@ -218,14 +218,14 @@ protected:
 	{
 		// Prendre en note le statut du clavier
 		GestionnaireDeSaisie.StatutClavier(); 
-		// Prendre en note l’état de la souris
+		// Prendre en note lï¿½ï¿½tat de la souris
 		GestionnaireDeSaisie.SaisirEtatSouris();
 
 		if (camera.getType() == CCamera::CAMERA_TYPE::LEVEL && camera.getPosition().vector4_f32[0] > (-terrain->width/2.0f)*terrain->scale.x && camera.getPosition().vector4_f32[0] < (terrain->width / 2.0f) * terrain->scale.x
 			&& camera.getPosition().vector4_f32[2] > (-terrain->height / 2.0f) * terrain->scale.z && camera.getPosition().vector4_f32[2] < (terrain->height / 2.0f) * terrain->scale.z){
 			
-			//float posX = /*static_cast<int>*/( (camera.getPosition().vector4_f32[0]) / (terrain->scale.x) + (terrain->width / 2) );  // on remet les coordonnées dans le référenciel de la heightmap
-			//float posZ = /*static_cast<int>*/( (camera.getPosition().vector4_f32[2]) / (terrain->scale.z) + (terrain->height / 2) );	// on remet les coordonnées dans le référenciel de la heightmap
+			//float posX = /*static_cast<int>*/( (camera.getPosition().vector4_f32[0]) / (terrain->scale.x) + (terrain->width / 2) );  // on remet les coordonnï¿½es dans le rï¿½fï¿½renciel de la heightmap
+			//float posZ = /*static_cast<int>*/( (camera.getPosition().vector4_f32[2]) / (terrain->scale.z) + (terrain->height / 2) );	// on remet les coordonnï¿½es dans le rï¿½fï¿½renciel de la heightmap
 			//float dx = posX - static_cast<int>(posX);
 			//float dz = posZ - static_cast<int>(posZ);
 
@@ -235,7 +235,7 @@ protected:
 			//float hx1z1 = terrain->getHeight((int)posX + 1, (int)posZ + 1);
 
 			//float y = (hxz + sqrt(pow(dx, 2) + pow(dz, 2)) * (hx1z1 - hxz)) + CCamera::HEIGHT;
-			float y = terrain->getHeight(camera.getPosition().vector4_f32[0], camera.getPosition().vector4_f32[2]) + CCamera::HEIGHT;
+			const float y = terrain->getHeight(camera.getPosition().vector4_f32[0], camera.getPosition().vector4_f32[2]) + CCamera::HEIGHT;
 			
 			//float y = terrain->getHeight(posX, posZ) + CCamera::HEIGHT;
 			for (auto& object3D : ListeScene)
@@ -264,7 +264,7 @@ protected:
 	// Le dispositif de rendu
 	TClasseDispositif* pDispositif;
 
-	// La seule scène
+	// La seule scï¿½ne
 	std::vector<std::unique_ptr<CObjet3D>> ListeScene;
 
 	// Les matrices

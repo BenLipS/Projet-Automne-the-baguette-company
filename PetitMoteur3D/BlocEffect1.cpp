@@ -167,13 +167,13 @@ namespace PM3D
 		effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex, &effectVSDesc2);
 
 		const void* vsCodePtr = effectVSDesc2.pBytecode;
-		unsigned vsCodeLen = effectVSDesc2.BytecodeLength;
+		const unsigned vsCodeLen = effectVSDesc2.BytecodeLength;
 
 		pVertexLayout = NULL;
 		DXEssayer(pD3DDevice->CreateInputLayout(CSommetBloc::layout, CSommetBloc::numElements, vsCodePtr, vsCodeLen, &pVertexLayout), DXE_CREATIONLAYOUT);
 	}
 
-	void CBlocEffect1::Anime(float tempsEcoule)
+	void CBlocEffect1::Anime(float tempsEcoule) noexcept
 	{
 		rotation = rotation + ((XM_PI * 2.0f) / 3.0f * tempsEcoule);
 
@@ -189,8 +189,8 @@ namespace PM3D
 		pImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ); 
 
 		// Source des sommets
-		const UINT stride = sizeof( CSommetBloc );
-		const UINT offset = 0;
+		constexpr UINT stride = sizeof( CSommetBloc );
+		constexpr UINT offset = 0;
 		pImmediateContext->IASetVertexBuffers( 0, 1, &pVertexBuffer, &stride, &offset ); 
 
 		// Source des index
@@ -200,8 +200,8 @@ namespace PM3D
 		pImmediateContext->IASetInputLayout( pVertexLayout ); 
 
 		// Initialiser et sélectionner les « constantes » de l’effet
-		ShadersParams sp;
-		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+		ShadersParams sp = ShadersParams();
+		const XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj );
 		sp.matWorld = XMMatrixTranspose(matWorld);
 		sp.vLumiere =  XMVectorSet( -10.0f, 10.0f, -10.0f, 1.0f );

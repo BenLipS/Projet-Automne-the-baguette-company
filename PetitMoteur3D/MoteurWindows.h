@@ -11,30 +11,30 @@ namespace PM3D
 class CMoteurWindows final : public CMoteur<CMoteurWindows, CDispositifD3D11>
 {
 public:
-	void SetWindowsAppInstance(HINSTANCE hInstance);
+	void SetWindowsAppInstance(HINSTANCE hInstance) noexcept;
 
 private:
-	ATOM MyRegisterClass(HINSTANCE hInstance);
+	ATOM MyRegisterClass(HINSTANCE hInstance) noexcept;
 	bool InitAppInstance();
-	int Show();
+	int Show() noexcept;
 
-	// Les fonctions spécifiques
-	virtual int InitialisationsSpecific() override;
-	virtual bool RunSpecific() override;
-	virtual int64_t GetTimeSpecific() const override;
-	virtual double GetTimeIntervalsInSec(int64_t start, int64_t stop) const override;
-	virtual CDispositifD3D11* CreationDispositifSpecific(const CDS_MODE cdsMode) override;
-	virtual void BeginRenderSceneSpecific() override;
-	virtual void EndRenderSceneSpecific() override;
+	// Les fonctions spï¿½cifiques
+	int InitialisationsSpecific() override;
+	bool RunSpecific() noexcept override;
+	int64_t GetTimeSpecific() const override;
+	double GetTimeIntervalsInSec(int64_t start, int64_t stop) const override;
+	CDispositifD3D11* CreationDispositifSpecific(const CDS_MODE cdsMode) override;
+	void BeginRenderSceneSpecific() override;
+	void EndRenderSceneSpecific() noexcept override;
 
-	// Fonctions "Callback" -- Doivent être statiques
-	static LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
-	static INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+	// Fonctions "Callback" -- Doivent ï¿½tre statiques
+	static LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM) noexcept;
+	static INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM) noexcept;
 
-	HACCEL hAccelTable;						// handle Windows de la table des accélérateurs
+	HACCEL hAccelTable;						// handle Windows de la table des accï¿½lï¿½rateurs
 	static HINSTANCE hAppInstance;			// handle Windows de l'instance actuelle de l'application
-	HWND hMainWnd;							// handle Windows de la fenêtre principale
-	TCHAR szWindowClass[MAX_LOADSTRING];	// le nom de la classe de fenêtre principale
+	HWND hMainWnd;							// handle Windows de la fenï¿½tre principale
+	TCHAR szWindowClass[MAX_LOADSTRING];	// le nom de la classe de fenï¿½tre principale
 
 	Horloge m_Horloge;
 };

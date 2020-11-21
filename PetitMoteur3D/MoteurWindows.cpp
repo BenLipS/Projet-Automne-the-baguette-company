@@ -7,33 +7,33 @@ namespace PM3D
 {
 HINSTANCE CMoteurWindows::hAppInstance;	// handle Windows de l'instance actuelle de l'application
 
-//   FONCTION : SetWindowsAppInstance(HANDLE, int)
+//   FONCTIONï¿½: SetWindowsAppInstance(HANDLE, int)
 //
-//   BUT : Prend en note le handle de l'instance
+//   BUTï¿½: Prend en note le handle de l'instance
 //
-void CMoteurWindows::SetWindowsAppInstance(HINSTANCE hInstance)
+void CMoteurWindows::SetWindowsAppInstance(HINSTANCE hInstance) noexcept
 {
-	hAppInstance = hInstance; // Stocke le handle d'instance de l'application, plusieurs fonctions spécifiques en auront besoin
+	hAppInstance = hInstance; // Stocke le handle d'instance de l'application, plusieurs fonctions spï¿½cifiques en auront besoin
 }
 
 //
-//  FONCTION : MyRegisterClass()
+//  FONCTIONï¿½: MyRegisterClass()
 //
-//  BUT : inscrit la classe de fenêtre.
+//  BUTï¿½: inscrit la classe de fenï¿½tre.
 //
-//  COMMENTAIRES :
+//  COMMENTAIRESï¿½:
 //
-//    Cette fonction et son utilisation sont nécessaires uniquement si vous souhaitez que ce code
-//    soit compatible avec les systèmes Win32 avant la fonction 'RegisterClassEx'
-//    qui a été ajoutée à Windows 95. Il est important d'appeler cette fonction
-//    afin que l'application dispose des petites icônes correctes qui lui sont
-//    associées.
+//    Cette fonction et son utilisation sont nï¿½cessaires uniquement si vous souhaitez que ce code
+//    soit compatible avec les systï¿½mes Win32 avant la fonction 'RegisterClassEx'
+//    qui a ï¿½tï¿½ ajoutï¿½e ï¿½ Windowsï¿½95. Il est important d'appeler cette fonction
+//    afin que l'application dispose des petites icï¿½nes correctes qui lui sont
+//    associï¿½es.
 //
-//	  FJ:  Copie-coller de la fonction MyRegisterClass générée automatiquement
+//	  FJ:  Copie-coller de la fonction MyRegisterClass gï¿½nï¿½rï¿½e automatiquement
 //
-ATOM CMoteurWindows::MyRegisterClass(HINSTANCE hInstance)
+ATOM CMoteurWindows::MyRegisterClass(HINSTANCE hInstance) noexcept
 {
-	WNDCLASSEX wcex;
+	WNDCLASSEX wcex = WNDCLASSEX();
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
@@ -52,20 +52,20 @@ ATOM CMoteurWindows::MyRegisterClass(HINSTANCE hInstance)
 	return RegisterClassEx(&wcex);
 }
 
-//   FONCTION : InitAppInstance()
+//   FONCTIONï¿½: InitAppInstance()
 //
-//   BUT :  Effectue des opérations d'initialisation de l'application
+//   BUTï¿½:  Effectue des opï¿½rations d'initialisation de l'application
 //
-//   COMMENTAIRES :
+//   COMMENTAIRESï¿½:
 //
 //        Dans cette fonction, nous enregistrons le handle de l'instance dans une variable globale, puis
-//        créons et affichons la fenêtre principale du programme.
+//        crï¿½ons et affichons la fenï¿½tre principale du programme.
 //
 bool CMoteurWindows::InitAppInstance()
 {
 	TCHAR szTitle[MAX_LOADSTRING];					// Le texte de la barre de titre
 
-		// Initialise les chaînes globales
+		// Initialise les chaï¿½nes globales
 	LoadString(hAppInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadString(hAppInstance, IDC_PETITMOTEUR3D, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hAppInstance);
@@ -83,7 +83,7 @@ bool CMoteurWindows::InitAppInstance()
 	return true;
 }
 
-int CMoteurWindows::Show()
+int CMoteurWindows::Show() noexcept
 {
 	ShowWindow(hMainWnd, SW_SHOWNORMAL);
 	UpdateWindow(hMainWnd);
@@ -106,18 +106,18 @@ int CMoteurWindows::InitialisationsSpecific()
 //
 //   FONCTION : RunSpecific 
 //
-//   BUT :	Éléments internes de la boucle de l'application (Boucle message)
+//   BUT :	ï¿½lï¿½ments internes de la boucle de l'application (Boucle message)
 //
 //   NOTES:
-//      Il s'agit d'une version modifiée spécifiquement pour nos besoins des
-//      éléments de la boucle message de Windows
+//      Il s'agit d'une version modifiï¿½e spï¿½cifiquement pour nos besoins des
+//      ï¿½lï¿½ments de la boucle message de Windows
 //
-bool CMoteurWindows::RunSpecific()
+bool CMoteurWindows::RunSpecific() noexcept
 {
-	MSG msg;
+	MSG msg = MSG();
 	bool bBoucle = true;
 
-	// Y-a-t'il un message Windows à traiter?
+	// Y-a-t'il un message Windows ï¿½ traiter?
 	if (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		// Est-ce un message de fermeture ?
@@ -153,11 +153,11 @@ double CMoteurWindows::GetTimeIntervalsInSec(int64_t start, int64_t stop) const
 
 //  FONCTION : CreationDispositifSpecific 
 //
-//  BUT :	Fonction responsable de créer le 
-//			dispositif selon certains paramètres
+//  BUT :	Fonction responsable de crï¿½er le 
+//			dispositif selon certains paramï¿½tres
 //  NOTES:		
-//		 CDS_MODE: 	CDS_FENETRE 		application fenêtrée
-//					CDS_PLEIN_ECRAN 	application plein écran
+//		 CDS_MODE: 	CDS_FENETRE 		application fenï¿½trï¿½e
+//					CDS_PLEIN_ECRAN 	application plein ï¿½cran
 //
 CDispositifD3D11* CMoteurWindows::CreationDispositifSpecific(const CDS_MODE cdsMode)
 {
@@ -170,38 +170,39 @@ void CMoteurWindows::BeginRenderSceneSpecific()
 	ID3D11RenderTargetView* pRenderTargetView = pDispositif->GetRenderTargetView();
 
 	// On efface la surface de rendu
-	float Couleur[4] = { 0.0f, 0.0f, 0.0f, 1.0f };  //  RGBA
+	const float Couleur[4] = { 0.0f, 0.0f, 0.0f, 1.0f };  //  RGBA
 	pImmediateContext->ClearRenderTargetView(pRenderTargetView, Couleur);
-	// On réinitialise le tampon de profondeur
+	// On rï¿½initialise le tampon de profondeur
 	ID3D11DepthStencilView* pDepthStencilView = pDispositif->GetDepthStencilView();
 	pImmediateContext->ClearDepthStencilView( pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 ); 
 }
 
-void CMoteurWindows::EndRenderSceneSpecific()
+void CMoteurWindows::EndRenderSceneSpecific() noexcept
 {
 }
 
-//  FONCTION : WndProc(HWND, unsigned, WORD, LONG)
+//  FONCTIONï¿½: WndProc(HWND, unsigned, WORD, LONG)
 //
-//  BUT :  traite les messages pour la fenêtre principale.
+//  BUTï¿½:  traite les messages pour la fenï¿½tre principale.
 //
 //  WM_COMMAND	- traite le menu de l'application
-//  WM_PAINT	- dessine la fenêtre principale
-//  WM_DESTROY	- génère un message d'arrêt et retourne
+//  WM_PAINT	- dessine la fenï¿½tre principale
+//  WM_DESTROY	- gï¿½nï¿½re un message d'arrï¿½t et retourne
 //
 //
-LRESULT CALLBACK CMoteurWindows::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK CMoteurWindows::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) noexcept
 {
-	int wmId, wmEvent;
-	PAINTSTRUCT ps;
-	HDC hdc;
+	int wmId = 0;
+	int wmEvent = 0;
+	PAINTSTRUCT ps = PAINTSTRUCT();
+	HDC hdc = HDC();
 
 	switch (message)
 	{
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
-		// Analyse les sélections de menu :
+		// Analyse les sï¿½lections de menuï¿½:
 		switch (wmId)
 		{
 		case IDM_ABOUT:
@@ -216,7 +217,7 @@ LRESULT CALLBACK CMoteurWindows::WndProc(HWND hWnd, UINT message, WPARAM wParam,
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		// Évitez d'ajouter du code ici...
+		// ï¿½vitez d'ajouter du code ici...
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
@@ -228,8 +229,8 @@ LRESULT CALLBACK CMoteurWindows::WndProc(HWND hWnd, UINT message, WPARAM wParam,
 	return 0;
 }
 
-// Gestionnaire de messages pour la boîte de dialogue À propos de.
-INT_PTR CALLBACK CMoteurWindows::About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+// Gestionnaire de messages pour la boï¿½te de dialogue ï¿½ propos de.
+INT_PTR CALLBACK CMoteurWindows::About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) noexcept
 {
 	UNREFERENCED_PARAMETER(lParam);
 	switch (message)
@@ -243,6 +244,8 @@ INT_PTR CALLBACK CMoteurWindows::About(HWND hDlg, UINT message, WPARAM wParam, L
 			EndDialog(hDlg, LOWORD(wParam));
 			return (INT_PTR)TRUE;
 		}
+		break;
+	default:
 		break;
 	}
 	return (INT_PTR)FALSE;

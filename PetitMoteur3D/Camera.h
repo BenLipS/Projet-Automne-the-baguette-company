@@ -28,7 +28,16 @@ namespace PM3D {
 
 	public:
 		bool waitForSwap = false;
-		CCamera() = default;
+		CCamera() noexcept
+		{
+			type = CAMERA_TYPE::FREE;
+			position = DirectX::XMVECTOR();
+			direction = DirectX::XMVECTOR();
+			up = DirectX::XMVECTOR();
+			pMatView = nullptr;
+			pMatProj = nullptr;
+			pMatViewProj = nullptr;
+		};
 		CCamera(const DirectX::XMVECTOR& position_in, const DirectX::XMVECTOR& direction_in, const DirectX::XMVECTOR& up_in, DirectX::XMMATRIX* pMatView_in, DirectX::XMMATRIX* pMatProj_in, DirectX::XMMATRIX* pMatViewProj_in, CAMERA_TYPE type = FREE);
 
 		void init(const DirectX::XMVECTOR& position_in, const DirectX::XMVECTOR& direction_in, const DirectX::XMVECTOR& up_in, DirectX::XMMATRIX* pMatView_in, DirectX::XMMATRIX* pMatProj_in, DirectX::XMMATRIX* pMatViewProj_in, CAMERA_TYPE type = FREE);
@@ -37,8 +46,8 @@ namespace PM3D {
 		void setDirection(const DirectX::XMVECTOR& direction_in);
 		void setUp(const DirectX::XMVECTOR& up_in);
 
-		CAMERA_TYPE getType() { return type; }
-		XMVECTOR getPosition() { return position; }
+		CAMERA_TYPE getType() noexcept { return type; }
+		XMVECTOR getPosition() noexcept { return position; }
 
 		void swapCameraMode();
 

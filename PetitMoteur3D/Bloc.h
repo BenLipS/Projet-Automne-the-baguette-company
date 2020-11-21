@@ -9,8 +9,8 @@ class CDispositifD3D11;
 const uint16_t index_bloc[36] = {
 					0,1,2,			// devant
 					0,2,3,			// devant
-					5,6,7,			// arrière
-					5,7,4,			// arrière
+					5,6,7,			// arriï¿½re
+					5,7,4,			// arriï¿½re
 					8,9,10,			// dessous
 					8,10,11,		// dessous
 					13,14,15,		// dessus
@@ -34,8 +34,8 @@ public:
 	// Destructeur
 	virtual ~CBloc();
 
-	virtual void Anime(float tempsEcoule) override;
-	virtual void Draw() override;
+	void Anime(float tempsEcoule) noexcept override;
+	void Draw() override;
 
 private:
 	CDispositifD3D11 * pDispositif;
@@ -48,7 +48,7 @@ private:
 	ID3D11PixelShader*  pPixelShader;
 	ID3D11InputLayout* pVertexLayout;
 
-	// Définitions des valeurs d'animation
+	// Dï¿½finitions des valeurs d'animation
 	ID3D11Buffer* pConstantBuffer;
 	XMMATRIX matWorld;
 	float rotation;

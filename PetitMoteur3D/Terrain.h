@@ -16,11 +16,11 @@ namespace PM3D
 		// Destructeur
 		virtual ~Terrain();
 
-		virtual void Anime(float tempsEcoule) override;
-		virtual void Draw() override;
+		void Anime(float tempsEcoule) noexcept override;
+		void Draw() override;
 
 
-		float getHeight(float x, float z);
+		float getHeight(float x, float z) noexcept;
 		int height;
 		int width;
 
@@ -45,7 +45,7 @@ namespace PM3D
 		int nbSommets;
 		int nbPolygones;
 
-		// Définitions des valeurs d'animation
+		// Dï¿½finitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;
 		XMMATRIX matWorld;
 		float rotation;
