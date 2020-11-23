@@ -8,7 +8,7 @@ namespace PM3D
 {
 CDispositifD3D11::~CDispositifD3D11()
 {
-	pSwapChain->SetFullscreenState(FALSE, NULL); // passer en mode fenêtré
+	pSwapChain->SetFullscreenState(FALSE, NULL); // passer en mode fenï¿½trï¿½
 	if (pImmediateContext)
 	{
 		pImmediateContext->ClearState();
@@ -25,14 +25,14 @@ CDispositifD3D11::~CDispositifD3D11()
 uint32_t CDispositifD3D11::GetLargeur() const { return largeurEcran; }
 uint32_t CDispositifD3D11::GetHauteur() const { return hauteurEcran; }
 
-//  FONCTION : CDispositifD3D11, constructeur paramètré 
-//  BUT :	Constructeur de notre classe spécifique de dispositif 
-//  PARAMÈTRES:		
-//		cdsMode:	CDS_FENETRE application fenêtrée
-//					CDS_PLEIN_ECRAN application plein écran
+//  FONCTION : CDispositifD3D11, constructeur paramï¿½trï¿½ 
+//  BUT :	Constructeur de notre classe spï¿½cifique de dispositif 
+//  PARAMï¿½TRES:		
+//		cdsMode:	CDS_FENETRE application fenï¿½trï¿½e
+//					CDS_PLEIN_ECRAN application plein ï¿½cran
 //
-//		hWnd:	Handle sur la fenêtre Windows de l'application,
-//				nécessaire pour la fonction de création du 
+//		hWnd:	Handle sur la fenï¿½tre Windows de l'application,
+//				nï¿½cessaire pour la fonction de crï¿½ation du 
 //				dispositif
 CDispositifD3D11::CDispositifD3D11(const CDS_MODE cdsMode,
 	const HWND hWnd)
@@ -58,10 +58,10 @@ CDispositifD3D11::CDispositifD3D11(const CDS_MODE cdsMode,
 	pRenderTargetView = nullptr;
 
 	DXGI_SWAP_CHAIN_DESC sd;
-	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // Permettre l’échange plein écran
+	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // Permettre lï¿½ï¿½change plein ï¿½cran
 	ZeroMemory(&sd, sizeof(sd));
 
-	// Obtenir les informations de l’adaptateur courant
+	// Obtenir les informations de lï¿½adaptateur courant
 	CInfoDispositif Dispo0( CInfoDispositif::ADAPTATEUR_COURANT );
 
 	largeur = 1900;
@@ -73,7 +73,7 @@ CDispositifD3D11::CDispositifD3D11(const CDS_MODE cdsMode,
 		sd.Windowed = TRUE;
 		break;
 	case CDS_PLEIN_ECRAN:
-		sd.Windowed = FALSE;        // Plein écran
+		sd.Windowed = FALSE;        // Plein ï¿½cran
 		break;
 	}
 
@@ -106,7 +106,7 @@ CDispositifD3D11::CDispositifD3D11(const CDS_MODE cdsMode,
 	sd.SampleDesc.Count = 1;
 	sd.SampleDesc.Quality = 0;
 
-	// régler le problème no 1 du passage en mode fenêtré
+	// rï¿½gler le problï¿½me no 1 du passage en mode fenï¿½trï¿½
 	RECT rcClient, rcWindow;
 	POINT ptDiff;
 	GetClientRect(hWnd, &rcClient);
@@ -128,7 +128,7 @@ CDispositifD3D11::CDispositifD3D11(const CDS_MODE cdsMode,
 		&pImmediateContext),
 		DXE_ERREURCREATIONDEVICE);
 
-	// Création d'un «render target view»
+	// Crï¿½ation d'un ï¿½render target viewï¿½
 	ID3D11Texture2D *pBackBuffer;
 	DXEssayer(pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer), DXE_ERREUROBTENTIONBUFFER);
 
@@ -179,7 +179,7 @@ void CDispositifD3D11::InitDepthBuffer() {
 
 	DXEssayer(pD3DDevice->CreateTexture2D(&depthTextureDesc, NULL, &pDepthTexture), DXE_ERREURCREATIONTEXTURE);
 
-	// Création de la vue du tampon de profondeur (ou de stencil)
+	// Crï¿½ation de la vue du tampon de profondeur (ou de stencil)
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSView;
 	ZeroMemory( &descDSView, sizeof(descDSView) );
 	descDSView.Format = depthTextureDesc.Format;

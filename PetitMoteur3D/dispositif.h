@@ -2,7 +2,7 @@
 
 namespace PM3D
 {
-// Constantes pour mode fenêtré ou plein écran
+// Constantes pour mode fenï¿½trï¿½ ou plein ï¿½cran
 enum CDS_MODE
 {
 	CDS_FENETRE,
@@ -12,8 +12,8 @@ enum CDS_MODE
 //
 //  Classe : CDispositif
 //
-//  BUT : 	Classe servant à construire un objet Dispositif 
-//				qui implantera les aspects "génériques" du dispositif de 
+//  BUT : 	Classe servant ï¿½ construire un objet Dispositif 
+//				qui implantera les aspects "gï¿½nï¿½riques" du dispositif de 
 //				rendu
 //
 class CDispositif
