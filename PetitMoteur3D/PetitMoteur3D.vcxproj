@@ -127,14 +127,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CONSOLE;RENDER_SNIPPET;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CONSOLE;RENDER_SNIPPET;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_CHARACTER_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\include_physX;$(ProjectDir)include\include_physXShared;$(ProjectDir)include\include_glut;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\include_physX;$(ProjectDir)include\include_physXShared;$(ProjectDir)include\include_glut;%(AdditionalIncludeDirectories);source;source/PhysX;source/PM3D;header;header/PhysX;header/PM3D</AdditionalIncludeDirectories>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -170,12 +170,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;PX_PHYSX_CHARACTER_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\include_physX;$(ProjectDir)include\include_physXShared;$(ProjectDir)include\include_glut;%(AdditionalIncludeDirectories);source;source/PhysX;source/PM3D;header;header/PhysX;header/PM3D</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -189,51 +190,53 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bloc.cpp" />
-    <ClCompile Include="BlocEffect1.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="DIManipulateur.cpp" />
-    <ClCompile Include="dispositif.cpp" />
-    <ClCompile Include="dispositifD3D11.cpp" />
-    <ClCompile Include="InfoDispositif.cpp" />
-    <ClCompile Include="Horloge.cpp" />
-    <ClCompile Include="Moteur.cpp" />
-    <ClCompile Include="MoteurWindows.cpp" />
-    <ClCompile Include="PetitMoteur3D.cpp" />
-    <ClCompile Include="SnippetCamera.cpp" />
-    <ClCompile Include="SnippetHelloWorld.cpp" />
-    <ClCompile Include="SnippetHelloWorldRender.cpp" />
-    <ClCompile Include="SnippetRender.cpp" />
-    <ClCompile Include="sommetbloc.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp" />
+    <ClCompile Include="source\PM3D\BlocStatic.cpp" />
+    <ClCompile Include="source\PM3D\BlocDynamic.cpp" />
+    <ClCompile Include="source\PM3D\Objet3DDynamic.cpp" />
+    <ClCompile Include="source\PM3D\Objet3DStatic.cpp" />
+    <ClCompile Include="source\PM3D\Objet3Dphysic.cpp" />
+    <ClCompile Include="source\PM3D\Camera.cpp" />
+    <ClCompile Include="source\PM3D\DIManipulateur.cpp" />
+    <ClCompile Include="source\PM3D\dispositif.cpp" />
+    <ClCompile Include="source\PM3D\dispositifD3D11.cpp" />
+    <ClCompile Include="source\PM3D\InfoDispositif.cpp" />
+    <ClCompile Include="source\PM3D\Horloge.cpp" />
+    <ClCompile Include="source\PM3D\Moteur.cpp" />
+    <ClCompile Include="source\PM3D\MoteurWindows.cpp" />
+    <ClCompile Include="source\PM3D\PetitMoteur3D.cpp" />
+    <ClCompile Include="source\PM3D\sommetbloc.cpp" />
+    <ClCompile Include="source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bloc.h" />
-    <ClInclude Include="BlocEffect1.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="DIManipulateur.h" />
-    <ClInclude Include="dispositif.h" />
-    <ClInclude Include="dispositifD3D11.h" />
-    <ClInclude Include="InfoDispositif.h" />
-    <ClInclude Include="Horloge.h" />
-    <ClInclude Include="Moteur.h" />
-    <ClInclude Include="MoteurWindows.h" />
-    <ClInclude Include="objet3d.h" />
-    <ClInclude Include="PetitMoteur3D.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="SnippetCamera.h" />
-    <ClInclude Include="SnippetRender.h" />
-    <ClInclude Include="sommetbloc.h" />
-    <ClInclude Include="sommetTerrain.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Terrain.h" />
-    <ClInclude Include="util.h" />
+    <ClInclude Include="header\PM3D\BlocRollerDynamic.h" />
+    <ClInclude Include="header\PM3D\BlocStatic.h" />
+    <ClInclude Include="header\PM3D\BlocDynamic.h" />
+    <ClInclude Include="header\PM3D\Camera.h" />
+    <ClInclude Include="header\PM3D\DIManipulateur.h" />
+    <ClInclude Include="header\PM3D\dispositif.h" />
+    <ClInclude Include="header\PM3D\dispositifD3D11.h" />
+    <ClInclude Include="header\PM3D\IndexModel.h" />
+    <ClInclude Include="header\PM3D\InfoDispositif.h" />
+    <ClInclude Include="header\PM3D\Horloge.h" />
+    <ClInclude Include="header\PM3D\Moteur.h" />
+    <ClInclude Include="header\PM3D\MoteurWindows.h" />
+    <ClInclude Include="header\PM3D\objet3d.h" />
+    <ClInclude Include="header\PM3D\PetitMoteur3D.h" />
+    <ClInclude Include="header\PM3D\Resource.h" />
+    <ClInclude Include="header\PM3D\sommetbloc.h" />
+    <ClInclude Include="header\PM3D\sommetTerrain.h" />
+    <ClInclude Include="header\PM3D\tools.h" />
+    <ClInclude Include="header\stdafx.h" />
+    <ClInclude Include="header\PM3D\util.h" />
+    <ClInclude Include="header\PM3D\Objet3Dphysic.h" />
+    <ClInclude Include="header\PM3D\Objet3DStatic.h" />
+    <ClInclude Include="header\PM3D\Objet3DDynamic.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MiniPhong.fx">

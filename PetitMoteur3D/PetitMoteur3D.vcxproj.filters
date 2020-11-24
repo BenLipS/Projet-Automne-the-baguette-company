@@ -21,120 +21,126 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Moteur.cpp">
+    <ClCompile Include="source\stdafx.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="MoteurWindows.cpp">
+    <ClCompile Include="source\PM3D\sommetbloc.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="PetitMoteur3D.cpp">
+    <ClCompile Include="source\PM3D\Camera.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="source\PM3D\DIManipulateur.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Bloc.cpp">
+    <ClCompile Include="source\PM3D\dispositif.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="dispositif.cpp">
+    <ClCompile Include="source\PM3D\dispositifD3D11.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Horloge.cpp">
+    <ClCompile Include="source\PM3D\Horloge.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="sommetbloc.cpp">
+    <ClCompile Include="source\PM3D\InfoDispositif.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="dispositifD3D11.cpp">
+    <ClCompile Include="source\PM3D\Moteur.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="InfoDispositif.cpp">
+    <ClCompile Include="source\PM3D\MoteurWindows.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp">
+    <ClCompile Include="source\PM3D\PetitMoteur3D.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="BlocEffect1.cpp">
+    <ClCompile Include="source\PM3D\Objet3Dphysic.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="DIManipulateur.cpp">
+    <ClCompile Include="source\PM3D\Objet3DStatic.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="source\PM3D\Objet3DDynamic.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="SnippetCamera.cpp">
+    <ClCompile Include="source\PM3D\BlocDynamic.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="SnippetHelloWorld.cpp">
+    <ClCompile Include="source\PM3D\BlocStatic.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="SnippetHelloWorldRender.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="SnippetRender.cpp">
+    <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Moteur.h">
+    <ClInclude Include="header\stdafx.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="MoteurWindows.h">
+    <ClInclude Include="header\PM3D\Camera.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="PetitMoteur3D.h">
+    <ClInclude Include="header\PM3D\dispositif.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
+    <ClInclude Include="header\PM3D\DIManipulateur.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="header\PM3D\dispositifD3D11.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="util.h">
+    <ClInclude Include="header\PM3D\Horloge.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="dispositif.h">
+    <ClInclude Include="header\PM3D\InfoDispositif.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="dispositifD3D11.h">
+    <ClInclude Include="header\PM3D\Moteur.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="objet3d.h">
+    <ClInclude Include="header\PM3D\MoteurWindows.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Bloc.h">
+    <ClInclude Include="header\PM3D\PetitMoteur3D.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="sommetbloc.h">
+    <ClInclude Include="header\PM3D\Resource.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Horloge.h">
+    <ClInclude Include="header\PM3D\sommetbloc.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="InfoDispositif.h">
+    <ClInclude Include="header\PM3D\sommetTerrain.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain.h">
+    <ClInclude Include="header\PM3D\util.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="sommetTerrain.h">
+    <ClInclude Include="header\PM3D\objet3d.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="BlocEffect1.h">
+    <ClInclude Include="header\PM3D\Objet3Dphysic.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="DIManipulateur.h">
+    <ClInclude Include="header\PM3D\Objet3DStatic.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="header\PM3D\Objet3DDynamic.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="SnippetCamera.h">
+    <ClInclude Include="header\PM3D\tools.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="SnippetRender.h">
+    <ClInclude Include="header\PM3D\BlocDynamic.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\BlocStatic.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\IndexModel.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\BlocRollerDynamic.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
