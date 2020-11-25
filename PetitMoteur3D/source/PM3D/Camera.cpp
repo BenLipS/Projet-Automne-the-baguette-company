@@ -35,8 +35,8 @@ namespace PM3D {
 
 	void CCamera::swapCameraMode()
 	{
-		/*if (type == CCamera::CAMERA_TYPE::FREE) type = CCamera::CAMERA_TYPE::LEVEL;
-		else type = CCamera::CAMERA_TYPE::FREE;*/
+		if (type == CCamera::CAMERA_TYPE::FREE) type = CCamera::CAMERA_TYPE::CUBE;
+		else type = CCamera::CAMERA_TYPE::FREE;
 
 		waitForSwap = false;
 	}
@@ -182,14 +182,13 @@ namespace PM3D {
 		*pMatViewProj = (*pMatView) * (*pMatProj);
 	}
 
-	void CCamera::update(PxRigidBody* _body, float tempsEcoule)
+	void CCamera::update(PxRigidBody* _body)
 	{
 
 		// Pour les mouvements, nous utilisons le gestionnaire de saisie
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
-		float coeffMove = 500.0f;
 		XMVECTOR relativeZ = XMVector3Normalize(XMVector3Cross(direction, up));
 
 
@@ -198,53 +197,12 @@ namespace PM3D {
 		setPosition(XMVECTOR{ pose.p.x, pose.p.y + 450.0f, pose.p.z - 300.0f});
 		setDirection(XMVECTOR{ 0.0f, -1.0f, 0.7f });
 
-		// Vérifier l’état de la touche gauche
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_A)) {
-			position += (coeffMove * relativeZ * tempsEcoule);
-		}
-
-		// Vérifier l’état de la touche droite
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_D)) {
-			position -= (coeffMove * relativeZ * tempsEcoule);
-		}
-
-		// Vérifier l'état de la touche forward
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_W)) {
-			position += (coeffMove * direction * tempsEcoule);
-		}
-
-		// Vérifier l’état de la touche backward
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_S)) {
-			position -= (coeffMove * direction * tempsEcoule);
-		}
-
 		// Vérifier l’état de la touche SwapMode
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_M)) {
 			waitForSwap = true;
 		}
 		else {
 			if (waitForSwap) swapCameraMode();
-		}
-
-		// ******** POUR LA SOURIS ************  
-		//Vérifier si déplacement vers la gauche
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(-XM_PI / (5000.0f * tempsEcoule)));
-		}
-
-		// Vérifier si déplacement vers la droite
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(XM_PI / (5000.0f * tempsEcoule)));
-		}
-
-		//Vérifier si déplacement vers le haut
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, XM_PI / (5000.0f * tempsEcoule)));
-		}
-
-		// Vérifier si déplacement vers le bas
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, -XM_PI / (5000.0f * tempsEcoule)));
 		}
 
 		// Matrice de la vision

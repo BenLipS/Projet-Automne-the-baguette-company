@@ -18,7 +18,8 @@ namespace PM3D {
 		static const int HEIGHT = 100;
 
 		enum CAMERA_TYPE {
-			FREE
+			FREE,
+			CUBE
 		};
 
 	private:
@@ -44,6 +45,6 @@ namespace PM3D {
 
 		void update(float tempsEcoule = 0.0f);
 		void update(float y, float tempsEcoule);
-		void update(physx::PxRigidBody*, float tempsEcoule = 0.0f);
+		void update(physx::PxRigidBody*);
 	};
 }

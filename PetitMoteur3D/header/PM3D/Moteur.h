@@ -223,9 +223,11 @@ namespace PM3D
 				planRapproche,
 				planEloigne);
 
-			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj, CCamera::CAMERA_TYPE::FREE);
+			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj, CCamera::CAMERA_TYPE::CUBE);
 
-			camera.update();
+			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+
+			camera.update((PxRigidBody*)character->getBody());
 		
 			return 0;
 		}
@@ -268,38 +270,23 @@ namespace PM3D
 			// Prendre en note l’état de la souris
 			GestionnaireDeSaisie.SaisirEtatSouris();
 
-			/*if (camera.getType() == CCamera::CAMERA_TYPE::LEVEL && camera.getPosition().vector4_f32[0] > (-terrain->width/2.0f)*terrain->scale.x && camera.getPosition().vector4_f32[0] < (terrain->width / 2.0f) * terrain->scale.x
-				&& camera.getPosition().vector4_f32[2] > (-terrain->height / 2.0f) * terrain->scale.z && camera.getPosition().vector4_f32[2] < (terrain->height / 2.0f) * terrain->scale.z){
-				*/
-				//float posX = /*static_cast<int>*/( (camera.getPosition().vector4_f32[0]) / (terrain->scale.x) + (terrain->width / 2) );  // on remet les coordonnées dans le référenciel de la heightmap
-				//float posZ = /*static_cast<int>*/( (camera.getPosition().vector4_f32[2]) / (terrain->scale.z) + (terrain->height / 2) );	// on remet les coordonnées dans le référenciel de la heightmap
-				//float dx = posX - static_cast<int>(posX);
-				//float dz = posZ - static_cast<int>(posZ);
-
-				//float hxz	= terrain->getHeight((int)posX, (int)posZ);
-				//float hx1z	= terrain->getHeight((int)posX + 1, (int)posZ);
-				//float hxz1	= terrain->getHeight((int)posX, (int)posZ + 1);
-				//float hx1z1 = terrain->getHeight((int)posX + 1, (int)posZ + 1);
-
-				//float y = (hxz + sqrt(pow(dx, 2) + pow(dz, 2)) * (hx1z1 - hxz)) + CCamera::HEIGHT;
-				/*float y = terrain->getHeight(camera.getPosition().vector4_f32[0], camera.getPosition().vector4_f32[2]) + CCamera::HEIGHT;
-			
-				//float y = terrain->getHeight(posX, posZ) + CCamera::HEIGHT;
-				for (auto& object3D : ListeScene)
+			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
+				
+				for (auto& object3D : scenePhysic_->ListeScene_)
 				{
 					object3D->Anime(tempsEcoule);
 				}
-				camera.update(y, tempsEcoule);
+				camera.update(tempsEcoule);
 			}
-			else {*/
+			else {
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
 				object3D->Anime(tempsEcoule);
 			}
 			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
-			camera.update((PxRigidBody*)character->getBody(), tempsEcoule);
-			//}
+			camera.update((PxRigidBody*)character->getBody());
+			}
 			return true;
 		}
 
