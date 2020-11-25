@@ -42,6 +42,9 @@ namespace PM3D
 		ID3D11Buffer* pConstantBuffer;
 		XMMATRIX matWorld;
 		//float rotation;
+
+		float dx_, dy_, dz_;
+
 		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position,
 			const float _dx, const float _dy, const float _dz);
 	};

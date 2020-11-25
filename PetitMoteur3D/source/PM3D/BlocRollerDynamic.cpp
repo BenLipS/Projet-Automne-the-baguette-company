@@ -31,6 +31,7 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du matériau
 	};
 
+	constexpr float BlocRollerDynamic::vitesseMax_ = 1000.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
 		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene->scene_, createRigidBody(_scene, _position, _radius))
@@ -148,39 +149,46 @@ namespace PM3D
 		auto body = (PxRigidDynamic*)(body_);
 		auto speed = body->getLinearVelocity();
 		
-		PxVec3 droite = PxVec3(0.0f, -1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
-		PxVec3 gauche = PxVec3(0.0f, 1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
+		PxVec3 gauche = PxVec3(0.0f, -1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
+		PxVec3 droite = PxVec3(0.0f, 1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
+
+		PxVec3 vVitesse = speed;
+		upPressed_ = false;
 
 		// Vérifier l’état de la touche gauche
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
-			auto direction = speed + (droite * speed.magnitude() / 50);
-			body->setLinearVelocity(direction.getNormalized() * speed.magnitude());
+			auto direction = gauche * speed.magnitude() / 50;
+			vVitesse += direction.getNormalized() * speed.magnitude();
 		}
 
 		// Vérifier l’état de la touche droite
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
-			auto direction = speed + (gauche * speed.magnitude() / 50);
-			body->setLinearVelocity(direction.getNormalized() * speed.magnitude());
+			auto direction = droite * speed.magnitude() / 50;
+			vVitesse += direction.getNormalized() * speed.magnitude();
 		}
 
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
-			auto direction = speed + (PxVec3{ 0.0f,0.0f,1.0f } * speed.magnitude() / 80);
-			body->setLinearVelocity(direction.getNormalized() * speed.magnitude());
+			upPressed_ = true;
+			vVitesse *= 1.01f;
 		}
 
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
-			auto direction = speed + (PxVec3{ 0.0f,0.0f,-10.0f } *speed.magnitude() / 20);
-			if (direction.z < 1000.0f)
-				body->setLinearVelocity(PxVec3{direction.x, direction.y, 0.0f}.getNormalized() * speed.magnitude());
-			body->setLinearVelocity(direction.getNormalized() * speed.magnitude());
+			vVitesse *= 0.99f;
 		}
+
+		if ((vVitesse.magnitude() > (vitesseMax_*0.95f)) && (!upPressed_))
+			body->setLinearVelocity(vVitesse.getNormalized() * (vitesseMax_*0.95f));
+		else if ((vVitesse.magnitude() > vitesseMax_) && (upPressed_))
+			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMax_);
+		else
+			body->setLinearVelocity(vVitesse);
 
 		tempsEcoule;
 
 		//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
 
 		PxTransform pose = body_->getGlobalPose();
-		pose.q = PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f));
+		pose.q = PxQuat(0.1f, PxVec3(1.0f, 0.0f, 0.0f));
 
 		if (pose.p.x > 475.0f) {
 			pose.p.x = 475.0f;
@@ -227,12 +235,12 @@ namespace PM3D
 		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
-		sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -10.0f, 1.0f);
+		sp.vLumiere = XMVectorSet(1000.0f, 1000.0f, 1000.0f, 1.0f);
 		sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vAMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+		sp.vAMat = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
 		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		sp.vDMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+		sp.vDMat = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
 
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 

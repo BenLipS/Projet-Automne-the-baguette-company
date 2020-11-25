@@ -47,6 +47,8 @@ namespace PM3D
 		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position, const float _radius);
 
 		float radius_;
+		static const float vitesseMax_;
+		bool upPressed_ = false;
 	};
 
 } // namespace PM3D

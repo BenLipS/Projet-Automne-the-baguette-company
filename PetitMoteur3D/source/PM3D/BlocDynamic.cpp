@@ -42,6 +42,9 @@ namespace PM3D
 		, pPixelShader(nullptr)
 		, pVertexLayout(nullptr)
 		, pConstantBuffer(nullptr)
+		, dx_(dx)
+		, dy_(dy)
+		, dz_(dz)
 
 	{
 		typeTag = "Bloc";
