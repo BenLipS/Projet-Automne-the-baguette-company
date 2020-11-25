@@ -27,6 +27,8 @@ namespace PM3D
 		virtual void Anime(float tempsEcoule) override;
 		virtual void Draw() override;
 
+		PxRigidActor* getBody() { return body_; }
+
 	private:
 		CDispositifD3D11* pDispositif;
 		void InitShaders();
@@ -43,6 +45,8 @@ namespace PM3D
 		XMMATRIX matWorld;
 		//float rotation;
 		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position, const float _radius);
+
+		float radius_;
 	};
 
 } // namespace PM3D

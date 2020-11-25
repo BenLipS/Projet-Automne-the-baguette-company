@@ -1,6 +1,8 @@
 #pragma once
 
 #include <PxPhysicsAPI.h>
+#include <vector>
+#include <memory>
 
 using namespace physx;
 
@@ -15,5 +17,6 @@ namespace PM3D {
 		PxMaterial* material_ = NULL;
 		PxPvd* pvd_ = NULL;
 		PxScene* scene_ = NULL;
+		std::vector<std::unique_ptr<CObjet3D>> ListeScene_{};
 	};	
 }

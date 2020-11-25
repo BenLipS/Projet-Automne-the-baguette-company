@@ -42,6 +42,7 @@ namespace PM3D
 		, pPixelShader(nullptr)
 		, pVertexLayout(nullptr)
 		, pConstantBuffer(nullptr)
+		, radius_(_radius)
 
 	{
 		typeTag = "Bloc";
@@ -162,12 +163,37 @@ namespace PM3D
 			body->setLinearVelocity(direction.getNormalized() * speed.magnitude());
 		}
 
+		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
+			auto direction = speed + (PxVec3{ 0.0f,0.0f,1.0f } * speed.magnitude() / 80);
+			body->setLinearVelocity(direction.getNormalized() * speed.magnitude());
+		}
+
+		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
+			auto direction = speed + (PxVec3{ 0.0f,0.0f,-10.0f } *speed.magnitude() / 20);
+			if (direction.z < 1000.0f)
+				body->setLinearVelocity(PxVec3{direction.x, direction.y, 0.0f}.getNormalized() * speed.magnitude());
+			body->setLinearVelocity(direction.getNormalized() * speed.magnitude());
+		}
+
 		tempsEcoule;
 
 		//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
 
 		PxTransform pose = body_->getGlobalPose();
 		pose.q = PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f));
+
+		if (pose.p.x > 475.0f) {
+			pose.p.x = 475.0f;
+			PxVec3 vitesse = body->getLinearVelocity();
+			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
+		}
+		else if (pose.p.x < -475.0f) {
+			pose.p.x = -475.0f;
+			PxVec3 vitesse = body->getLinearVelocity();
+			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
+			
+		}
+
 		body_->setGlobalPose(pose);
 
 		matWorld = XMMatrixRotationQuaternion(XMVectorSet(body_->getGlobalPose().q.x, body_->getGlobalPose().q.y, body_->getGlobalPose().q.z, body_->getGlobalPose().q.w)); //Orientation
