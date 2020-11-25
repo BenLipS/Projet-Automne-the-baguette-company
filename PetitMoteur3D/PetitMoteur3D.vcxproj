@@ -206,6 +206,7 @@
     <ClCompile Include="source\PM3D\MoteurWindows.cpp" />
     <ClCompile Include="source\PM3D\PetitMoteur3D.cpp" />
     <ClCompile Include="source\PM3D\sommetbloc.cpp" />
+    <ClCompile Include="source\PM3D\Terrain.cpp" />
     <ClCompile Include="source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -231,6 +232,7 @@
     <ClInclude Include="header\PM3D\Resource.h" />
     <ClInclude Include="header\PM3D\sommetbloc.h" />
     <ClInclude Include="header\PM3D\sommetTerrain.h" />
+    <ClInclude Include="header\PM3D\Terrain.h" />
     <ClInclude Include="header\PM3D\tools.h" />
     <ClInclude Include="header\stdafx.h" />
     <ClInclude Include="header\PM3D\util.h" />
