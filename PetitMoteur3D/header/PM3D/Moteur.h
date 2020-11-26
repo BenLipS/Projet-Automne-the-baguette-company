@@ -234,9 +234,19 @@ namespace PM3D
 
 		bool InitObjets()
 		{
+			Light_Manager LMP{
+
+			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere
+			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
+			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
+			XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f), // vAMat
+			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
+			XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f) // vDMat
+			};
+
 			// Puis, il est ajouté à la scène
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1250.0f, -10000.0f, PxQuat(0.078f, PxVec3(1.0f, 0.0f, 0.0f))), 50.0f, pDispositif));
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 370.0f, 0.0f, PxQuat(0.078f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 0.1f, 100000.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 370.0f, 0.0f, PxQuat(0.078f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 0.1f, 100000.0f, pDispositif, LMP));
 
 
 			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 0.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))),10000.0f, 10000.0f, 10000.0f, pDispositif));
