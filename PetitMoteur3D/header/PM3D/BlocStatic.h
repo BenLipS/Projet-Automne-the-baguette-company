@@ -8,6 +8,7 @@
 
 namespace PM3D {
 
+	
 	class CDispositifD3D11;
 
     class BlocStatic :
@@ -15,7 +16,15 @@ namespace PM3D {
     {
 	public:
 		BlocStatic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
-			CDispositifD3D11* _pDispositif);
+			CDispositifD3D11* _pDispositif, Light_Manager LM_ = {
+
+			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f),
+			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f),
+			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f),
+			XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f),
+			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f),
+			XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f)
+			});
 
 		// Destructeur
 		virtual ~BlocStatic();
@@ -24,6 +33,10 @@ namespace PM3D {
 		virtual void Draw() override;
 
 	private:
+
+		
+		Light_Manager LM_;
+
 		CDispositifD3D11* pDispositif;
 		void InitShaders();
 
@@ -33,6 +46,8 @@ namespace PM3D {
 		ID3D11VertexShader* pVertexShader;
 		ID3D11PixelShader* pPixelShader;
 		ID3D11InputLayout* pVertexLayout;
+
+		
 
 		// Définitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;

@@ -1,13 +1,13 @@
 #pragma once
 #include "Singleton.h"
-#include "dispositif.h" 
+#include "dispositif.h"
 
 #include <vector>
 #include <iostream>
 
 #include "Objet3D.h"
 #include "Terrain.h"
-#include "DIManipulateur.h" 
+#include "DIManipulateur.h"
 #include "Camera.h"
 #include "PxPhysicsAPI.h"
 #include "stdafx.h"
@@ -27,16 +27,16 @@ namespace PM3D
 	const double EcartTemps = 1.0 / static_cast<double>(IMAGESPARSECONDE);
 
 	//
-	//   TEMPLATE : CMoteur
+	//   TEMPLATEï¿½: CMoteur
 	//
-	//   BUT : Template servant à construire un objet Moteur qui implantera les
-	//         aspects "génériques" du moteur de jeu
+	//   BUTï¿½: Template servant ï¿½ construire un objet Moteur qui implantera les
+	//         aspects "gï¿½nï¿½riques" du moteur de jeu
 	//
-	//   COMMENTAIRES :
+	//   COMMENTAIRESï¿½:
 	//
-	//        Comme plusieurs de nos objets représenteront des éléments uniques 
-	//        du système (ex: le moteur lui-même, le lien vers 
-	//        le dispositif Direct3D), l'utilisation d'un singleton 
+	//        Comme plusieurs de nos objets reprï¿½senteront des ï¿½lï¿½ments uniques
+	//        du systï¿½me (ex: le moteur lui-mï¿½me, le lien vers
+	//        le dispositif Direct3D), l'utilisation d'un singleton
 	//        nous simplifiera plusieurs aspects.
 	//
 	template <class T, class TClasseDispositif> class CMoteur :public CSingleton<T>
@@ -48,7 +48,7 @@ namespace PM3D
 
 			while (bBoucle)
 			{
-				// Propre à la plateforme - (Conditions d'arrêt, interface, messages)
+				// Propre ï¿½ la plateforme - (Conditions d'arrï¿½t, interface, messages)
 				bBoucle = RunSpecific();
 
 				// appeler la fonction d'animation
@@ -61,18 +61,18 @@ namespace PM3D
 
 		virtual int Initialisations()
 		{
-			// Propre à la plateforme
+			// Propre ï¿½ la plateforme
 			InitialisationsSpecific();
 
 			// * Initialisation du dispositif de rendu
 			pDispositif = CreationDispositifSpecific(CDS_FENETRE);
 			//pDispositif = CreationDispositifSpecific(CDS_PLEIN_ECRAN);
 
-			// * Initialisation de la scène
+			// * Initialisation de la scï¿½ne
 			InitScene();
 
-			// * Initialisation des paramètres de l'animation et 
-			//   préparation de la première image
+			// * Initialisation des paramï¿½tres de l'animation et
+			//   prï¿½paration de la premiï¿½re image
 			InitAnimation();
 
 			return 0;
@@ -80,22 +80,22 @@ namespace PM3D
 
 		virtual bool Animation()
 		{
-			// méthode pour lire l'heure et calculer le 
-			// temps écoulé
+			// mï¿½thode pour lire l'heure et calculer le
+			// temps ï¿½coulï¿½
 			const int64_t TempsCompteurCourant = GetTimeSpecific();
 			const double TempsEcoule = GetTimeIntervalsInSec(TempsCompteurPrecedent, TempsCompteurCourant);
 
 			// Est-il temps de rendre l'image?
 			if (TempsEcoule > EcartTemps)
 			{
-				// Affichage optimisé
-				pDispositif->Present(); // On enlevera «//» plus tard
+				// Affichage optimisï¿½
+				pDispositif->Present(); // On enlevera ï¿½//ï¿½ plus tard
 
-				// On prépare la prochaine image
+				// On prï¿½pare la prochaine image
 				AnimeScene(static_cast<float>(TempsEcoule));
 
 				// On rend l'image sur la surface de travail
-				// (tampon d'arrière plan)
+				// (tampon d'arriï¿½re plan)
 				RenderScene();
 
 				// Calcul du temps du prochain affichage
@@ -118,7 +118,7 @@ namespace PM3D
 			Cleanup();
 		}
 
-		// Spécifiques - Doivent être implantés
+		// Spï¿½cifiques - Doivent ï¿½tre implantï¿½s
 		virtual bool RunSpecific() = 0;
 		virtual int InitialisationsSpecific() = 0;
 
@@ -135,18 +135,18 @@ namespace PM3D
 			TempsSuivant = GetTimeSpecific();
 			TempsCompteurPrecedent = TempsSuivant;
 
-			// première Image
+			// premiï¿½re Image
 			RenderScene();
 
 			return true;
 		}
 
-		// Fonctions de rendu et de présentation de la scène
+		// Fonctions de rendu et de prï¿½sentation de la scï¿½ne
 		virtual bool RenderScene()
 		{
 			BeginRenderSceneSpecific();
 
-			// Appeler les fonctions de dessin de chaque objet de la scène
+			// Appeler les fonctions de dessin de chaque objet de la scï¿½ne
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
 				object3D->Draw();
@@ -158,10 +158,10 @@ namespace PM3D
 
 		virtual void Cleanup()
 		{
-			// détruire les objets
+			// dï¿½truire les objets
 			scenePhysic_->ListeScene_.clear();
 
-			// Détruire le dispositif
+			// Dï¿½truire le dispositif
 			if (pDispositif)
 			{
 				delete pDispositif;
@@ -181,7 +181,7 @@ namespace PM3D
 			scenePhysic_->foundation_ = PxCreateFoundation(PX_PHYSICS_VERSION, scenePhysic_->allocator_, scenePhysic_->errorCallback_);
 			//scenePhysic_->pvd_ = PxCreatePvd(*(scenePhysic_->foundation_));
 			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), PxTolerancesScale(), true);
-		
+
 			PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
 			sceneDesc.gravity = PxVec3(0.0f, -200.0f, 0.0f);
 			scenePhysic_->dispatcher_ = PxDefaultCpuDispatcherCreate(2);
@@ -194,7 +194,7 @@ namespace PM3D
 			//managerController
 			//PxCreateControllerManager(*(scenePhysic_->scene_));
 
-			// Initialisation des objets 3D - création et/ou chargement
+			// Initialisation des objets 3D - crï¿½ation et/ou chargement
 			if (!InitObjets())
 			{
 				return 1;
@@ -208,11 +208,11 @@ namespace PM3D
 				XMVectorSet(2.0f, 2.0f, 2.0f, 1.0f),
 				XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
-			// Calcul de VP à l'avance
+			// Calcul de VP ï¿½ l'avance
 			m_MatViewProj = m_MatView * m_MatProj;
 			*/
 
-			const float champDeVision = XM_PI / 4; 	// 45 degrés
+			const float champDeVision = XM_PI / 4; 	// 45 degrï¿½s
 			const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 			const float planRapproche = 2.0f;
 			const float planEloigne = 10000.0f;
@@ -228,17 +228,28 @@ namespace PM3D
 			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
 			camera.update((PxRigidBody*)character->getBody());
-		
+
 			return 0;
 		}
 
 		bool InitObjets()
 		{
-			// Puis, il est ajouté à la scène
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1450.0f, -10000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 50.0f, pDispositif));
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 620.0f, 0.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 5000.0f, 0.1f, 25000.0f, pDispositif));
+			Light_Manager LMP{
 
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, -500.0f, 1000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
+			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere
+			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
+			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
+			XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f), // vAMat
+			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
+			XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f) // vDMat
+			};
+
+			// Puis, il est ajoutï¿½ ï¿½ la scï¿½ne
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1450.0f, -10000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 50.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 620.0f, 0.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 5000.0f, 0.1f, 25000.0f, pDispositif, LMP));
+
+
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, -500.0f, 1000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 1000.0f, 1000.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(100.0f, -1000.0f, 2000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-300.0f, -1500.0f, 3000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(400.0f, -2000.0f, 4000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
@@ -248,6 +259,7 @@ namespace PM3D
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(300.0f, -4000.0f, 8000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(200.0f, -4500.0f, 9000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-100.0f, -5000.0f, 10000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
+
 			char* filename = new char[50]("./src/heighmap_Proj51.bmp");
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename,XMFLOAT3(20.0f,5.0f,20.0f),pDispositif));
 			//ListeScene.emplace_back(std::make_unique<CBlocEffect1>(2.0f, 2.0f, 2.0f, pDispositif));
@@ -266,12 +278,12 @@ namespace PM3D
 			scenePhysic_->scene_->simulate(1.0f / 60.0f);
 			scenePhysic_->scene_->fetchResults(true);
 			// Prendre en note le statut du clavier
-			GestionnaireDeSaisie.StatutClavier(); 
-			// Prendre en note l’état de la souris
+			GestionnaireDeSaisie.StatutClavier();
+			// Prendre en note lï¿½ï¿½tat de la souris
 			GestionnaireDeSaisie.SaisirEtatSouris();
 
 			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
-				
+
 				for (auto& object3D : scenePhysic_->ListeScene_)
 				{
 					object3D->Anime(tempsEcoule);
@@ -298,7 +310,7 @@ namespace PM3D
 		// Le dispositif de rendu
 		TClasseDispositif* pDispositif;
 
-		// La seule scène
+		// La seule scï¿½ne
 		//std::vector<std::unique_ptr<CObjet3D>> ListeScene;
 
 		// Les matrices
