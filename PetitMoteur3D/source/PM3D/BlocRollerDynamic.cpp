@@ -176,11 +176,11 @@ namespace PM3D
 
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
 			//upPressed_ = true;
-			vVitesse *= 1.1f;
+			vVitesse = PxVec3{ vVitesse.x * 1.1f,vVitesse.y,vVitesse.z * 1.1f };
 		}
 
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
-			vVitesse *= 0.95f;
+			vVitesse = PxVec3{ vVitesse.x * 0.95f,vVitesse.y,vVitesse.z * 0.95f };
 		}
 
 		/*if ((vVitesse.magnitude() > (vitesseMax_*0.95f)) && (!upPressed_))
