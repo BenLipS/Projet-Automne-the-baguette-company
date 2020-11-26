@@ -19,11 +19,13 @@ namespace PM3D {
 		XMMATRIX matWorld;    // matrice de transformation dans le monde
 		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
 		XMVECTOR vCamera;    // la position de la caméra
-		XMVECTOR vAEcl;   // la valeur ambiante de l’éclairage
+		XMVECTOR vAEcl;        // la valeur ambiante de l’éclairage
 		XMVECTOR vAMat;     // la valeur ambiante du matériau
 		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
 		XMVECTOR vDMat;     // la valeur diffuse du matériau
 	};
+
+
 
 	Terrain::Terrain(char* filenameBMP, XMFLOAT3 scale, CDispositifD3D11* pDispositif_)
 		: pDispositif(pDispositif_) // Prendre en note le dispositif
@@ -254,7 +256,7 @@ namespace PM3D {
 		}
 
 		if ((intX < width - 1) && (intZ < height - 1)) {
-			y += hxz + (sqrt(pow(dx, 2) + pow(dz, 2)) * (sommets[(width * (height - 1 - (intZ + 1))) + (intX + 1)].getPosition().y - hxz));
+			y += hxz + static_cast<float>((sqrt(pow(dx, 2) + pow(dz, 2)) * (sommets[(width * (height - 1 - (intZ + 1))) + (intX + 1)].getPosition().y - hxz)));
 			++counter;
 		}
 		
@@ -336,7 +338,7 @@ namespace PM3D {
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 		sp.vLumiere = XMVectorSet(0.0f, 1000.0f, 0.0f, 1.0f);
-		sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
+		sp.vCamera = XMVectorSet(1000.0f, 0.0f, -10.0f, 1.0f);
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 		sp.vAMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
 		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);

@@ -19,4 +19,15 @@ namespace PM3D {
 		PxScene* scene_ = NULL;
 		std::vector<std::unique_ptr<CObjet3D>> ListeScene_{};
 	};	
+
+	struct Light_Manager{
+
+		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
+		XMVECTOR vCamera;    // la position de la caméra
+		XMVECTOR vAEcl;		// la valeur ambiante de l’éclairage
+		XMVECTOR vAMat;     // la valeur ambiante du matériau
+		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
+		XMVECTOR vDMat;     // la valeur diffuse du matériau
+	};
+
 }

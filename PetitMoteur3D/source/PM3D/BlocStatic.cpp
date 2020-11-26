@@ -8,6 +8,7 @@
 #include "MoteurWindows.h"
 #include <iostream>
 #include "IndexModel.h"
+#include "tools.h"
 
 using namespace physx;
 using namespace DirectX;
@@ -21,12 +22,13 @@ namespace PM3D
 	//		dx, dy, dz:	dimension en x, y, et z
 	//		pDispositif: pointeur sur notre objet dispositif
 
+
 	struct ShadersParams {
 		XMMATRIX matWorldViewProj; // la matrice totale
 		XMMATRIX matWorld;    // matrice de transformation dans le monde
 		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
 		XMVECTOR vCamera;    // la position de la caméra
-		XMVECTOR vAEcl;		// la valeur ambiante de l’éclairage
+		XMVECTOR vAEcl;        // la valeur ambiante de l’éclairage
 		XMVECTOR vAMat;     // la valeur ambiante du matériau
 		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
 		XMVECTOR vDMat;     // la valeur diffuse du matériau
@@ -34,7 +36,7 @@ namespace PM3D
 
 
 	BlocStatic::BlocStatic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
-		CDispositifD3D11* _pDispositif) : Objet3DStatic(_scene->scene_, createRigidBody(_scene, _position, dx/2, dy/2, dz/2))
+		CDispositifD3D11* _pDispositif, Light_Manager _sp) : Objet3DStatic(_scene->scene_, createRigidBody(_scene, _position, dx / 2, dy / 2, dz / 2))
 		, pDispositif(_pDispositif) // Prendre en note le dispositif
 		, matWorld(XMMatrixIdentity())
 		, pVertexBuffer(nullptr)
@@ -46,7 +48,8 @@ namespace PM3D
 		, dx_(dx)
 		, dy_(dy)
 		, dz_(dz)
-
+		, LM_(_sp)
+		
 	{
 		typeTag = "Bloc";
 		// Les points
@@ -181,12 +184,12 @@ namespace PM3D
 		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
-		sp.vLumiere = XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f);
-		sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
-		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vAMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
-		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		sp.vDMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+		sp.vLumiere = LM_.vLumiere;
+		sp.vCamera = LM_.vCamera;
+		sp.vAEcl = LM_.vAEcl;
+		sp.vAMat = LM_.vAMat;
+		sp.vDEcl = LM_.vDEcl;
+		sp.vDMat = LM_.vDMat;
 
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 

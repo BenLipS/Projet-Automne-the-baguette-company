@@ -8,6 +8,7 @@
 #include "MoteurWindows.h"
 #include <iostream>
 #include "IndexModel.h"
+#include "tools.h"
 
 using namespace physx;
 using namespace DirectX;
@@ -25,11 +26,12 @@ namespace PM3D
 		XMMATRIX matWorld;    // matrice de transformation dans le monde
 		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
 		XMVECTOR vCamera;    // la position de la caméra
-		XMVECTOR vAEcl;		// la valeur ambiante de l’éclairage
+		XMVECTOR vAEcl;        // la valeur ambiante de l’éclairage
 		XMVECTOR vAMat;     // la valeur ambiante du matériau
 		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
 		XMVECTOR vDMat;     // la valeur diffuse du matériau
 	};
+	
 
 	constexpr float BlocRollerDynamic::vitesseMax_ = 1000.0f;
 
@@ -235,12 +237,13 @@ namespace PM3D
 		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
-		sp.vLumiere = XMVectorSet(1000.0f, 1000.0f, 1000.0f, 1.0f);
+		sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -10.0f, 1.0f);
 		sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vAMat = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
+		sp.vAMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
 		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		sp.vDMat = XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
+		sp.vDMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+	
 
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 

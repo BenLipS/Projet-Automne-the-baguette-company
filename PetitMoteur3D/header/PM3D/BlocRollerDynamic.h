@@ -11,6 +11,7 @@ namespace PM3D
 {
 	class CDispositifD3D11;
 
+	
 	//  Classe : CBloc
 	//
 	//  BUT : 	Classe de bloc
@@ -26,6 +27,7 @@ namespace PM3D
 
 		virtual void Anime(float tempsEcoule) override;
 		virtual void Draw() override;
+		
 
 		PxRigidActor* getBody() { return body_; }
 
@@ -49,6 +51,8 @@ namespace PM3D
 		float radius_;
 		static const float vitesseMax_;
 		bool upPressed_ = false;
+
+
 	};
 
 } // namespace PM3D
