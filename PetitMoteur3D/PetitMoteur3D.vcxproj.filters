@@ -81,12 +81,6 @@
     <ClCompile Include="source\PM3D\DDSTextureLoader.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="source\PM3D\ObjetMesh.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="source\PM3D\Texture.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="source\PM3D\GestionnaireDeTextures.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
