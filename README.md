@@ -48,16 +48,16 @@
  │                                                         │  
  │ DLL: DLL PhysX pour l'inclusion de PhysX dans le projet │  
  │                                                         │  
- │ HEADER - PHYSX : tous les headers de PhysX, exclus du   │
- │ projet à la compilation.                                │
- │                                                         │
- │ HEADER - PM3D : contient tous les Headers pour les      │
- │ objets du projet.                                       │
- │                                                         │
- │ INCLUDE : tous les dossiers et fichiers relatifs à      │
- │ DirectX et PhysX                                        │
- │                                                         │
- │ LIB :  Librairies PhysX utilisées pour l'implémentation │
- │ de PhysX dans le projet                                 │
- └─────────────────────────────────────────────────────────┘  
+ │ HEADER - PHYSX : tous les headers de PhysX, exclus du   │  
+ │ projet à la compilation.                                │  
+ │                                                         │  
+ │ HEADER - PM3D : contient tous les Headers pour les      │  
+ │ objets du projet.                                       │  
+ │                                                         │  
+ │ INCLUDE : tous les dossiers et fichiers relatifs à      │  
+ │ DirectX et PhysX                                        │  
+ │                                                         │  
+ │ LIB :  Librairies PhysX utilisées pour l'implémentation │  
+ │ de PhysX dans le projet                                 │  
+ └─────────────────────────────────────────────────────────┘    
 
