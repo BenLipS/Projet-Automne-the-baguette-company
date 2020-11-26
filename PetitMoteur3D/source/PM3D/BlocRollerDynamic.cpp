@@ -197,13 +197,13 @@ namespace PM3D
 		PxTransform pose = body_->getGlobalPose();
 		//pose.q = PxQuat(0.1f, PxVec3(1.0f, 0.0f, 0.0f));
 
-		if (pose.p.x > 475.0f) {
-			pose.p.x = 475.0f;
+		if (pose.p.x > 2375.0f) {
+			pose.p.x = 2375.0f;
 			PxVec3 vitesse = body->getLinearVelocity();
 			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
 		}
-		else if (pose.p.x < -475.0f) {
-			pose.p.x = -475.0f;
+		else if (pose.p.x < -2375.0f) {
+			pose.p.x = -2375.0f;
 			PxVec3 vitesse = body->getLinearVelocity();
 			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
 		}
