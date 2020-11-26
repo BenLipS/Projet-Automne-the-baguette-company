@@ -3,7 +3,7 @@
 #include "sommetbloc.h"
 #include "util.h"
 #include "DispositifD3D11.h"
-
+#include <math.h>
 #include "resource.h"
 #include "MoteurWindows.h"
 #include <iostream>
@@ -48,6 +48,9 @@ namespace PM3D
 		, radius_(_radius)
 
 	{
+		for( unsigned int i = 0; i < 10; i++)
+			speedY_buffer.push(0.0f);
+
 		typeTag = "Bloc";
 		// Les points
 		XMFLOAT3 point[8] =
@@ -150,37 +153,41 @@ namespace PM3D
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 		auto body = (PxRigidDynamic*)(body_);
 		auto speed = body->getLinearVelocity();
+
+		
 		
 		PxVec3 gauche = PxVec3(0.0f, -1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
 		PxVec3 droite = PxVec3(0.0f, 1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
 
 		PxVec3 vVitesse = speed;
-		upPressed_ = false;
+		//upPressed_ = false;
 
 		// Vérifier l’état de la touche gauche
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
-			auto direction = gauche * speed.magnitude() / 50;
-			vVitesse += direction.getNormalized() * speed.magnitude();
+			auto direction = gauche * speed.magnitude();
+			vVitesse += (direction.getNormalized() * 50);
 		}
 
 		// Vérifier l’état de la touche droite
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
-			auto direction = droite * speed.magnitude() / 50;
-			vVitesse += direction.getNormalized() * speed.magnitude();
+			auto direction = droite * speed.magnitude();
+			vVitesse += (direction.getNormalized() * 50);
 		}
 
+		vVitesse = vVitesse.getNormalized() * speed.magnitude();
+
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
-			upPressed_ = true;
-			vVitesse *= 1.01f;
+			//upPressed_ = true;
+			vVitesse = PxVec3{ vVitesse.x * 1.1f,vVitesse.y,vVitesse.z * 1.1f };
 		}
 
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
-			vVitesse *= 0.99f;
+			vVitesse = PxVec3{ vVitesse.x * 0.95f,vVitesse.y,vVitesse.z * 0.95f };
 		}
 
-		if ((vVitesse.magnitude() > (vitesseMax_*0.95f)) && (!upPressed_))
-			body->setLinearVelocity(vVitesse.getNormalized() * (vitesseMax_*0.95f));
-		else if ((vVitesse.magnitude() > vitesseMax_) && (upPressed_))
+		/*if ((vVitesse.magnitude() > (vitesseMax_*0.95f)) && (!upPressed_))
+			body->setLinearVelocity(vVitesse.getNormalized() * (vitesseMax_*0.95f));*/
+		if (vVitesse.magnitude() > vitesseMax_)
 			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMax_);
 		else
 			body->setLinearVelocity(vVitesse);
@@ -190,23 +197,40 @@ namespace PM3D
 		//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
 
 		PxTransform pose = body_->getGlobalPose();
-		pose.q = PxQuat(0.1f, PxVec3(1.0f, 0.0f, 0.0f));
+		//pose.q = PxQuat(0.1f, PxVec3(1.0f, 0.0f, 0.0f));
 
-		if (pose.p.x > 475.0f) {
-			pose.p.x = 475.0f;
+		if (pose.p.x > 2375.0f) {
+			pose.p.x = 2375.0f;
 			PxVec3 vitesse = body->getLinearVelocity();
 			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
 		}
-		else if (pose.p.x < -475.0f) {
-			pose.p.x = -475.0f;
+		else if (pose.p.x < -2375.0f) {
+			pose.p.x = -2375.0f;
 			PxVec3 vitesse = body->getLinearVelocity();
 			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
-			
 		}
 
 		body_->setGlobalPose(pose);
 
-		matWorld = XMMatrixRotationQuaternion(XMVectorSet(body_->getGlobalPose().q.x, body_->getGlobalPose().q.y, body_->getGlobalPose().q.z, body_->getGlobalPose().q.w)); //Orientation
+		speedY_buffer.pop();
+		speedY_buffer.push(speed.y);
+
+		float moyenne = 0.0f;
+
+		for (unsigned int i = 0; i < 10; i++) {
+			moyenne += speedY_buffer.front();
+			speedY_buffer.emplace(speedY_buffer.front());
+			speedY_buffer.pop();
+		}
+
+		speed.y = moyenne/10.0f;
+
+		PxVec3 base = PxVec3(1.0f, 0.0f, 0.0f);
+		PxVec3 direction = speed.getNormalized();
+
+		PxQuat orientation = PxQuat(PxAcos(base.dot(direction)), base.cross(direction).getNormalized());
+
+		matWorld = XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position
 	}
 
