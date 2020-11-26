@@ -33,7 +33,7 @@ namespace PM3D
 	};
 	
 
-	constexpr float BlocRollerDynamic::vitesseMax_ = 1000.0f;
+	constexpr float BlocRollerDynamic::vitesseMax_ = 2000.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
 		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene->scene_, createRigidBody(_scene, _position, _radius))
@@ -185,8 +185,6 @@ namespace PM3D
 			vVitesse = PxVec3{ vVitesse.x * 0.95f,vVitesse.y,vVitesse.z * 0.95f };
 		}
 
-		/*if ((vVitesse.magnitude() > (vitesseMax_*0.95f)) && (!upPressed_))
-			body->setLinearVelocity(vVitesse.getNormalized() * (vitesseMax_*0.95f));*/
 		if (vVitesse.magnitude() > vitesseMax_)
 			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMax_);
 		else
