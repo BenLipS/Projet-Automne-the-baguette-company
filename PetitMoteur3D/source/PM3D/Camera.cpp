@@ -194,7 +194,7 @@ namespace PM3D {
 
 		PxTransform pose = _body->getGlobalPose();
 
-		setPosition(XMVECTOR{ pose.p.x, pose.p.y + 300.0f, pose.p.z - 300.0f});
+		setPosition(XMVECTOR{ pose.p.x, pose.p.y + 1000.0f, pose.p.z - 1000.0f});
 		setDirection(XMVECTOR{ 0.0f, -1.0f, 1.6f });
 
 		// Vérifier l’état de la touche SwapMode

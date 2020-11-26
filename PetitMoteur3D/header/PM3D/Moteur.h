@@ -235,7 +235,6 @@ namespace PM3D
 		bool InitObjets()
 		{
 			Light_Manager LMP{
-
 			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere
 			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
 			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
@@ -245,14 +244,32 @@ namespace PM3D
 			};
 
 			// Puis, il est ajout� � la sc�ne
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1450.0f, -10000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 50.0f, pDispositif));
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 620.0f, 0.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 5000.0f, 0.1f, 25000.0f, pDispositif, LMP));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1450.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 50.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 620.0f, 0.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 4760.0f, 0.1f, 20000.0f, pDispositif, LMP));
 
+			Light_Manager LMB{
 
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, -500.0f, 1000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 1000.0f, 1000.0f, pDispositif));
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(100.0f, -1000.0f, 2000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-300.0f, -1500.0f, 3000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(400.0f, -2000.0f, 4000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
+			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere
+			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
+			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
+			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f), // vAMat
+			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
+			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f) // vDMat
+			};
+
+			Light_Manager LMBOr{
+			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere
+			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
+			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
+			XMVectorSet(1.0f, 1.0f, 0.0f, 1.0f), // vAMat
+			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
+			XMVectorSet(1.0f, 1.0f, 0.0f, 1.0f) // vDMat
+			};
+
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 1000.0f, 1000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 1000.0f, 1000.0f, pDispositif, LMB));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(1100.0f, 1200.0f, -5000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 500.0f, 500.0f, 500.0f, pDispositif, LMB));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-1500.0f, 1200.0f, -5000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 500.0f, 500.0f, 500.0f, pDispositif, LMBOr));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 600.0f, -5000.0f, PxQuat(-0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 500.0f, 1000.0f, pDispositif, LMP));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-100.0f, -2500.0f, 5000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, -3000.0f, 6000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-400.0f, -3500.0f, 7000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
