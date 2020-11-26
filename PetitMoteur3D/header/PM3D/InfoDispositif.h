@@ -1,29 +1,29 @@
-#pragma once 
+#pragma once
 
-namespace PM3D {
+namespace PM3D
+{
 
-	class CInfoDispositif {
+	enum INFODISPO_TYPE
+	{
+		ADAPTATEUR_COURANT
+	};
+
+	class CInfoDispositif
+	{
 	public:
 
 		explicit CInfoDispositif(int NoAdaptateur);
-		CInfoDispositif(DXGI_MODE_DESC modeDesc);
+		explicit CInfoDispositif(const DXGI_MODE_DESC& modeDesc);
 
-		enum INFODISPO_TYPE { 
-			ADAPTATEUR_COURANT 
-		};
+		void GetDesc(DXGI_MODE_DESC& modeDesc) const { modeDesc = mode; }
 
-		bool EstValide() const;
-		int GetLargeur() const;
-		int GetHauteur() const;
-		int GetMemoire() const;
-		const wchar_t* GetNomCarte() const;
-		void GetDesc(DXGI_MODE_DESC& modeDesc);
-		
 	private:
 		bool valide;
-		int largeur, hauteur, memoire;
-		wchar_t nomcarte[100];
+		int largeur;
+		int hauteur;
+		int memoire;
+		wchar_t nomcarte[128];
 		DXGI_MODE_DESC mode;
 	};
 
-}
+} // namespace PM3D

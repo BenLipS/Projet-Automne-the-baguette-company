@@ -1,6 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "header/PM3D/resource.h"
+#include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -15,7 +15,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// French (Canada) resources
+// Français (Canada) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRC)
 LANGUAGE LANG_FRENCH, SUBLANG_FRENCH_CANADIAN
@@ -143,9 +143,11 @@ BEGIN
     ERREUR_CREATION_SOURIS  "Erreur de création de la souris"
     ERREUR_CREATION_FORMAT_SOURIS 
                             "Erreur dans le format de données de la souris"
+    DXE_ERREURCREATION_BLENDSTATE "Erreur dans la création du blending"
+    DXE_FICHIERTEXTUREINTROUVABLE "Erreur texture introuvable"
 END
 
-#endif    // French (Canada) resources
+#endif    // Français (Canada) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

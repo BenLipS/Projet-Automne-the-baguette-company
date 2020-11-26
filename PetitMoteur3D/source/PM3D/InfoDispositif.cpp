@@ -1,88 +1,90 @@
-﻿#include "stdafx.h"
-#include "InfoDispositif.h" 
+﻿#include "StdAfx.h"
+#include "InfoDispositif.h"
+
 #include "util.h"
 #include <vector>
 
-namespace PM3D {
-	bool CInfoDispositif::EstValide() const { return valide; }
-	int CInfoDispositif::GetLargeur() const { return largeur; }
-	int CInfoDispositif::GetHauteur() const { return hauteur; }
-	int CInfoDispositif::GetMemoire() const { return memoire; }
+namespace PM3D
+{
 
-	const wchar_t* CInfoDispositif::GetNomCarte() const { return nomcarte; }
-	void CInfoDispositif::GetDesc(DXGI_MODE_DESC& modeDesc) { modeDesc = mode; }
-
-	// Pour obtenir les informations à partir d’un numéro d’adaptateur 
-	// 0 = courant = ADAPTATEUR_COURANT
-	CInfoDispositif::CInfoDispositif( int NoAdaptateur ) { 
-		IDXGIFactory* pFactory = nullptr; 
-		IDXGIAdapter* pAdapter = nullptr;  
-		IDXGIOutput* pOutput = nullptr; 
+	// Pour obtenir les informations à partir d'un numéro d'adaptateur
+	// 0 = défaut = ADAPTATEUR_DE_DEFAUT
+	CInfoDispositif::CInfoDispositif(int NoAdaptateur)
+	{
+		IDXGIFactory* pFactory = nullptr;
+		IDXGIAdapter* pAdapter = nullptr;
+		IDXGIOutput* pOutput = nullptr;
 
 		valide = false;
 
-		// Créer un IDXGIFactory.  
-		CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory); 
+		// Créer un IDXGIFactory.
+		CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
 
 		if (FAILED(pFactory->EnumAdapters(NoAdaptateur, &pAdapter))) return;
 
-		// Obtenir les informations de la première sortie de l’adaptateur 
-		// (Le moniteur) 
-		if (FAILED(pAdapter->EnumOutputs(0, &pOutput))) return; 
+		// Obtenir les informations de la première sortie de l'adaptateur 
+		// (Le moniteur)
+		if (FAILED(pAdapter->EnumOutputs(0, &pOutput))) return;
 
-		// Obtenir la description de l’état courant 
-		DXGI_OUTPUT_DESC outDesc; 
-		pOutput->GetDesc(&outDesc); 
+		// Obtenir la description de l'état courant
+		DXGI_OUTPUT_DESC outDesc;
+		pOutput->GetDesc(&outDesc);
 
 		largeur = outDesc.DesktopCoordinates.right - outDesc.DesktopCoordinates.left;
 		hauteur = outDesc.DesktopCoordinates.bottom - outDesc.DesktopCoordinates.top;
 		valide = true;
 
-		DXGI_ADAPTER_DESC Desc;  pAdapter->GetDesc(&Desc);
+		DXGI_ADAPTER_DESC Desc;
+		pAdapter->GetDesc(&Desc);
 
-		// Mémoire dédiée (en megabytes). 
-		memoire = (int)(Desc.DedicatedVideoMemory / 1024 / 1024); 
+		// Mémoire dédiée (en megabytes).
+		memoire = (int)(Desc.DedicatedVideoMemory / 1024 / 1024);
 
 		// Nom de la carte video.
-		wcscpy_s(nomcarte, 100, Desc.Description); 
+		wcscpy_s(nomcarte, 128, Desc.Description);
 
-		// Faire le ménage pour éviter les « memory leaks » 
+		// Faire le ménage pour éviter les «memory leaks»
 		DXRelacher(pOutput);
 		DXRelacher(pAdapter);
-		DXRelacher(pFactory);  
+		DXRelacher(pFactory);
 	}
 
-	CInfoDispositif::CInfoDispositif(DXGI_MODE_DESC modeDesc) {
+	CInfoDispositif::CInfoDispositif(const DXGI_MODE_DESC& modeDesc)
+	{
 		// Énumération des adaptateurs
-		IDXGIFactory * pFactory = nullptr; 
+		IDXGIFactory* pFactory = nullptr;
 
-		CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)& pFactory);
+		CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
 
-		IDXGIAdapter* pAdapter;  
+		IDXGIAdapter* pAdapter;
 		std::vector <IDXGIAdapter*> vAdapters;
 
-		for (UINT i = 0; pFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i) { 
-			vAdapters.push_back(pAdapter); 
+		for (UINT i = 0;
+			pFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
+		{
+			vAdapters.push_back(pAdapter);
 		}
 
-		// On travaille presque toujours avec vAdapters[0]  
-		// à moins d’avoir plusieurs cartes non-hybrides
-		*this = CInfoDispositif(0); 
+		// On travaille presque toujours avec vAdapters[0] 
+		// à moins d'avoir plusieurs cartes non-collaboratives
+		*this = CInfoDispositif(0);
 
-		// Obtenir la sortie 0 - le moniteur principal  
-		IDXGIOutput* pOutput = nullptr;  
-		vAdapters[0]->EnumOutputs(0,&pOutput);   
+		// Obtenir la sortie 0 - le moniteur principal
+		IDXGIOutput* pOutput = nullptr;
+		vAdapters[0]->EnumOutputs(0, &pOutput);
 
 		// Obtenir le mode le plus intéressant
-		pOutput->FindClosestMatchingMode( &modeDesc, &mode, nullptr); 
+		pOutput->FindClosestMatchingMode(&modeDesc, &mode, nullptr);
 
-		// Faire le ménage pour éviter les « memory leaks »
-		DXRelacher(pOutput); 
+		// Faire le ménage pour éviter les «memory leaks»
+		DXRelacher(pOutput);
 
-		for (int i = 0; i < vAdapters.size(); ++i) {
-			DXRelacher(vAdapters[i]); 
+		for (int i = 0; i < vAdapters.size(); ++i)
+		{
+			DXRelacher(vAdapters[i]);
 		}
 
 		DXRelacher(pFactory);
 	}
-}
+
+} // namespace PM3D
