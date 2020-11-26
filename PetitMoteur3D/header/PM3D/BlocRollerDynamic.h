@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include "tools.h"
+#include <queue>
 
 #include "PxPhysicsAPI.h"
 using namespace DirectX;
@@ -49,6 +50,7 @@ namespace PM3D
 		float radius_;
 		static const float vitesseMax_;
 		bool upPressed_ = false;
+		std::queue<float> speedY_buffer;
 	};
 
 } // namespace PM3D
