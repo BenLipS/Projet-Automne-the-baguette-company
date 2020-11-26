@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include "tools.h"
+#include <queue>
 
 #include "PxPhysicsAPI.h"
 using namespace DirectX;
@@ -10,6 +11,7 @@ using namespace DirectX;
 namespace PM3D
 {
 	class CDispositifD3D11;
+
 
 	//  Classe : CBloc
 	//
@@ -27,6 +29,7 @@ namespace PM3D
 		virtual void Anime(float tempsEcoule) override;
 		virtual void Draw() override;
 
+
 		PxRigidActor* getBody() { return body_; }
 
 	private:
@@ -40,13 +43,16 @@ namespace PM3D
 		ID3D11PixelShader* pPixelShader;
 		ID3D11InputLayout* pVertexLayout;
 
-		// Définitions des valeurs d'animation
+		// Dï¿½finitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;
 		XMMATRIX matWorld;
 		//float rotation;
 		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position, const float _radius);
 
 		float radius_;
+		static const float vitesseMax_;
+		bool upPressed_ = false;
+		std::queue<float> speedY_buffer;
 	};
 
 } // namespace PM3D

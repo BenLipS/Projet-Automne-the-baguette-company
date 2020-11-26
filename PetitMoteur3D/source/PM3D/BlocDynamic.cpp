@@ -25,7 +25,7 @@ namespace PM3D
 		XMMATRIX matWorld;    // matrice de transformation dans le monde
 		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
 		XMVECTOR vCamera;    // la position de la caméra
-		XMVECTOR vAEcl;		// la valeur ambiante de l’éclairage
+		XMVECTOR vAEcl;        // la valeur ambiante de l’éclairage
 		XMVECTOR vAMat;     // la valeur ambiante du matériau
 		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
 		XMVECTOR vDMat;     // la valeur diffuse du matériau
@@ -42,6 +42,9 @@ namespace PM3D
 		, pPixelShader(nullptr)
 		, pVertexLayout(nullptr)
 		, pConstantBuffer(nullptr)
+		, dx_(dx)
+		, dy_(dy)
+		, dz_(dz)
 
 	{
 		typeTag = "Bloc";

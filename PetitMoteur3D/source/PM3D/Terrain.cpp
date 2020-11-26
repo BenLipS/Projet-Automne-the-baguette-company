@@ -19,11 +19,13 @@ namespace PM3D {
 		XMMATRIX matWorld;    // matrice de transformation dans le monde
 		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
 		XMVECTOR vCamera;    // la position de la caméra
-		XMVECTOR vAEcl;   // la valeur ambiante de l’éclairage
+		XMVECTOR vAEcl;        // la valeur ambiante de l’éclairage
 		XMVECTOR vAMat;     // la valeur ambiante du matériau
 		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
 		XMVECTOR vDMat;     // la valeur diffuse du matériau
 	};
+
+
 
 	Terrain::Terrain(char* filenameBMP, XMFLOAT3 scale, CDispositifD3D11* pDispositif_)
 		: pDispositif(pDispositif_) // Prendre en note le dispositif
@@ -336,11 +338,11 @@ namespace PM3D {
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 		sp.vLumiere = XMVectorSet(0.0f, 1000.0f, 0.0f, 1.0f);
-		sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
+		sp.vCamera = XMVectorSet(1000.0f, 0.0f, -10.0f, 1.0f);
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vAMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+		sp.vAMat = XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f);
 		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		sp.vDMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+		sp.vDMat = XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f);
 
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 
