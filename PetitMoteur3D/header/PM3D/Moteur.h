@@ -235,8 +235,8 @@ namespace PM3D
 		bool InitObjets()
 		{
 			// Puis, il est ajouté à la scène
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1250.0f, -10000.0f, PxQuat(0.078f, PxVec3(1.0f, 0.0f, 0.0f))), 50.0f, pDispositif));
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 375.0f, 0.0f, PxQuat(0.078f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 0.1f, 100000.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1450.0f, -10000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 50.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 620.0f, 0.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 5000.0f, 0.1f, 25000.0f, pDispositif));
 
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, -500.0f, 1000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(100.0f, -1000.0f, 2000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
@@ -249,7 +249,7 @@ namespace PM3D
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(200.0f, -4500.0f, 9000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-100.0f, -5000.0f, 10000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			char* filename = new char[50]("./src/heighmap_Proj51.bmp");
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename,XMFLOAT3(20.0f,3.0f,20.0f),pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename,XMFLOAT3(20.0f,5.0f,20.0f),pDispositif));
 			//ListeScene.emplace_back(std::make_unique<CBlocEffect1>(2.0f, 2.0f, 2.0f, pDispositif));
 			/*ListeScene.emplace_back(std::make_unique<BlocDynamic>(PxTransform(0.0f, 0.0f, 0.0f),
 				10.0f,
