@@ -235,7 +235,8 @@ namespace PM3D
 		bool InitObjets()
 		{
 			Light_Manager LMP{
-			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere
+			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1
+			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere2
 			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
 			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
 			XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f), // vAMat
@@ -249,7 +250,8 @@ namespace PM3D
 
 			Light_Manager LMB{
 
-			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere
+			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere1
+			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere2
 			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
 			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
 			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f), // vAMat
@@ -258,7 +260,8 @@ namespace PM3D
 			};
 
 			Light_Manager LMBOr{
-			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere
+			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere1
+			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere2
 			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
 			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
 			XMVectorSet(1.0f, 1.0f, 0.0f, 1.0f), // vAMat
