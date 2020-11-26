@@ -19,6 +19,7 @@ namespace PM3D {
 			CDispositifD3D11* _pDispositif, Light_Manager LM_ = {
 
 			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f),
+			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f),
 			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f),
 			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f),
 			XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f),
@@ -49,7 +50,7 @@ namespace PM3D {
 
 		
 
-		// Définitions des valeurs d'animation
+		// Dï¿½finitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;
 		XMMATRIX matWorld;
 		//float rotation;

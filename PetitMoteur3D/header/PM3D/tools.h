@@ -22,12 +22,13 @@ namespace PM3D {
 
 	struct Light_Manager{
 
-		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
-		XMVECTOR vCamera;    // la position de la caméra
-		XMVECTOR vAEcl;		// la valeur ambiante de l’éclairage
-		XMVECTOR vAMat;     // la valeur ambiante du matériau
-		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
-		XMVECTOR vDMat;     // la valeur diffuse du matériau
+		XMVECTOR vLumiere1;    // la position de la source dï¿½ï¿½clairage (Point)
+		XMVECTOR vLumiere2;    // la position de la source dï¿½ï¿½clairage (Point)
+		XMVECTOR vCamera;    // la position de la camï¿½ra
+		XMVECTOR vAEcl;		// la valeur ambiante de lï¿½ï¿½clairage
+		XMVECTOR vAMat;     // la valeur ambiante du matï¿½riau
+		XMVECTOR vDEcl;     // la valeur diffuse de lï¿½ï¿½clairage
+		XMVECTOR vDMat;     // la valeur diffuse du matï¿½riau
 	};
 
 }
