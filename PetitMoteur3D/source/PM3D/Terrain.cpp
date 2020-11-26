@@ -17,12 +17,13 @@ namespace PM3D {
 	struct ShadersParams {
 		XMMATRIX matWorldViewProj; // la matrice totale
 		XMMATRIX matWorld;    // matrice de transformation dans le monde
-		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
-		XMVECTOR vCamera;    // la position de la caméra
-		XMVECTOR vAEcl;        // la valeur ambiante de l’éclairage
-		XMVECTOR vAMat;     // la valeur ambiante du matériau
-		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
-		XMVECTOR vDMat;     // la valeur diffuse du matériau
+		XMVECTOR vLumiere1;    // la position de la source dï¿½ï¿½clairage (Point)
+		XMVECTOR vLumiere2;    // la position de la source dï¿½ï¿½clairage (Point)
+		XMVECTOR vCamera;    // la position de la camï¿½ra
+		XMVECTOR vAEcl;        // la valeur ambiante de lï¿½ï¿½clairage
+		XMVECTOR vAMat;     // la valeur ambiante du matï¿½riau
+		XMVECTOR vDEcl;     // la valeur diffuse de lï¿½ï¿½clairage
+		XMVECTOR vDMat;     // la valeur diffuse du matï¿½riau
 	};
 
 
@@ -71,11 +72,11 @@ namespace PM3D {
 		if (!extrabit) imageSize = height * (width * 3);
 		else imageSize = height * ((width * 3) + 1);
 
-		// Création du tableau pour stocker les valeurs du BMP
+		// Crï¿½ation du tableau pour stocker les valeurs du BMP
 		unsigned char* bitmapImage = new unsigned char[imageSize];
 		if (!bitmapImage) return;
 
-		// Lecture des données de l'image BMP
+		// Lecture des donnï¿½es de l'image BMP
 		fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
 		count = fread(bitmapImage, 1, imageSize, filePtr);
 		if (count != imageSize) return;
@@ -90,12 +91,12 @@ namespace PM3D {
 
 		for (int j = 0; j < height; j++) {
 			for (int i = 0; i < width; i++) {
-				// association des coordonnées en x,z avec les hauteurs récupérées
+				// association des coordonnï¿½es en x,z avec les hauteurs rï¿½cupï¿½rï¿½es
 				index = (width * (height - 1 - j)) + i;
 
 				int heightValue = bitmapImage[k];
 				
-				// Création des sommmets aux bonnes coordonnées (avec une normale par défaut qui sera calculée plus tard)
+				// Crï¿½ation des sommmets aux bonnes coordonnï¿½es (avec une normale par dï¿½faut qui sera calculï¿½e plus tard)
 				sommets[index] = CSommetTerrain(XMFLOAT3((float)((i - width/2)* scale.x), (float)(heightValue* scale.y), (float)((j-height/2)* scale.z)),normale);
 
 				k += 3;
@@ -145,7 +146,7 @@ namespace PM3D {
 		k = 0;
 		for (int j = 0; j < height - 1; j++) {
 			for (int i = 0; i < width - 1; i++) {
-				// Création des indexs pour rendu
+				// Crï¿½ation des indexs pour rendu
 				pIndices[k++] = j* width + i;
 				pIndices[k++] = j * width + (i + 1);
 				pIndices[k++] = (j + 1) * width + (i + 1);
@@ -155,7 +156,7 @@ namespace PM3D {
 			}
 		}
 
-		// Création du vertex buffer et copie des sommets
+		// Crï¿½ation du vertex buffer et copie des sommets
 		ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
 		D3D11_BUFFER_DESC bd;
@@ -172,7 +173,7 @@ namespace PM3D {
 
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer), DXE_CREATIONVERTEXBUFFER);
 
-		// Création de l'index buffer et copie des indices
+		// Crï¿½ation de l'index buffer et copie des indices
 		ZeroMemory(&bd, sizeof(bd));
 
 		bd.Usage = D3D11_USAGE_IMMUTABLE;
@@ -194,7 +195,7 @@ namespace PM3D {
 		// Compilation et chargement du vertex shader
 		ID3D11Device* pD3DDevice = pDispositif-> GetD3DDevice(); 
 
-		// Création d’un tampon pour les constantes du VS
+		// Crï¿½ation dï¿½un tampon pour les constantes du VS
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory( &bd, sizeof(bd) ); 
 
@@ -204,7 +205,7 @@ namespace PM3D {
 		bd.CPUAccessFlags = 0;
 		pD3DDevice->CreateBuffer(&bd, NULL, &pConstantBuffer);
 
-		// Pour l’effet
+		// Pour lï¿½effet
 		ID3DBlob* pFXBlob = NULL;
 		DXEssayer( D3DCompileFromFile( L"MiniPhong.fx", 0, 0, 0, "fx_5_0", 0, 0, &pFXBlob, 0), DXE_ERREURCREATION_FX);
 		D3DX11CreateEffectFromMemory(  pFXBlob->GetBufferPointer(), pFXBlob->GetBufferSize(), 0, pD3DDevice, &pEffet);
@@ -213,7 +214,7 @@ namespace PM3D {
 		pTechnique = pEffet->GetTechniqueByIndex(0);
 		pPasse = pTechnique->GetPassByIndex(0);
 
-		// Créer l’organisation des sommets pour le VS de notre effet
+		// Crï¿½er lï¿½organisation des sommets pour le VS de notre effet
 		D3DX11_PASS_SHADER_DESC effectVSDesc;
 		pPasse->GetVertexShaderDesc(&effectVSDesc); 
 
@@ -228,13 +229,13 @@ namespace PM3D {
 	}
 
 	/*
-		Interpole les hauteurs des points suivants pour approximer la hauteur du terrain aux coordonnées envoyées en paramètres
+		Interpole les hauteurs des points suivants pour approximer la hauteur du terrain aux coordonnï¿½es envoyï¿½es en paramï¿½tres
 	*/
 
 	float Terrain::getHeight(float x, float z)
 	{
-		x = ((x) / (scale.x) + (width / 2));  // on remet les coordonnées dans le référenciel de la heightmap
-		z = ((z) / (scale.z) + (height / 2));	// on remet les coordonnées dans le référenciel de la heightmap
+		x = ((x) / (scale.x) + (width / 2));  // on remet les coordonnï¿½es dans le rï¿½fï¿½renciel de la heightmap
+		z = ((z) / (scale.z) + (height / 2));	// on remet les coordonnï¿½es dans le rï¿½fï¿½renciel de la heightmap
 		int intX = static_cast<int>(x);
 		int intZ = static_cast<int>(z);
 		float dx = x - intX;
@@ -280,32 +281,32 @@ namespace PM3D {
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie(); 
 		
-		// Vérifier l’état de la touche gauche
+		// Vï¿½rifier lï¿½ï¿½tat de la touche gauche
 		if ( rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT))  {
 			rotation = rotation + ( (XM_PI * 2.0f) / 7.0f * tempsEcoule ); 
-			// modifier la matrice de l’objet X
+			// modifier la matrice de lï¿½objet X
 			matWorld = XMMatrixRotationY( rotation );
 		} 
 		
-		// Vérifier l’état de la touche droite
+		// Vï¿½rifier lï¿½ï¿½tat de la touche droite
 		if ( rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT))  {
 			rotation = rotation - ( (XM_PI * 2.0f) / 7.0f * tempsEcoule ); 
-			// modifier la matrice de l’objet X
+			// modifier la matrice de lï¿½objet X
 			matWorld = XMMatrixRotationY( rotation );
 		}
 		
 		// ******** POUR LA SOURIS ************  
-		//Vérifier si déplacement vers la gauche
+		//Vï¿½rifier si dï¿½placement vers la gauche
 		if ( (rGestionnaireDeSaisie.EtatSouris().rgbButtons[0]&0x80) && (rGestionnaireDeSaisie.EtatSouris().lX < 0))  {
 			rotation = rotation + ( (XM_PI * 2.0f) / 4.0f * tempsEcoule ); 
-			// modifier la matrice de l’objet X
+			// modifier la matrice de lï¿½objet X
 			matWorld = XMMatrixRotationY(  rotation );
 		} 
 		
-		// Vérifier si déplacement vers la droite
+		// Vï¿½rifier si dï¿½placement vers la droite
 		if ( (rGestionnaireDeSaisie.EtatSouris().rgbButtons[0]&0x80) && (rGestionnaireDeSaisie.EtatSouris().lX > 0)) {
 			rotation = rotation - ((XM_PI * 2.0f) / 4.0f * tempsEcoule);
-			// modifier la matrice de l’objet X
+			// modifier la matrice de lï¿½objet X
 			matWorld = XMMatrixRotationY(  rotation );
 		} 
 
@@ -332,12 +333,13 @@ namespace PM3D {
 		// input layout des sommets
 		pImmediateContext->IASetInputLayout(pVertexLayout);
 
-		// Initialiser et sélectionner les «constantes» du VS
+		// Initialiser et sï¿½lectionner les ï¿½constantesï¿½ du VS
 		ShadersParams sp;
 		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
-		sp.vLumiere = XMVectorSet(0.0f, 1000.0f, 0.0f, 1.0f);
+		sp.vLumiere1 = XMVectorSet(0.0f, 3000.0f, 0.0f, 1.0f);
+		sp.vLumiere2 = XMVectorSet(0.0f, 3000.0f, 0.0f, 1.0f);
 		sp.vCamera = XMVectorSet(1000.0f, 0.0f, -10.0f, 1.0f);
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 		sp.vAMat = XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f);
@@ -346,11 +348,11 @@ namespace PM3D {
 
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 
-		// Nous n’avons qu’un seul CBuffer
+		// Nous nï¿½avons quï¿½un seul CBuffer
 		ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");
 		pCB->SetConstantBuffer(pConstantBuffer);
 		
-		// **** Rendu de l’objet
+		// **** Rendu de lï¿½objet
 		pPasse->Apply(0, pImmediateContext);
 		pImmediateContext->DrawIndexed(nbPolygones * 3, 0, 0);
 	}
@@ -385,7 +387,7 @@ namespace PM3D {
 			&pVertexShader),
 			DXE_CREATION_VS);
 
-		// Créer l'organisation des sommets
+		// Crï¿½er l'organisation des sommets
 		pVertexLayout = nullptr;
 		DXEssayer(pD3DDevice->CreateInputLayout(CSommetTerrain::layout,
 			CSommetTerrain::numElements,
@@ -396,7 +398,7 @@ namespace PM3D {
 
 		pVSBlob->Release(); //  On n'a plus besoin du blob
 
-		// Création d'un tampon pour les constantes du VS
+		// Crï¿½ation d'un tampon pour les constantes du VS
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
