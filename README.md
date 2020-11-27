@@ -59,5 +59,17 @@
  │                                                         │  
  │ LIB :  Librairies PhysX utilisées pour l'implémentation │  
  │ de PhysX dans le projet                                 │  
- └─────────────────────────────────────────────────────────┘    
-
+ │                                                         │  
+ │ SOURCE - PHYSX : Elements de création d'objets de base  │  
+ │ PhysX, exclus du projet.                                │  
+ │                                                         │  
+ │ SOURCE - PM3D : Elements de crétion d'objets du projet. │  
+ │                                                         │  
+ │ SRC : dossier où se trouve la heightmap du terrain.     │  
+ │                                                         │ 
+ │ x64 - DEBUG : Dossier des objets crées par              │  
+ │ l'application                                           │  
+ │                                                         │
+ │ Autres fichiers : fichiers FX, VS, PS, vxcproj du       │
+ │ projet.                                                 │
+ └─────────────────────────────────────────────────────────┘  
