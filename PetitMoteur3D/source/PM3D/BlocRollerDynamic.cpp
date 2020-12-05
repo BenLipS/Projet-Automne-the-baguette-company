@@ -32,6 +32,7 @@ namespace PM3D
 	};
 
 	constexpr float BlocRollerDynamic::vitesseMax_ = 1000.0f;
+	constexpr float BlocRollerDynamic::vitesseMin_ = 100.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
 		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene->scene_, createRigidBody(_scene, _position, _radius))
@@ -154,8 +155,10 @@ namespace PM3D
 
 		
 		
-		PxVec3 gauche = PxVec3(0.0f, -1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
-		PxVec3 droite = PxVec3(0.0f, 1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
+		PxVec3 normale = PxVec3(0.0f, 1.0f, 0.0f).cross(speed.getNormalized()).getNormalized().cross(speed.getNormalized()).getNormalized();
+
+		PxVec3 gauche = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
+		PxVec3 droite = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
 
 		PxVec3 vVitesse = speed;
 		//upPressed_ = false;
@@ -163,30 +166,32 @@ namespace PM3D
 		// Vérifier l’état de la touche gauche
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
 			auto direction = gauche * speed.magnitude();
-			vVitesse += (direction.getNormalized() * 50);
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / 30));
 		}
 
 		// Vérifier l’état de la touche droite
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
 			auto direction = droite * speed.magnitude();
-			vVitesse += (direction.getNormalized() * 50);
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / 30));
 		}
 
 		vVitesse = vVitesse.getNormalized() * speed.magnitude();
 
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
 			//upPressed_ = true;
-			vVitesse = PxVec3{ vVitesse.x * 1.1f,vVitesse.y,vVitesse.z * 1.1f };
+			vVitesse = vVitesse * 1.05f;
 		}
 
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
-			vVitesse = PxVec3{ vVitesse.x * 0.95f,vVitesse.y,vVitesse.z * 0.95f };
+			vVitesse = vVitesse * 0.99f;
 		}
 
 		/*if ((vVitesse.magnitude() > (vitesseMax_*0.95f)) && (!upPressed_))
 			body->setLinearVelocity(vVitesse.getNormalized() * (vitesseMax_*0.95f));*/
 		if (vVitesse.magnitude() > vitesseMax_)
 			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMax_);
+		else if (vVitesse.magnitude() < vitesseMin_)
+			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMin_);
 		else
 			body->setLinearVelocity(vVitesse);
 
@@ -200,12 +205,12 @@ namespace PM3D
 		if (pose.p.x > 2375.0f) {
 			pose.p.x = 2375.0f;
 			PxVec3 vitesse = body->getLinearVelocity();
-			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
+			body->setLinearVelocity({ vitesse.x, vitesse.y, vitesse.z });
 		}
 		else if (pose.p.x < -2375.0f) {
 			pose.p.x = -2375.0f;
 			PxVec3 vitesse = body->getLinearVelocity();
-			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
+			body->setLinearVelocity({ vitesse.y, vitesse.y, vitesse.z });
 		}
 
 		body_->setGlobalPose(pose);
@@ -223,10 +228,12 @@ namespace PM3D
 
 		speed.y = moyenne/10.0f;
 
-		PxVec3 base = PxVec3(1.0f, 0.0f, 0.0f);
 		PxVec3 direction = speed.getNormalized();
+		normale = PxVec3(0.0f, 1.0f, 0.0f).cross(direction).getNormalized().cross(direction).getNormalized();
+		//PxVec3 base = PxVec3(1.0f, 0.0f, 0.0f);
+		//PxQuat orientation = PxQuat(PxAcos(base.dot(direction)), base.cross(direction).getNormalized());
 
-		PxQuat orientation = PxQuat(PxAcos(base.dot(direction)), base.cross(direction).getNormalized());
+		PxQuat orientation = PxQuat(3.14f/3.0f, normale);
 
 		matWorld = XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position

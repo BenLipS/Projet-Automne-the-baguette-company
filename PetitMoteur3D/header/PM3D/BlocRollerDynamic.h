@@ -49,6 +49,7 @@ namespace PM3D
 
 		float radius_;
 		static const float vitesseMax_;
+		static const float vitesseMin_;
 		bool upPressed_ = false;
 		std::queue<float> speedY_buffer;
 	};
