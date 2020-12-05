@@ -254,7 +254,7 @@ namespace PM3D {
 		}
 
 		if ((intX < width - 1) && (intZ < height - 1)) {
-			y += hxz + (sqrt(pow(dx, 2) + pow(dz, 2)) * (sommets[(width * (height - 1 - (intZ + 1))) + (intX + 1)].getPosition().y - hxz));
+			y += static_cast<float>(hxz + (sqrt(pow(dx, 2) + pow(dz, 2)) * (sommets[(width * (height - 1 - (intZ + 1))) + (intX + 1)].getPosition().y - hxz)));
 			++counter;
 		}
 		
