@@ -215,7 +215,7 @@ namespace PM3D
 			const float champDeVision = XM_PI / 4; 	// 45 degr�s
 			const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 			const float planRapproche = 2.0f;
-			const float planEloigne = 10000.0f;
+			const float planEloigne = 100000.0f;
 
 			m_MatProj = XMMatrixPerspectiveFovLH(
 				champDeVision,
@@ -247,7 +247,7 @@ namespace PM3D
 			// Puis, il est ajout� � la sc�ne
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1450.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 620.0f, 0.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 4760.0f, 0.1f, 20000.0f, pDispositif, LMP));
-
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 2000.0f, 0.0f, PxQuat(XM_PI, PxVec3(1.0f, 0.0f, 0.0f))), 4760.0f, 0.1f, 20000.0f, pDispositif, LMP));
 			Light_Manager LMB{
 
 			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere1
