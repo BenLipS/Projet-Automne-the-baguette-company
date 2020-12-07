@@ -183,7 +183,7 @@ namespace PM3D
 			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), PxTolerancesScale(), true);
 		
 			PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
-			sceneDesc.gravity = PxVec3(0.0f, -200.0f, 0.0f);
+			sceneDesc.gravity = PxVec3(0.0f, -2000.0f, 0.0f);
 			scenePhysic_->dispatcher_ = PxDefaultCpuDispatcherCreate(2);
 			sceneDesc.cpuDispatcher = scenePhysic_->dispatcher_;
 			sceneDesc.filterShader = PxDefaultSimulationFilterShader;
@@ -212,7 +212,9 @@ namespace PM3D
 			m_MatViewProj = m_MatView * m_MatProj;
 			*/
 
-			const float champDeVision = XM_PI / 4; 	// 45 degrés
+
+			const float champDeVision = XM_PI / 3; 	// 45 degrï¿½s
+
 			const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 			const float planRapproche = 2.0f;
 			const float planEloigne = 10000.0f;
@@ -223,7 +225,7 @@ namespace PM3D
 				planRapproche,
 				planEloigne);
 
-			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj, CCamera::CAMERA_TYPE::CUBE);
+			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj,CCamera::CAMERA_TYPE::CUBE);
 
 			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
@@ -285,7 +287,7 @@ namespace PM3D
 			}
 			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
-			camera.update((PxRigidBody*)character->getBody());
+			camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 			}
 			return true;
 		}
