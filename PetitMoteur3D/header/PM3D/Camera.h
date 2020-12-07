@@ -14,6 +14,8 @@ namespace PM3D {
 		DirectX::XMMATRIX* pMatProj;
 		DirectX::XMMATRIX* pMatViewProj;
 
+		//float pchampDeVision, pratiodAspect, pplanRapproche, pplanEloigne;
+
 	public:
 		static const int HEIGHT = 100;
 
@@ -45,6 +47,6 @@ namespace PM3D {
 
 		void update(float tempsEcoule = 0.0f);
 		void update(float y, float tempsEcoule);
-		void update(physx::PxRigidBody*);
+		void update(physx::PxRigidBody*, float tempsEcoule = 0);
 	};
 }

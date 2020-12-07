@@ -8,6 +8,7 @@ using namespace DirectX;
 
 namespace PM3D {
 	CCamera::CCamera(const XMVECTOR& position_in, const XMVECTOR& direction_in, const XMVECTOR& up_in, XMMATRIX* pMatView_in, XMMATRIX* pMatProj_in, XMMATRIX* pMatViewProj_in, CCamera::CAMERA_TYPE type_in) {
+		//init(position_in, direction_in, up_in, pMatView_in, pMatProj_in, pMatViewProj_in, 0.0f, 0.0f, 0.0f, 0.0f,type_in);
 		init(position_in, direction_in, up_in, pMatView_in, pMatProj_in, pMatViewProj_in, type_in);
 	}
 
@@ -25,6 +26,11 @@ namespace PM3D {
 		pMatProj = pMatProj_in;
 
 		pMatViewProj = pMatViewProj_in;
+
+		/*pchampDeVision = champDeVision;
+		pratiodAspect = ratiodAspect;
+		pplanEloigne = planEloigne;
+		pplanRapproche = planRapproche;*/
 	}
 
 	void CCamera::setPosition(const XMVECTOR& position_in) { position = position_in; }
@@ -182,19 +188,32 @@ namespace PM3D {
 		*pMatViewProj = (*pMatView) * (*pMatProj);
 	}
 
-	void CCamera::update(PxRigidBody* _body)
+	void CCamera::update(PxRigidBody* _body, float tempsEcoule)
 	{
-
+		tempsEcoule;
 		// Pour les mouvements, nous utilisons le gestionnaire de saisie
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
+		//float coeffMove = 3000.0f;
 		XMVECTOR relativeZ = XMVector3Normalize(XMVector3Cross(direction, up));
 
 
 		PxTransform pose = _body->getGlobalPose();
+		
+		//float z = XMVectorGetZ(position);
+		/*if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
+			if (XMVectorGetZ(position) < (pose.p.z - 700.0f))
+				z += coeffMove * tempsEcoule;
+			//*pMatProj = XMMatrixPerspectiveFovLH(XM_PI/4,pratiodAspect,pplanRapproche,pplanEloigne);
+		}
+		else if (XMVectorGetZ(position) >= (pose.p.z - 1000.0f)) {
+			z -= coeffMove * tempsEcoule;
+		}*/
 
-		setPosition(XMVECTOR{ pose.p.x, pose.p.y + 1000.0f, pose.p.z - 1000.0f});
+		//z = max(z,pose.p.z - 1000.0f);
+
+		setPosition(XMVECTOR{ pose.p.x, pose.p.y + 1000.0f, pose.p.z - 1000.0f });
 		setDirection(XMVECTOR{ 0.0f, -1.0f, 1.6f });
 
 		// Vérifier l’état de la touche SwapMode
