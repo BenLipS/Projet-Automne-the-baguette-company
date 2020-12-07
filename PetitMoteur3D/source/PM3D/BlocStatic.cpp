@@ -8,6 +8,7 @@
 #include "MoteurWindows.h"
 #include <iostream>
 #include "IndexModel.h"
+#include "tools.h"
 
 using namespace physx;
 using namespace DirectX;
@@ -15,26 +16,28 @@ using namespace DirectX;
 
 namespace PM3D
 {
-	//  FONCTION : CBloc, constructeur paramètré 
+	//  FONCTION : CBloc, constructeur paramï¿½trï¿½ 
 	//  BUT :	Constructeur d'une classe de bloc
-	//  PARAMÈTRES:
+	//  PARAMï¿½TRES:
 	//		dx, dy, dz:	dimension en x, y, et z
 	//		pDispositif: pointeur sur notre objet dispositif
+
 
 	struct ShadersParams {
 		XMMATRIX matWorldViewProj; // la matrice totale
 		XMMATRIX matWorld;    // matrice de transformation dans le monde
-		XMVECTOR vLumiere;    // la position de la source d’éclairage (Point)
-		XMVECTOR vCamera;    // la position de la caméra
-		XMVECTOR vAEcl;		// la valeur ambiante de l’éclairage
-		XMVECTOR vAMat;     // la valeur ambiante du matériau
-		XMVECTOR vDEcl;     // la valeur diffuse de l’éclairage
-		XMVECTOR vDMat;     // la valeur diffuse du matériau
+		XMVECTOR vLumiere1;    // la position de la source dï¿½ï¿½clairage (Point)
+		XMVECTOR vLumiere2;    // la position de la source dï¿½ï¿½clairage (Point)
+		XMVECTOR vCamera;    // la position de la camï¿½ra
+		XMVECTOR vAEcl;        // la valeur ambiante de lï¿½ï¿½clairage
+		XMVECTOR vAMat;     // la valeur ambiante du matï¿½riau
+		XMVECTOR vDEcl;     // la valeur diffuse de lï¿½ï¿½clairage
+		XMVECTOR vDMat;     // la valeur diffuse du matï¿½riau
 	};
 
 
 	BlocStatic::BlocStatic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
-		CDispositifD3D11* _pDispositif) : Objet3DStatic(_scene->scene_, createRigidBody(_scene, _position, dx/2, dy/2, dz/2))
+		CDispositifD3D11* _pDispositif, Light_Manager _sp) : Objet3DStatic(_scene->scene_, createRigidBody(_scene, _position, dx / 2, dy / 2, dz / 2))
 		, pDispositif(_pDispositif) // Prendre en note le dispositif
 		, matWorld(XMMatrixIdentity())
 		, pVertexBuffer(nullptr)
@@ -46,7 +49,8 @@ namespace PM3D
 		, dx_(dx)
 		, dy_(dy)
 		, dz_(dz)
-
+		, LM_(_sp)
+		
 	{
 		typeTag = "Bloc";
 		// Les points
@@ -64,7 +68,7 @@ namespace PM3D
 
 		// Calculer les normales
 		const XMFLOAT3 n0(0.0f, 0.0f, -1.0f); // devant
-		const XMFLOAT3 n1(0.0f, 0.0f, 1.0f); // arrière
+		const XMFLOAT3 n1(0.0f, 0.0f, 1.0f); // arriï¿½re
 		const XMFLOAT3 n2(0.0f, -1.0f, 0.0f); // dessous
 		const XMFLOAT3 n3(0.0f, 1.0f, 0.0f); // dessus
 		const XMFLOAT3 n4(-1.0f, 0.0f, 0.0f); // face gauche
@@ -78,7 +82,7 @@ namespace PM3D
 			CSommetBloc(point[2], n0),
 			CSommetBloc(point[3], n0),
 
-			// L'arrière du bloc
+			// L'arriï¿½re du bloc
 			CSommetBloc(point[4], n1),
 			CSommetBloc(point[5], n1),
 			CSommetBloc(point[6], n1),
@@ -109,7 +113,7 @@ namespace PM3D
 			CSommetBloc(point[2], n5)
 		};
 
-		// Création du vertex buffer et copie des sommets
+		// Crï¿½ation du vertex buffer et copie des sommets
 		ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
 		D3D11_BUFFER_DESC bd;
@@ -126,7 +130,7 @@ namespace PM3D
 
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer), DXE_CREATIONVERTEXBUFFER);
 
-		// Création de l'index buffer et copie des indices
+		// Crï¿½ation de l'index buffer et copie des indices
 		ZeroMemory(&bd, sizeof(bd));
 
 		bd.Usage = D3D11_USAGE_IMMUTABLE;
@@ -176,17 +180,18 @@ namespace PM3D
 		// Activer le VS
 		pImmediateContext->VSSetShader(pVertexShader, nullptr, 0);
 
-		// Initialiser et sélectionner les «constantes» du VS
+		// Initialiser et sï¿½lectionner les ï¿½constantesï¿½ du VS
 		ShadersParams sp;
 		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
-		sp.vLumiere = XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f);
-		sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
-		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vAMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
-		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		sp.vDMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+		sp.vLumiere1 = LM_.vLumiere1;
+		sp.vLumiere2 = LM_.vLumiere2;
+		sp.vCamera = LM_.vCamera;
+		sp.vAEcl = LM_.vAEcl;
+		sp.vAMat = LM_.vAMat;
+		sp.vDEcl = LM_.vDEcl;
+		sp.vDMat = LM_.vDMat;
 
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 
@@ -233,7 +238,7 @@ namespace PM3D
 			&pVertexShader),
 			DXE_CREATION_VS);
 
-		// Créer l'organisation des sommets
+		// Crï¿½er l'organisation des sommets
 		pVertexLayout = nullptr;
 		DXEssayer(pD3DDevice->CreateInputLayout(CSommetBloc::layout,
 			CSommetBloc::numElements,
@@ -244,7 +249,7 @@ namespace PM3D
 
 		pVSBlob->Release(); //  On n'a plus besoin du blob
 
-		// Création d'un tampon pour les constantes du VS
+		// Crï¿½ation d'un tampon pour les constantes du VS
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 

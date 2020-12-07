@@ -12,6 +12,7 @@ namespace PM3D
 {
 	class CDispositifD3D11;
 
+
 	//  Classe : CBloc
 	//
 	//  BUT : 	Classe de bloc
@@ -28,6 +29,7 @@ namespace PM3D
 		virtual void Anime(float tempsEcoule) override;
 		virtual void Draw() override;
 
+
 		PxRigidActor* getBody() { return body_; }
 
 	private:
@@ -41,7 +43,7 @@ namespace PM3D
 		ID3D11PixelShader* pPixelShader;
 		ID3D11InputLayout* pVertexLayout;
 
-		// Définitions des valeurs d'animation
+		// Dï¿½finitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;
 		XMMATRIX matWorld;
 		//float rotation;

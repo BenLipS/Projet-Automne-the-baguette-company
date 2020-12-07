@@ -1,12 +1,13 @@
 cbuffer param {
 	float4x4 matWorldViewProj;   // la matrice totale
 	float4x4 matWorld;  // matrice de transformation dans le monde
-	float4 vLumiere;   // la position de la source d’éclairage (Point)
-	float4 vCamera;    // la position de la caméra
-	float4 vAEcl;    // la valeur ambiante de l’éclairage
-	float4 vAMat;    // la valeur ambiante du matériau
-	float4 vDEcl;    // la valeur diffuse de l’éclairage
-	float4 vDMat;    // la valeur diffuse du matériau
+	float4 vLumiere1;   // la position de la source dï¿½ï¿½clairage (Point)
+	float4 vLumiere2;   // la position de la source dï¿½ï¿½clairage (Point)
+	float4 vCamera;    // la position de la camï¿½ra
+	float4 vAEcl;    // la valeur ambiante de lï¿½ï¿½clairage
+	float4 vAMat;    // la valeur ambiante du matï¿½riau
+	float4 vDEcl;    // la valeur diffuse de lï¿½ï¿½clairage
+	float4 vDMat;    // la valeur diffuse du matï¿½riau
 } 
 
 struct VS_Sortie {
@@ -24,7 +25,8 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL) {
 
 	float3 PosWorld = mul(Pos, matWorld).xyz;
 
-	sortie.vDirLum = vLumiere.xyz - PosWorld;
+	sortie.vDirLum = vLumiere1.xyz - PosWorld;
+	sortie.vDirLum = vLumiere2.xyz - PosWorld;
 	sortie.vDirCam = vCamera.xyz - PosWorld;
 
 	return sortie;

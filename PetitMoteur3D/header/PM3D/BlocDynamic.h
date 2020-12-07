@@ -26,6 +26,7 @@ namespace PM3D
 
 		virtual void Anime(float tempsEcoule) override;
 		virtual void Draw() override;
+		
 
 	private:
 		CDispositifD3D11* pDispositif;
@@ -48,5 +49,7 @@ namespace PM3D
 		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position,
 			const float _dx, const float _dy, const float _dz);
 	};
+
+
 
 } // namespace PM3D
