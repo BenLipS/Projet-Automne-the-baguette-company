@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 #include "Level.h"
+#include "PlanStatic.h"
+
 #include <cmath>
 
 
@@ -42,7 +44,7 @@ namespace PM3D {
 			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
 			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f) // vDMat
 		};
-		
+
 		initJoueur();
 		initPente( LMB ,0);
 		initPente(LMB, 1);
@@ -59,7 +61,7 @@ namespace PM3D {
 		// Mur final
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif_, LMBOr));
 
-		// Mur début
+		// Mur dï¿½but
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 1000.0f, -10000.0f), 5000.0f, 1300.0f, 10.0f, pDispositif_, LMBOr));
 
 		// Tremplin
@@ -81,15 +83,16 @@ namespace PM3D {
 		// Pente
 		float constexpr posX = 0; //longueur  // au centre
 		float constexpr posY = 0.0f; // largeur // au centre
-		float const posZ = scaleFixZ_ * scaleZ_ / 2  - 55.f; // hauteur // centre de la pente à la mi hauteur de la pente
+		float const posZ = scaleFixZ_ * scaleZ_ / 2  - 55.f; // hauteur // centre de la pente ï¿½ la mi hauteur de la pente
 
 		float const longueur = sqrt(scaleFixZ_ * scaleZ_ * scaleFixZ_ * scaleZ_ + scaleX_ * scaleFixX_ * scaleX_ * scaleFixX_); // pythagor
 		float constexpr largeur = 4760.0f;
 		float constexpr epaisseur = 0.1f;
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<TerrainStatic>(scenePhysic_, PxTransform(posY, posZ - scaleFixZ_ * scaleZ_ * numPente, posX + scaleFixX_ * scaleX_ * numPente, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, longueur, pDispositif_, _lm));
-		char* filename = new char[50]{ "./src/heighmap_Proj52.bmp" };
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente));
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, _lm));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<TerrainStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, longueur, pDispositif_, _lm));
+
+		//mur invisible
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(largeur / 2, 0.0f, 0.0f), PxVec3(-1.0f, 0.0f,0.0f)));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(-largeur / 2, 0.0f, 0.0f), PxVec3(1.0f, 0.0f, 0.0f)));
 	}
 
 	void Level::initBloc(Light_Manager _lm, float _x, float _y) {
@@ -103,7 +106,7 @@ namespace PM3D {
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_ )/ 2;
 		float const posY = _y * scaleY_;
 
-		
+
 
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, _lm));
 	}

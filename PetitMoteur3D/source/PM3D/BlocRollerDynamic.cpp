@@ -53,18 +53,18 @@ namespace PM3D
 		for( unsigned int i = 0; i < 10; i++)
 			speedY_buffer.push(0.0f);
 
-		typeTag = "Bloc";
+		typeTag = "vehicule";
 		// Les points
 		XMFLOAT3 point[8] =
 		{
-			XMFLOAT3(-_radius / 2, _radius / 2, -_radius),
-			XMFLOAT3(_radius / 2, _radius / 2, -_radius),
-			XMFLOAT3(_radius / 2, -_radius / 2, -_radius),
-			XMFLOAT3(-_radius / 2, -_radius / 2, -_radius),
-			XMFLOAT3(-_radius / 2, _radius / 2, _radius),
-			XMFLOAT3(-_radius / 2, -_radius / 2, _radius),
-			XMFLOAT3(_radius / 2, -_radius / 2, _radius),
-			XMFLOAT3(_radius / 2, _radius / 2, _radius)
+			XMFLOAT3(-_radius, _radius, -_radius),
+			XMFLOAT3(_radius, _radius, -_radius),
+			XMFLOAT3(_radius, -_radius, -_radius),
+			XMFLOAT3(-_radius, -_radius, -_radius),
+			XMFLOAT3(-_radius, _radius, _radius),
+			XMFLOAT3(-_radius, -_radius, _radius),
+			XMFLOAT3(_radius, -_radius, _radius),
+			XMFLOAT3(_radius, _radius, _radius)
 		};
 
 		// Calculer les normales

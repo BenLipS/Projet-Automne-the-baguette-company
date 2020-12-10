@@ -282,8 +282,6 @@ namespace PM3D
 	PxRigidStatic* BlocStatic::createRigidBody(Scene* _scene, PxTransform _position, const float _dx, const float _dy, const float _dz)
 	{
 		PxRigidStatic* bodyStatic = PxCreateStatic(*(_scene->physic_), _position, PxBoxGeometry(_dx, _dy, _dz), *(_scene->material_));
-		//dynamic->setAngularDamping(0.5f);
-		//dynamic->setLinearVelocity(velocity);
 		return bodyStatic;
 	}
 } // namespace PM3D
