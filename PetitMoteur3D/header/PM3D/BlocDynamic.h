@@ -26,6 +26,7 @@ namespace PM3D
 
 		virtual void Anime(float tempsEcoule) override;
 		virtual void Draw() override;
+		
 
 	private:
 		CDispositifD3D11* pDispositif;
