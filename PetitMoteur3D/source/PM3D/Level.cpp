@@ -9,7 +9,7 @@ namespace PM3D {
 	Level::Level(Scene* _sPhysique, CDispositifD3D11* _pDispositif, float _scaleX, float _scaleY, float _scaleZ)
 		:scenePhysic_{ _sPhysique }, pDispositif_{ _pDispositif }, scaleX_{ _scaleX }, scaleY_{ _scaleY }, scaleZ_{ _scaleZ }, scaleFixX_{ 1000 }, scaleFixY_{ 1000 }, scaleFixZ_{ 254 }
 	{
-		anglePente_ = atan(scaleFixZ_ * scaleZ_ / (scaleFixX_ * scaleX_)) ;
+		anglePente_ = atan(scaleFixZ_ * scaleZ_ / (scaleFixX_ * scaleX_)) + 0.002f ;
 		initlevel();
 	}
 	void Level::initlevel()
@@ -69,7 +69,7 @@ namespace PM3D {
 	};
 	void Level::initJoueur() {
 		// Joueur
-		float const posX = -scaleX_ * scaleFixX_ / 2 + 200; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
+		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
 		float constexpr posY = 0.0f; // largeur // au centre de la pente
 		float const posZ = scaleFixZ_ * scaleZ_ + 200; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 12900.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_));
@@ -79,7 +79,7 @@ namespace PM3D {
 		// Pente
 		float constexpr posX = 0; //longueur  // au centre
 		float constexpr posY = 0.0f; // largeur // au centre
-		float const posZ = scaleFixZ_ * scaleZ_ / 2; // hauteur // centre de la pente à la mi hauteur de la pente
+		float const posZ = scaleFixZ_ * scaleZ_ / 2  - 55.f; // hauteur // centre de la pente à la mi hauteur de la pente
 
 		float const longueur = sqrt(scaleFixZ_ * scaleZ_ * scaleFixZ_ * scaleZ_ + scaleX_ * scaleFixX_ * scaleX_ * scaleFixX_); // pythagor
 		float constexpr largeur = 4760.0f;

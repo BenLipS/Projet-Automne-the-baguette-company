@@ -236,7 +236,7 @@ namespace PM3D
 		bool InitObjets()
 		{
 
-			Level niveau(scenePhysic_, pDispositif, 20, 20, 55); // scale en X Y et Z
+			Level niveau(scenePhysic_, pDispositif, 20, 20, 5); // scale en X Y et Z
 			//Light_Manager LMP{
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere2
