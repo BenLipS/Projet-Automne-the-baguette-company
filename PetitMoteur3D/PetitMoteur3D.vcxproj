@@ -205,6 +205,7 @@
     <ClCompile Include="source\PM3D\Moteur.cpp" />
     <ClCompile Include="source\PM3D\MoteurWindows.cpp" />
     <ClCompile Include="source\PM3D\PetitMoteur3D.cpp" />
+    <ClCompile Include="source\PM3D\Level.cpp" />
     <ClCompile Include="source\PM3D\sommetbloc.cpp" />
     <ClCompile Include="source\PM3D\Terrain.cpp" />
     <ClCompile Include="source\stdafx.cpp">
@@ -231,6 +232,7 @@
     <ClInclude Include="header\PM3D\objet3d.h" />
     <ClInclude Include="header\PM3D\PetitMoteur3D.h" />
     <ClInclude Include="header\PM3D\Resource.h" />
+    <ClInclude Include="header\PM3D\Level.h" />
     <ClInclude Include="header\PM3D\sommetbloc.h" />
     <ClInclude Include="header\PM3D\sommetTerrain.h" />
     <ClInclude Include="header\PM3D\Terrain.h" />

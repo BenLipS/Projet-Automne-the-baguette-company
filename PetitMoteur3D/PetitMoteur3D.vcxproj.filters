@@ -78,6 +78,9 @@
     <ClCompile Include="source\PM3D\TerrainStatic.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="source\PM3D\Level.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\stdafx.h">
@@ -153,6 +156,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="header\PM3D\TerrainStatic.h">
+	  <Filter>Fichiers d%27en-tête</Filter>
+	</ClInclude>
+    <ClInclude Include="header\PM3D\Level.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
