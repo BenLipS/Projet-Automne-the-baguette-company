@@ -7,7 +7,7 @@ PM3D::TerrainStatic::TerrainStatic(Scene* _scene, PxTransform _position, const f
 	typeTag = "terrain";
 }
 
-PxVec3 PM3D::TerrainStatic::getTerrainNormale()
+PxTransform PM3D::TerrainStatic::getTerrainNormale()
 {
-	return body_->getGlobalPose().q.getBasisVector1().getNormalized();
+	return body_->getGlobalPose();
 }

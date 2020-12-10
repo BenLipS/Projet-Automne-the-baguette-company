@@ -16,6 +16,6 @@ namespace PM3D {
 			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f),
 			XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f)
 			});
-        PxVec3 getTerrainNormale();
+        PxTransform getTerrainNormale();
     };
 }; //namespace PM3D

@@ -10,6 +10,7 @@
 #include <d3d11.h>
 #include <PxPhysicsAPI.h>
 #include <fstream>
+#include "TerrainStatic.h"
 
 using namespace physx;
 

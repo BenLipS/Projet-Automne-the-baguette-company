@@ -108,20 +108,18 @@ namespace PM3D
 			return true;
 		}
 
-		PxVec3 getTerrainNormale() {
+		PxTransform getTerrainNormale() {
 			auto start = scenePhysic_->ListeScene_.begin();
 			auto end = scenePhysic_->ListeScene_.end();
 			while (start != end && start->get()->typeTag != "terrain")
 				start++;
-			/*auto found = find_if(scenePhysic_->ListeScene_.begin(), scenePhysic_->ListeScene_.end(), [&](unique_ptr<CObjet3D> objet) {
-				return objet->typeTag == "terrain";
-			});*/
+
 			if (start != end) {
 				TerrainStatic* terrain = static_cast<TerrainStatic*>(start->get());
 				return terrain->getTerrainNormale();
 			}
 			else {
-				return PxVec3(PxZero);
+				return PxTransform();
 			}
 		}
 
@@ -254,8 +252,8 @@ namespace PM3D
 
 		bool InitObjets()
 		{
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<TerrainStatic>(scenePhysic_, PxTransform(0.0f, 620.0f, 0.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 4760.0f, 100000.0f, pDispositif));
-			Level niveau(scenePhysic_, pDispositif, 20, 20, 5); // scale en X Y et Z
+			//
+			Level niveau(scenePhysic_, pDispositif, 20, 20, 5.0f); // scale en X Y et Z
 			//Light_Manager LMP{
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere2

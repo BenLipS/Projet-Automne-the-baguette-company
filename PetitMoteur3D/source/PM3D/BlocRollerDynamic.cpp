@@ -33,7 +33,7 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMax_ = 1000.0f;
+	constexpr float BlocRollerDynamic::vitesseMax_ = 2000.0f;
 	constexpr float BlocRollerDynamic::vitesseMin_ = 100.0f;
 
 
@@ -157,14 +157,13 @@ namespace PM3D
 		auto speed = body->getLinearVelocity();
 
 		
-		
-		PxVec3 normale = CMoteurWindows::GetInstance().getTerrainNormale();
+		PxTransform terrain = CMoteurWindows::GetInstance().getTerrainNormale();
+		PxVec3 normale = terrain.q.getBasisVector1();
 
 		PxVec3 gauche = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
 		PxVec3 droite = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
 
 		PxVec3 vVitesse = speed;
-		//upPressed_ = false;
 
 		// V�rifier l��tat de la touche gauche
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
@@ -228,19 +227,21 @@ namespace PM3D
 		}
 
 		speed.y = moyenne/10.0f;
-
+		
 		PxVec3 direction = speed.getNormalized();
 		//normale = CMoteurWindows::GetInstance().getTerrainNormale();
-		PxVec3 projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
 		PxVec3 sens = PxVec3(0.0f, 0.0f, 1.0f);
+		PxVec3 projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
 		float angle = acos(projete.dot(sens));
-		PxQuat orientation = PxQuat(0.0f, normale);
-
-		
+		if ((direction.cross(terrain.q.getBasisVector2()).y > 0)) {
+			angle = -angle;
+		}
+		PxQuat pente = PxQuat(acos(normale.dot(PxVec3(0.0f,1.0f,0.0f))), terrain.q.getBasisVector0());
+		PxQuat orientation = PxQuat(angle, normale).getNormalized();
 
 		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
-
-		matWorld = XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
+		matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
+		matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position
 	}
 
