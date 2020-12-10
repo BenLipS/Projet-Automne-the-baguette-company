@@ -15,6 +15,10 @@
 #include "BlocDynamic.h"
 #include "BlocStatic.h"
 #include "BlocRollerDynamic.h"
+#include "ChargeurOBJ.h"
+#include "GestionnaireDeTextures.h"
+#include "ObjetMesh.h"
+#include "AfficheurSprite.h"
 
 #include <fstream>
 
@@ -104,6 +108,9 @@ namespace PM3D
 
 			return true;
 		}
+		// 06/12/2020
+		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
+		//
 
 		CDIManipulateur& GetGestionnaireDeSaisie() { return GestionnaireDeSaisie; }
 
@@ -225,7 +232,7 @@ namespace PM3D
 
 			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj, CCamera::CAMERA_TYPE::CUBE);
 
-			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[1].get());
 
 			camera.update((PxRigidBody*)character->getBody());
 
@@ -234,6 +241,20 @@ namespace PM3D
 
 		bool InitObjets()
 		{
+			//Affichage du tunnel (10/12/2020)
+
+			//CObjetMesh* pMesh;
+
+			// Constructeur abec format bianaire
+			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>("C:\\Users\\reymi\\OneDrive\\Documents\\GitHub\\projet-automne-the-baguette-company\\PetitMoteur3D\\src\\Jin\\jin.OMB", pDispositif);
+
+			// Puis il est ajouté à la scène
+			scenePhysic_->ListeScene_.push_back(std::move(pMesh));
+
+			// Création de l'afficheur de sprites et ajout des sprites
+			//d::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);j
+
+
 			Light_Manager LMP{
 			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1
 			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere2
@@ -325,7 +346,7 @@ namespace PM3D
 			{
 				object3D->Anime(tempsEcoule);
 			}
-			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[1].get());
 
 			camera.update((PxRigidBody*)character->getBody());
 			}
@@ -347,6 +368,9 @@ namespace PM3D
 		XMMATRIX m_MatView;
 		XMMATRIX m_MatProj;
 		XMMATRIX m_MatViewProj;
+
+		// Le gestionnaire de texture
+		CGestionnaireDeTextures TexturesManager;
 
 		// Les saisies
 		CDIManipulateur GestionnaireDeSaisie;

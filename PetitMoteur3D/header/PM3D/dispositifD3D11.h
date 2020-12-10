@@ -30,6 +30,16 @@ public:
 
 	ID3D11DepthStencilView* GetDepthStencilView() { return pDepthStencilView; }
 
+
+	void ActiverMelangeAlpha();
+	void DesactiverMelangeAlpha();
+
+	// NOUVEAUTES (06/12/2020)
+	void SetViewPortDimension(float largeur_in, float hauteur_in);
+	void ResetViewPortDimension();
+	void SetNormalRSState();
+
+	//
 private:
 	ID3D11Device * pD3DDevice;
 	ID3D11DeviceContext*    pImmediateContext;
@@ -48,6 +58,10 @@ protected:
 
 	// Variables d’état
 	ID3D11RasterizerState* mSolidCullBackRS; 
+
+	// Pour le mélange alpha (transparence)
+	ID3D11BlendState* alphaBlendEnable;
+	ID3D11BlendState* alphaBlendDisable;
 };
 
 } // namespace PM3D
