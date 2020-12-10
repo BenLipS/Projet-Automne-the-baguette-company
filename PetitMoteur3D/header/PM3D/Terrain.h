@@ -11,7 +11,7 @@ namespace PM3D
 	class Terrain : public CObjet3D {
 	public:
 
-		Terrain(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif);
+		Terrain(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif, float scaleFixX, float scaleFixY, float scaleFixZ, int numTerrain = 0);
 
 		// Destructeur
 		virtual ~Terrain();
@@ -54,5 +54,8 @@ namespace PM3D
 		ID3DX11Effect* pEffet;
 		ID3DX11EffectTechnique* pTechnique;
 		ID3DX11EffectPass* pPasse;
+
+		int numTerrain_;
+		float scaleFixX_, scaleFixZ_, scaleFixY_;
 	};
 }

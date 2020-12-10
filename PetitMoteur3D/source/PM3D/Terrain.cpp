@@ -28,7 +28,7 @@ namespace PM3D {
 
 
 
-	Terrain::Terrain(char* filenameBMP, XMFLOAT3 scale, CDispositifD3D11* pDispositif_)
+	Terrain::Terrain(char* filenameBMP, XMFLOAT3 scale, CDispositifD3D11* pDispositif_, float scaleFixX, float scaleFixY, float scaleFixZ, int numTerrain)
 		: pDispositif(pDispositif_) // Prendre en note le dispositif
 		, matWorld(XMMatrixIdentity())
 		, rotation(0.0f)
@@ -39,6 +39,10 @@ namespace PM3D {
 		, pVertexLayout(nullptr)
 		, pConstantBuffer(nullptr)
 		, filename(filenameBMP)
+		, scaleFixX_(scaleFixX)
+		, scaleFixY_(scaleFixY)
+		, scaleFixZ_(scaleFixZ)
+		, numTerrain_(numTerrain)
 	{
 		this->scale = scale;
 		typeTag = "Terrain";
@@ -97,7 +101,7 @@ namespace PM3D {
 				int heightValue = bitmapImage[k];
 				
 				// Cr�ation des sommmets aux bonnes coordonn�es (avec une normale par d�faut qui sera calcul�e plus tard)
-				sommets[index] = CSommetTerrain(XMFLOAT3((float)((i - width/2)* scale.x), (float)(heightValue* scale.y), (float)((j-height/2)* scale.z)),normale);
+				sommets[index] = CSommetTerrain(XMFLOAT3((float)((i +/* scaleFixX_ * numTerrain*/ - width/2) * scale.x), (float)((heightValue - scaleFixZ_ * numTerrain)* scale.y), (float)((j + scaleFixX_ * numTerrain -height/2)* scale.z)),normale);
 
 				k += 3;
 			}

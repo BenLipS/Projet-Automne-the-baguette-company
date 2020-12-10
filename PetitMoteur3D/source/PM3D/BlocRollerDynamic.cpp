@@ -33,7 +33,7 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMax_ = 2000.0f;
+	constexpr float BlocRollerDynamic::vitesseMax_ = 6000.0f;
 	constexpr float BlocRollerDynamic::vitesseMin_ = 100.0f;
 
 
