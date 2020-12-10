@@ -230,7 +230,7 @@ namespace PM3D
 		speed.y = moyenne/10.0f;
 
 		PxVec3 direction = speed.getNormalized();
-		normale = CMoteurWindows::GetInstance().getTerrainNormale();
+		//normale = CMoteurWindows::GetInstance().getTerrainNormale();
 		PxVec3 projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
 		PxVec3 sens = PxVec3(0.0f, 0.0f, 1.0f);
 		float angle = acos(projete.dot(sens));
