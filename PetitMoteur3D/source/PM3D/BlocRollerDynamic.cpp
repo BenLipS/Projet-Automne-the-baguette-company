@@ -54,14 +54,14 @@ namespace PM3D
 		// Les points
 		XMFLOAT3 point[8] =
 		{
-			XMFLOAT3(-_radius / 2, _radius / 2, -_radius / 2),
-			XMFLOAT3(_radius / 2, _radius / 2, -_radius / 2),
-			XMFLOAT3(_radius / 2, -_radius / 2, -_radius / 2),
-			XMFLOAT3(-_radius / 2, -_radius / 2, -_radius / 2),
-			XMFLOAT3(-_radius / 2, _radius / 2, _radius / 2),
-			XMFLOAT3(-_radius / 2, -_radius / 2, _radius / 2),
-			XMFLOAT3(_radius / 2, -_radius / 2, _radius / 2),
-			XMFLOAT3(_radius / 2, _radius / 2, _radius / 2)
+			XMFLOAT3(-_radius / 2, _radius / 2, -_radius),
+			XMFLOAT3(_radius / 2, _radius / 2, -_radius),
+			XMFLOAT3(_radius / 2, -_radius / 2, -_radius),
+			XMFLOAT3(-_radius / 2, -_radius / 2, -_radius),
+			XMFLOAT3(-_radius / 2, _radius / 2, _radius),
+			XMFLOAT3(-_radius / 2, -_radius / 2, _radius),
+			XMFLOAT3(_radius / 2, -_radius / 2, _radius),
+			XMFLOAT3(_radius / 2, _radius / 2, _radius)
 		};
 
 		// Calculer les normales
@@ -155,10 +155,10 @@ namespace PM3D
 
 		
 		
-		PxVec3 normale = PxVec3(0.0f, 1.0f, 0.0f).cross(speed.getNormalized()).getNormalized().cross(speed.getNormalized()).getNormalized();
+		PxVec3 normale = CMoteurWindows::GetInstance().getTerrainNormale();
 
-		PxVec3 gauche = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
-		PxVec3 droite = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
+		PxVec3 gauche = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
+		PxVec3 droite = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
 
 		PxVec3 vVitesse = speed;
 		//upPressed_ = false;
@@ -199,7 +199,7 @@ namespace PM3D
 
 		//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
 
-		PxTransform pose = body_->getGlobalPose();
+		/*PxTransform pose = body_->getGlobalPose();
 		//pose.q = PxQuat(0.1f, PxVec3(1.0f, 0.0f, 0.0f));
 
 		if (pose.p.x > 2375.0f) {
@@ -213,7 +213,7 @@ namespace PM3D
 			body->setLinearVelocity({ vitesse.y, vitesse.y, vitesse.z });
 		}
 
-		body_->setGlobalPose(pose);
+		body_->setGlobalPose(pose);*/
 
 		speedY_buffer.pop();
 		speedY_buffer.push(speed.y);
@@ -229,11 +229,15 @@ namespace PM3D
 		speed.y = moyenne/10.0f;
 
 		PxVec3 direction = speed.getNormalized();
-		normale = PxVec3(0.0f, 1.0f, 0.0f).cross(direction).getNormalized().cross(direction).getNormalized();
-		//PxVec3 base = PxVec3(1.0f, 0.0f, 0.0f);
-		//PxQuat orientation = PxQuat(PxAcos(base.dot(direction)), base.cross(direction).getNormalized());
+		normale = CMoteurWindows::GetInstance().getTerrainNormale();
+		PxVec3 projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
+		PxVec3 sens = PxVec3(0.0f, 0.0f, 1.0f);
+		float angle = acos(projete.dot(sens));
+		PxQuat orientation = PxQuat(0.0f, normale);
 
-		PxQuat orientation = PxQuat(3.14f/3.0f, normale);
+		
+
+		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
 
 		matWorld = XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position

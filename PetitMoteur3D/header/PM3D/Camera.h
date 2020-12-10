@@ -46,5 +46,10 @@ namespace PM3D {
 		void update(float tempsEcoule = 0.0f);
 		void update(float y, float tempsEcoule);
 		void update(physx::PxRigidBody*);
+
+		/*void SuivreObjet(XMVECTOR e_PositionObjet, XMVECTOR e_DirectionObjet)
+		{
+			XMMatrixLookToLH(e_PositionObjet - (3 * e_DirectionObjet), e_DirectionObjet, XMVectorSet(0.0f,1.0f,0.0f,0));
+		}*/
 	};
 }

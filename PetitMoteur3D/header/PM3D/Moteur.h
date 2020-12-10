@@ -4,6 +4,8 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <algorithm>
 
 #include "Objet3D.h"
 #include "Terrain.h"
@@ -15,9 +17,9 @@
 #include "BlocDynamic.h"
 #include "BlocStatic.h"
 #include "BlocRollerDynamic.h"
+#include "TerrainStatic.h"
 
-#include <fstream>
-
+using namespace std;
 using namespace physx;
 
 namespace PM3D
@@ -103,6 +105,23 @@ namespace PM3D
 			}
 
 			return true;
+		}
+
+		PxVec3 getTerrainNormale() {
+			auto start = scenePhysic_->ListeScene_.begin();
+			auto end = scenePhysic_->ListeScene_.end();
+			while (start != end && start->get()->typeTag != "terrain")
+				start++;
+			/*auto found = find_if(scenePhysic_->ListeScene_.begin(), scenePhysic_->ListeScene_.end(), [&](unique_ptr<CObjet3D> objet) {
+				return objet->typeTag == "terrain";
+			});*/
+			if (start != end) {
+				TerrainStatic* terrain = static_cast<TerrainStatic*>(start->get());
+				return terrain->getTerrainNormale();
+			}
+			else {
+				return PxVec3(PxZero);
+			}
 		}
 
 		CDIManipulateur& GetGestionnaireDeSaisie() { return GestionnaireDeSaisie; }
@@ -236,7 +255,7 @@ namespace PM3D
 		{
 			// Puis, il est ajouté à la scène
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1250.0f, -10000.0f, PxQuat(0.078f, PxVec3(1.0f, 0.0f, 0.0f))), 50.0f, pDispositif));
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 375.0f, 0.0f, PxQuat(0.078f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 0.1f, 100000.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<TerrainStatic>(scenePhysic_, PxTransform(0.0f, 375.0f, 0.0f, PxQuat(0.078f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 100000.0f, pDispositif));
 
 			/*scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, -500.0f, 1000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(100.0f, -1000.0f, 2000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
