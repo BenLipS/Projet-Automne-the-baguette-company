@@ -190,6 +190,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\PM3D\PlanStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp" />
     <ClCompile Include="source\PM3D\BlocStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocDynamic.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="header\PM3D\Objet3DStatic.h" />
     <ClInclude Include="header\PM3D\Objet3DDynamic.h" />
     <ClInclude Include="header\PM3D\TerrainStatic.h" />
+    <ClInclude Include="header\PM3D\PlanStatic.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MiniPhong.fx">

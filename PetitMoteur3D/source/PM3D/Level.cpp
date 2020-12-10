@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 #include "Level.h"
+#include "PlanStatic.h"
+
 #include <cmath>
 
 
@@ -85,7 +87,10 @@ namespace PM3D {
 		float constexpr largeur = 4760.0f;
 		float constexpr epaisseur = 0.1f;
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<TerrainStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, longueur, pDispositif_, _lm));
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, _lm));
+		
+		//mur invisible
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(largeur / 2, 0.0f, 0.0f), PxVec3(-1.0f, 0.0f,0.0f)));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(-largeur / 2, 0.0f, 0.0f), PxVec3(1.0f, 0.0f, 0.0f)));
 	}
 
 	void Level::initBloc(Light_Manager _lm, float _x, float _y) {
