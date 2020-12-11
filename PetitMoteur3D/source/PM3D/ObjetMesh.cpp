@@ -19,6 +19,7 @@ D3D11_INPUT_ELEMENT_DESC CObjetMesh::CSommetMesh::layout[] =
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
 };
 
+
 UINT CObjetMesh::CSommetMesh::numElements;
 
 struct ShadersParams // toujours un multiple de 16 pour les constantes
@@ -146,7 +147,7 @@ void CObjetMesh::InitEffet()
 	CSommetMesh::numElements = ARRAYSIZE(CSommetMesh::layout);
 
 	// 1 pour le shadowmap
-	/*
+	
 	pTechnique = pEffet->GetTechniqueByName("ShadowMap");
 
 	pPasse = pTechnique->GetPassByIndex(0);
@@ -174,7 +175,7 @@ void CObjetMesh::InitEffet()
 	effectVSDesc.pShaderVariable->GetShaderDesc(effectVSDesc.ShaderIndex,
 		&effectVSDesc2);
 
-	*/
+	
 	vsCodePtr = effectVSDesc2.pBytecode;
 	vsCodeLen = effectVSDesc2.BytecodeLength;
 
@@ -211,7 +212,7 @@ void CObjetMesh::InitEffet()
 	// Création de l'état de sampling
 	pD3DDevice->CreateSamplerState(&samplerDesc, &pSampleState);
 
-	/*
+	
 	D3D11_TEXTURE2D_DESC textureDesc;
 	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
@@ -259,7 +260,7 @@ void CObjetMesh::InitEffet()
 
 	InitDepthBuffer();
 	InitMatricesShadowMap();
-	*/
+	
 }
 
 void CObjetMesh::Anime(float tempsEcoule)
@@ -629,7 +630,7 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 		if (index >= Material.size())
 		{
 			index = 0;  // valeur de défaut
-		}
+	
 
 		SubsetMaterialIndex.push_back(index);
 	}
@@ -832,7 +833,7 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 		fichier.read((char*)smi.get(), (NombreSubset) * sizeof(int32_t));
 		SubsetMaterialIndex.assign(smi.get(), smi.get() + NombreSubset);
 	}
-/*
+
 	// 4d) Chargement des textures
 	CGestionnaireDeTextures& TexturesManager = CMoteurWindows::GetInstance().GetTextureManager();
 
@@ -844,7 +845,7 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 			Material[i].pTextureD3D = TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
 		}
 	}
-	*/
+	
 }
 
 void CObjetMesh::InitDepthBuffer()

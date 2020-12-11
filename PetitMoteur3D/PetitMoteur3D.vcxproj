@@ -99,7 +99,7 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)DLL</OutDir>
+    <OutDir>$(ProjectDir)DLL\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -146,6 +146,9 @@
       <AdditionalDependencies>dinput8.lib;dxguid.lib;d3d11.lib;d3dcompiler.lib;DXGI.lib;Effects11d.lib;$(ProjectDir)lib\PhysX_64.lib;$(ProjectDir)lib\PhysXCommon_64.lib;$(ProjectDir)lib\PhysXCooking_64.lib;$(ProjectDir)lib\PhysXExtensions_static_64.lib;$(ProjectDir)lib\PhysXFoundation_64.lib;$(ProjectDir)lib\PhysXPvdSDK_static_64.lib;$(ProjectDir)lib\win64_glut\glut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -262,6 +265,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="sprite1.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="VS_MiniPhong.hlsl">

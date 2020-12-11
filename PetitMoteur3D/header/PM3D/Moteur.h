@@ -250,9 +250,12 @@ namespace PM3D
 
 			// Puis il est ajouté à la scène
 			scenePhysic_->ListeScene_.push_back(std::move(pMesh));
+			//scenePhysic_->ListeScene_.emplace_back(std::move(pMesh)
+
+			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif, LMBOr));
 
 			// Création de l'afficheur de sprites et ajout des sprites
-			//d::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);j
+			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
 
 
 			Light_Manager LMP{
@@ -291,7 +294,7 @@ namespace PM3D
 			};
 
 			// Blocs statiques
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 1000.0f, 1000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 1000.0f, 1000.0f, pDispositif, LMB));
+			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 1000.0f, 1000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 1000.0f, 1000.0f, pDispositif, LMB));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(1100.0f, 1200.0f, -5000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 500.0f, 500.0f, 500.0f, pDispositif, LMB));
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-1500.0f, 1200.0f, -5000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 500.0f, 500.0f, 500.0f, pDispositif, LMBOr));
 
@@ -304,12 +307,12 @@ namespace PM3D
 			// Tremplin
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 600.0f, -5000.0f, PxQuat(-0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 1000.0f, 1000.0f, pDispositif, LMP));
 
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-100.0f, -2500.0f, 5000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, -3000.0f, 6000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-400.0f, -3500.0f, 7000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(300.0f, -4000.0f, 8000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(200.0f, -4500.0f, 9000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-100.0f, -5000.0f, 10000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-100.0f, -2500.0f, 5000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, -3000.0f, 6000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-400.0f, -3500.0f, 7000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(300.0f, -4000.0f, 8000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(200.0f, -4500.0f, 9000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
+			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-100.0f, -5000.0f, 10000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
 
 			char* filename = new char[50]("./src/heighmap_Proj52.bmp");
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename,XMFLOAT3(20.0f,5.0f,20.0f),pDispositif));

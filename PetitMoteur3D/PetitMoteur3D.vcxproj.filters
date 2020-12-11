@@ -220,6 +220,7 @@
     <FxCompile Include="MiniPhong.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="sprite1.fx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Heightmap.bmp">

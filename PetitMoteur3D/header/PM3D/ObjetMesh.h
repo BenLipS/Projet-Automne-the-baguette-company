@@ -102,6 +102,7 @@ private:
 	void LireFichierBinaire(const std::string& nomFichier);
 	void InitDepthBuffer();
 	void InitMatricesShadowMap();
+	
 
 	// ****  Données membres
 	XMMATRIX matWorld;				// Matrice de transformation dans le monde
