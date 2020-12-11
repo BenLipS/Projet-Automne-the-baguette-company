@@ -171,13 +171,13 @@ namespace PM3D
 		// V�rifier l��tat de la touche gauche
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
 			auto direction = gauche * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 30));
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
 		}
 
 		// V�rifier l��tat de la touche droite
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
 			auto direction = droite * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 30));
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
 		}
 
 		vVitesse = vVitesse.getNormalized() * speed.magnitude();
