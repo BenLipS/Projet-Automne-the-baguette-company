@@ -12,6 +12,11 @@ namespace PM3D {
 	struct Scene {
 		PxDefaultAllocator allocator_ = PxDefaultAllocator();
 		PxDefaultErrorCallback errorCallback_ = PxDefaultErrorCallback();
+
+		PxSimulationFilterShader filterShader;
+		PxSimulationEventCallback* eventCallback;
+		PxContactModifyCallback* modifyCallback;
+
 		PxFoundation* foundation_ = NULL;
 		PxDefaultCpuDispatcher* dispatcher_ = NULL;
 		PxPhysics* physic_ = NULL;
@@ -19,6 +24,7 @@ namespace PM3D {
 		PxPvd* pvd_ = NULL;
 		PxScene* scene_ = NULL;
 		std::vector<std::unique_ptr<CObjet3D>> ListeScene_{};
+		
 	};	
 
 	struct Light_Manager{
