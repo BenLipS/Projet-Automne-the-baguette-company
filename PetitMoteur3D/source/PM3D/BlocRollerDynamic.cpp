@@ -33,7 +33,7 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMax_ = 2000.0f;
+	constexpr float BlocRollerDynamic::vitesseMax_ = 60000.0f;
 	constexpr float BlocRollerDynamic::vitesseMin_ = 100.0f;
 
 
@@ -53,18 +53,18 @@ namespace PM3D
 		for( unsigned int i = 0; i < 10; i++)
 			speedY_buffer.push(0.0f);
 
-		typeTag = "Bloc";
+		typeTag = "vehicule";
 		// Les points
 		XMFLOAT3 point[8] =
 		{
-			XMFLOAT3(-_radius / 2, _radius / 2, -_radius),
-			XMFLOAT3(_radius / 2, _radius / 2, -_radius),
-			XMFLOAT3(_radius / 2, -_radius / 2, -_radius),
-			XMFLOAT3(-_radius / 2, -_radius / 2, -_radius),
-			XMFLOAT3(-_radius / 2, _radius / 2, _radius),
-			XMFLOAT3(-_radius / 2, -_radius / 2, _radius),
-			XMFLOAT3(_radius / 2, -_radius / 2, _radius),
-			XMFLOAT3(_radius / 2, _radius / 2, _radius)
+			XMFLOAT3(-_radius, _radius, -_radius),
+			XMFLOAT3(_radius, _radius, -_radius),
+			XMFLOAT3(_radius, -_radius, -_radius),
+			XMFLOAT3(-_radius, -_radius, -_radius),
+			XMFLOAT3(-_radius, _radius, _radius),
+			XMFLOAT3(-_radius, -_radius, _radius),
+			XMFLOAT3(_radius, -_radius, _radius),
+			XMFLOAT3(_radius, _radius, _radius)
 		};
 
 		// Calculer les normales
@@ -157,8 +157,11 @@ namespace PM3D
 		auto speed = body->getLinearVelocity();
 
 		
-		PxTransform terrain = CMoteurWindows::GetInstance().getTerrainNormale();
-		PxVec3 normale = terrain.q.getBasisVector1();
+		//PxTransform terrain = CMoteurWindows::GetInstance().getTerrainNormale();
+		pair<PxVec3, PxVec3> terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
+
+		//PxVec3 normale = terrain.q.getBasisVector1();
+		PxVec3 normale = terrainPair.first;
 
 		PxVec3 gauche = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
 		PxVec3 droite = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
@@ -168,13 +171,13 @@ namespace PM3D
 		// V�rifier l��tat de la touche gauche
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
 			auto direction = gauche * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 30));
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
 		}
 
 		// V�rifier l��tat de la touche droite
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
 			auto direction = droite * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 30));
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
 		}
 
 		vVitesse = vVitesse.getNormalized() * speed.magnitude();
@@ -233,10 +236,15 @@ namespace PM3D
 		PxVec3 sens = PxVec3(0.0f, 0.0f, 1.0f);
 		PxVec3 projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
 		float angle = acos(projete.dot(sens));
-		if ((direction.cross(terrain.q.getBasisVector2()).y > 0)) {
+
+		PxVec3 directionPente = terrainPair.second;
+		if ((direction.cross(directionPente).y > 0)) {
 			angle = -angle;
 		}
-		PxQuat pente = PxQuat(acos(normale.dot(PxVec3(0.0f,1.0f,0.0f))), terrain.q.getBasisVector0());
+
+
+		PxVec3 largeurPente = normale.cross(directionPente);
+		PxQuat pente = PxQuat(acos(normale.dot(PxVec3(0.0f,1.0f,0.0f))), largeurPente);
 		PxQuat orientation = PxQuat(angle, normale).getNormalized();
 
 		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);

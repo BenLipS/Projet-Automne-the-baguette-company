@@ -18,6 +18,7 @@
 #include "BlocStatic.h"
 #include "BlocRollerDynamic.h"
 #include "TerrainStatic.h"
+#include "PlanStatic.h"
 #include "Level.h"
 
 using namespace std;
@@ -115,11 +116,27 @@ namespace PM3D
 				start++;
 
 			if (start != end) {
-				TerrainStatic* terrain = static_cast<TerrainStatic*>(start->get());
+				PlanStatic* terrain = static_cast<PlanStatic*>(start->get());
 				return terrain->getTerrainNormale();
 			}
 			else {
 				return PxTransform();
+			}
+		}
+
+		pair<PxVec3, PxVec3> getTerrainPair() {
+			auto start = scenePhysic_->ListeScene_.begin();
+			auto end = scenePhysic_->ListeScene_.end();
+			while (start != end && start->get()->typeTag != "terrain")
+				start++;
+
+			if (start != end) {
+				PlanStatic* terrain = static_cast<PlanStatic*>(start->get());
+				pair<PxVec3, PxVec3> pair{ terrain->getNormale(), terrain->getDirection() };
+				return pair;
+			}
+			else {
+				return {};
 			}
 		}
 
@@ -253,7 +270,7 @@ namespace PM3D
 		bool InitObjets()
 		{
 			//
-			Level niveau(scenePhysic_, pDispositif, 20, 20, 5.0f); // scale en X Y et Z
+			Level niveau(scenePhysic_, pDispositif, 200, 200, 755.0f); // scale en X Y et Z
 			//Light_Manager LMP{
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere2

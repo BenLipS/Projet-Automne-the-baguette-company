@@ -55,7 +55,7 @@ namespace PM3D {
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
-		float coeffMove = 500.0f;
+		float coeffMove = 5000.0f;
 		XMVECTOR relativeZ = XMVector3Normalize(XMVector3Cross(direction, up));
 
 
@@ -125,7 +125,7 @@ namespace PM3D {
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
-		float coeffMove = 500.0f;
+		float coeffMove = 5000.0f;
 		XMVECTOR relativeZ = XMVector3Normalize(XMVector3Cross(direction, up));
 		XMVECTOR forward = -XMVector3Normalize(XMVector3Cross(relativeZ, up));
 

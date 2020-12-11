@@ -35,5 +35,6 @@ namespace PM3D {
 		void initJoueur();
 		void initPente(Light_Manager lm);
 		void initBloc(Light_Manager lm, float _x, float _y);
+		void initHM(Light_Manager lm, int numPente);
 	};
 }
