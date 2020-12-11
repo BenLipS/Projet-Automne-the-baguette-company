@@ -1,35 +1,45 @@
 #include "stdafx.h"
 #include "PlanStatic.h"
-#include "..\..\header\PM3D\PlanStatic.h"
+#include "Filter.h"
 
-PM3D::PlanStatic::PlanStatic(Scene* _scene, PxVec3 _point, PxVec3 _normale, PxVec3 _direction) :
-	Objet3DStatic(_scene->scene_, createRigidBody(_scene, _point, _normale))
-	, normale_(_normale)
-	, direction_(_direction)
-{
-	if (_normale.x == 0 )
-		typeTag = "terrain";
-}
+namespace PM3D {
 
-PxRigidStatic* PM3D::PlanStatic::createRigidBody(Scene* _scene, PxVec3 _point, PxVec3 _normale)
-{
-	PxRigidStatic* bodyStatic = PxCreatePlane(*(_scene->physic_), PxPlane(_point, _normale), *(_scene->material_));
-	//dynamic->setAngularDamping(0.5f);
-	//dynamic->setLinearVelocity(velocity);
-	return bodyStatic;
-}
+	PlanStatic::PlanStatic(Scene* _scene, PxVec3 _point, PxVec3 _normale, PxVec3 _direction) :
+		Objet3DStatic(_scene->scene_, createRigidBody(_scene, _point, _normale))
+		, normale_(_normale)
+		, direction_(_direction)
+	{
 
-PxVec3 PM3D::PlanStatic::getDirection() {
-	return direction_;
-}
+		if (_normale.x == 0) {
+			typeTag = "terrain";
+			setupFiltering(body_, FILTER_TYPE::TERRAIN, FILTER_TYPE::VEHICULE);
 
-PxVec3 PM3D::PlanStatic::getNormale() {
-	return normale_;
-}
+		}
+		else {
+			setupFiltering(body_, FILTER_TYPE::MUR, FILTER_TYPE::VEHICULE);
+		}
+	}
+
+	PxRigidStatic* PlanStatic::createRigidBody(Scene* _scene, PxVec3 _point, PxVec3 _normale)
+	{
+		PxRigidStatic* bodyStatic = PxCreatePlane(*(_scene->physic_), PxPlane(_point, _normale), *(_scene->material_));
+		//dynamic->setAngularDamping(0.5f);
+		//dynamic->setLinearVelocity(velocity);
+		return bodyStatic;
+	}
+
+	PxVec3 PlanStatic::getDirection() {
+		return direction_;
+	}
+
+	PxVec3 PlanStatic::getNormale() {
+		return normale_;
+	}
 
 
-PxTransform PM3D::PlanStatic::getTerrainNormale()
-{
-	return body_->getGlobalPose();
-}
+	PxTransform PlanStatic::getTerrainNormale()
+	{
+		return body_->getGlobalPose();
+	}
 
+} // namespace PM3D

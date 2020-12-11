@@ -20,6 +20,8 @@
 #include "TerrainStatic.h"
 #include "PlanStatic.h"
 #include "Level.h"
+#include "Filter.h"
+#include "ContactModification.h"
 
 using namespace std;
 using namespace physx;
@@ -221,7 +223,13 @@ namespace PM3D
 			sceneDesc.gravity = PxVec3(0.0f, -2000.0f, 0.0f);
 			scenePhysic_->dispatcher_ = PxDefaultCpuDispatcherCreate(2);
 			sceneDesc.cpuDispatcher = scenePhysic_->dispatcher_;
-			sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+			//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+			scenePhysic_->filterShader = FilterShader;
+			sceneDesc.filterShader = scenePhysic_->filterShader;
+			scenePhysic_->eventCallback = &contactModif_;
+			sceneDesc.simulationEventCallback = scenePhysic_->eventCallback;
+			scenePhysic_->modifyCallback = &contactModif_;
+			sceneDesc.contactModifyCallback = scenePhysic_->modifyCallback;
 			scenePhysic_->scene_ = scenePhysic_->physic_->createScene(sceneDesc);
 
 			scenePhysic_->material_ = scenePhysic_->physic_->createMaterial(0.5f, 0.5f, 0.6f);
@@ -399,5 +407,8 @@ namespace PM3D
 
 		//ControllerManager
 		//PxControllerManager * controllerManager_;
+
+		// Gestion des collisions
+		ContactModification contactModif_;
 	};
 } // namespace PM3D

@@ -9,6 +9,7 @@
 #include <iostream>
 #include "IndexModel.h"
 #include "tools.h"
+#include "Filter.h"
 
 using namespace physx;
 using namespace DirectX;
@@ -143,6 +144,9 @@ namespace PM3D
 
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer),
 			DXE_CREATIONINDEXBUFFER);
+
+		// Filtre pour les collisions
+		setupFiltering(body_, FILTER_TYPE::OBSTACLE, FILTER_TYPE::VEHICULE);
 
 		// Inititalisation des shaders
 		InitShaders();

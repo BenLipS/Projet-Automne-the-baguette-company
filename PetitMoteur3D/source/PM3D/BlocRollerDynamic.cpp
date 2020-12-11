@@ -9,6 +9,7 @@
 #include <iostream>
 #include "IndexModel.h"
 #include "tools.h"
+#include "Filter.h"
 
 using namespace physx;
 using namespace DirectX;
@@ -33,7 +34,7 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMax_ = 60000.0f;
+	constexpr float BlocRollerDynamic::vitesseMax_ = 6000.0f;
 	constexpr float BlocRollerDynamic::vitesseMin_ = 100.0f;
 
 
@@ -145,6 +146,9 @@ namespace PM3D
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer),
 			DXE_CREATIONINDEXBUFFER);
 
+		// Filtre pour les collisions
+		setupFiltering(body_, FILTER_TYPE::VEHICULE, FILTER_TYPE::OBSTACLE | FILTER_TYPE::TERRAIN);
+
 		// Inititalisation des shaders
 		InitShaders();
 	}
@@ -190,13 +194,6 @@ namespace PM3D
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
 			vVitesse = vVitesse * 0.99f;
 		}
-
-		if (vVitesse.magnitude() > vitesseMax_)
-			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMax_);
-		else if (vVitesse.magnitude() < vitesseMin_)
-			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMin_);
-		else
-			body->setLinearVelocity(vVitesse);
 
 		tempsEcoule;
 
@@ -246,6 +243,15 @@ namespace PM3D
 		PxVec3 largeurPente = normale.cross(directionPente);
 		PxQuat pente = PxQuat(acos(normale.dot(PxVec3(0.0f,1.0f,0.0f))), largeurPente);
 		PxQuat orientation = PxQuat(angle, normale).getNormalized();
+
+		float valProjete = normale.dot(vVitesse);
+		PxVec3 vitesseFinale{ vVitesse - (valProjete * normale) };
+		if (vitesseFinale.magnitude() > vitesseMax_)
+			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
+		else if (vitesseFinale.magnitude() < vitesseMin_)
+			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
+		else
+			body->setLinearVelocity(vitesseFinale);
 
 		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
 		matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
