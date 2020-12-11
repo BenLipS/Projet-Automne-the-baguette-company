@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <DirectXMath.h>
+#include "BlocRollerDynamic.h"
 #include "objet3d.h"
 #include "PxPhysicsAPI.h"
 
@@ -47,6 +48,6 @@ namespace PM3D {
 
 		void update(float tempsEcoule = 0.0f);
 		void update(float y, float tempsEcoule);
-		void update(physx::PxRigidBody*, float tempsEcoule = 0);
+		void update(BlocRollerDynamic*, float tempsEcoule = 0);
 	};
 }

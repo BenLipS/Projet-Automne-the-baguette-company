@@ -188,7 +188,7 @@ namespace PM3D {
 		*pMatViewProj = (*pMatView) * (*pMatProj);
 	}
 
-	void CCamera::update(PxRigidBody* _body, float tempsEcoule)
+	void CCamera::update(BlocRollerDynamic* _character, float tempsEcoule)
 	{
 		tempsEcoule;
 		// Pour les mouvements, nous utilisons le gestionnaire de saisie
@@ -197,10 +197,20 @@ namespace PM3D {
 
 		//float coeffMove = 3000.0f;
 		XMVECTOR relativeZ = XMVector3Normalize(XMVector3Cross(direction, up));
+		PxRigidBody* body = static_cast<PxRigidBody*>(_character->getBody());
 
-
-		PxTransform pose = _body->getGlobalPose();
+		PxTransform pose = _character->getBody()->getGlobalPose();
 		
+		PxVec3 vecVitesse = body->getLinearVelocity();
+		float vitesseMax = _character->getVitesseMax();
+		float pourcentageVmax = vecVitesse.magnitude() / vitesseMax;
+
+		float offsetY =1000.f + 5000.f * pourcentageVmax;
+		float offsetZ = 500.f + 2000.f * pourcentageVmax;
+		
+		setPosition(XMVECTOR{ pose.p.x, pose.p.y + offsetY, pose.p.z - offsetZ });
+		setDirection(XMVECTOR{ 0.0f, -offsetY, offsetZ });
+
 		//float z = XMVectorGetZ(position);
 		/*if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
 			if (XMVectorGetZ(position) < (pose.p.z - 700.0f))
@@ -213,8 +223,7 @@ namespace PM3D {
 
 		//z = max(z,pose.p.z - 1000.0f);
 
-		setPosition(XMVECTOR{ pose.p.x, pose.p.y + 1000.0f, pose.p.z - 1000.0f });
-		setDirection(XMVECTOR{ 0.0f, -1.0f, 1.6f });
+		
 
 		// Vérifier l’état de la touche SwapMode
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_M)) {

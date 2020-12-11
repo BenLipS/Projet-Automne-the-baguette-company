@@ -31,7 +31,7 @@ namespace PM3D
 
 
 		PxRigidActor* getBody() { return body_; }
-
+		float getVitesseMax() { return vitesseMax_; }
 	private:
 		CDispositifD3D11* pDispositif;
 		void InitShaders();

@@ -250,7 +250,7 @@ namespace PM3D
 			const float champDeVision = XM_PI / 3; 	// 45 degr�s
 			const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 			const float planRapproche = 2.0f;
-			const float planEloigne = 100000.0f;
+			const float planEloigne = 1000000.0f;
 
 			m_MatProj = XMMatrixPerspectiveFovLH(
 				champDeVision,
@@ -262,7 +262,7 @@ namespace PM3D
 
 			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
-			camera.update((PxRigidBody*)character->getBody());
+			camera.update(character);
 
 			return 0;
 		}
@@ -364,7 +364,8 @@ namespace PM3D
 			}
 			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
-			camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
+			//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
+			camera.update(character, tempsEcoule);
 			}
 			return true;
 		}
