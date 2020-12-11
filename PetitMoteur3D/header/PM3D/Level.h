@@ -33,7 +33,8 @@ namespace PM3D {
 		Scene* scenePhysic_;
 		CDispositifD3D11* pDispositif_;
 		void initJoueur();
-		void initPente(Light_Manager lm, int numPente);
+		void initPente(Light_Manager lm);
 		void initBloc(Light_Manager lm, float _x, float _y);
+		void initHM(Light_Manager lm, int numPente);
 	};
 }

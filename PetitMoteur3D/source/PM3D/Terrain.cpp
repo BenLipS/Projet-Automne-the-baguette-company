@@ -101,7 +101,7 @@ namespace PM3D {
 				int heightValue = bitmapImage[k];
 				
 				// Cr�ation des sommmets aux bonnes coordonn�es (avec une normale par d�faut qui sera calcul�e plus tard)
-				sommets[index] = CSommetTerrain(XMFLOAT3((float)((i +/* scaleFixX_ * numTerrain*/ - width/2) * scale.x), (float)((heightValue - scaleFixZ_ * numTerrain)* scale.y), (float)((j + scaleFixX_ * numTerrain -height/2)* scale.z)),normale);
+				sommets[index] = CSommetTerrain(XMFLOAT3((float)((i +/* scaleFixX_ * numTerrain*/ - width/2) * scale.x), (float)((heightValue - (scaleFixZ_ - 0.33f) * numTerrain)* scale.y), (float)((j + (scaleFixX_ -5)* numTerrain -height/2)* scale.z)),normale);
 
 				k += 3;
 			}
