@@ -93,6 +93,9 @@
     <ClCompile Include="source\PM3D\DDSTextureLoader.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="source\PM3D\PanneauPE.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\stdafx.h">
@@ -188,6 +191,9 @@
     <ClInclude Include="header\PM3D\DDSTextureLoader.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="header\PM3D\PanneauPE.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PetitMoteur3D.ico">
@@ -221,6 +227,7 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="sprite1.fx" />
+    <FxCompile Include="PostEffect.fx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Heightmap.bmp">

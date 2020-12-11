@@ -19,6 +19,7 @@
 #include "GestionnaireDeTextures.h"
 #include "ObjetMesh.h"
 #include "AfficheurSprite.h"
+#include "PanneauPE.h"
 
 #include <fstream>
 
@@ -246,16 +247,28 @@ namespace PM3D
 			//CObjetMesh* pMesh;
 
 			// Constructeur abec format bianaire
-			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>("C:\\Users\\reymi\\OneDrive\\Documents\\GitHub\\projet-automne-the-baguette-company\\PetitMoteur3D\\src\\Jin\\jin.OMB", pDispositif);
+			
+			//std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>("C:\\Users\\reymi\\OneDrive\\Documents\\GitHub\\projet-automne-the-baguette-company\\PetitMoteur3D\\src\\Jin\\jin.OMB", pDispositif);
+			
+			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(".\\modeles\\Jin\\jin.OMB", pDispositif);
 
 			// Puis il est ajouté à la scène
 			scenePhysic_->ListeScene_.push_back(std::move(pMesh));
-			//scenePhysic_->ListeScene_.emplace_back(std::move(pMesh)
+		
 
 			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif, LMBOr));
 
 			// Création de l'afficheur de sprites et ajout des sprites
 			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+
+			//pAfficheurSprite->AjouterSprite("tree02s.dds", 0,0);
+			//pAfficheurSprite->AjouterSprite("tree02s.dds", 500,500, 100, 100);
+			//pAfficheurSprite->AjouterSprite("tree02s.dds", 800,200, 100, 100);
+
+			// Lighe suivante lève EXCEPTION
+			//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+
+
 
 
 			Light_Manager LMP{

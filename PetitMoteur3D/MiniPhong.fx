@@ -34,6 +34,10 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL) {
 	return sortie;
 }
 
+Texture2D textureEntree;  // la texture
+SamplerState SampleState;  // l'état de sampling
+
+
 float4 MiniPhongPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;

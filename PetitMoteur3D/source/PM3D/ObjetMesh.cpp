@@ -40,6 +40,8 @@ struct ShadersParams // toujours un multiple de 16 pour les constantes
 	XMFLOAT2 remplissage;
 };
 
+
+
 // Ancien constructeur
 CObjetMesh::CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* _pDispositif)
 	: pDispositif(_pDispositif) // prendre en note le dispositif
@@ -71,10 +73,12 @@ CObjetMesh::CObjetMesh(const IChargeur& chargeur, const std::string& nomfichier,
 	InitEffet();
 }
 
+
+
 // Constructeur pour lecture d'un objet de format OMB
 CObjetMesh::CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispositif)
 	: pDispositif(_pDispositif) // prendre en note le dispositif
-	, matWorld(XMMatrixIdentity())
+	, matWorld(XMMatrixIdentity()*10)
 	, rotation(0.0f)
 {
 	// Placer l'objet sur la carte graphique
@@ -526,7 +530,6 @@ void CObjetMesh::Draw() {
 			pImmediateContext->DrawIndexed(indexDrawAmount, indexStart, 0);
 		}
 	}
-
 }
 
 
@@ -630,23 +633,24 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 		if (index >= Material.size())
 		{
 			index = 0;  // valeur de défaut
-	
-
+		}
 		SubsetMaterialIndex.push_back(index);
 	}
 
-	// 4d) Chargement des textures
-	CGestionnaireDeTextures& TexturesManager = CMoteurWindows::GetInstance().GetTextureManager();
+		// 4d) Chargement des textures
+		CGestionnaireDeTextures& TexturesManager = CMoteurWindows::GetInstance().GetTextureManager();
 
-	for (uint32_t i = 0; i < Material.size(); ++i)
-	{
-		if (Material[i].NomFichierTexture.length() > 0)
+		for (uint32_t i = 0; i < Material.size(); ++i)
 		{
-			const std::wstring ws(Material[i].NomFichierTexture.begin(), Material[i].NomFichierTexture.end());
-			Material[i].pTextureD3D = TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+			if (Material[i].NomFichierTexture.length() > 0)
+			{
+				const std::wstring ws(Material[i].NomFichierTexture.begin(), Material[i].NomFichierTexture.end());
+				Material[i].pTextureD3D = TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+			}
 		}
-	}
 }
+
+
 
 void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::string& nomFichier)
 {

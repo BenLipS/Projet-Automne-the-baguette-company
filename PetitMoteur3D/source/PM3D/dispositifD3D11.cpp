@@ -234,4 +234,13 @@ void CDispositifD3D11::SetNormalRSState() {
 	pImmediateContext->RSSetState(mSolidCullBackRS);
 }
 
+void CDispositifD3D11::SetRenderTargetView(ID3D11RenderTargetView* pRenderTargetView_in, ID3D11DepthStencilView* pDepthStencilView_in) { 
+	
+	pRenderTargetView = pRenderTargetView_in; 
+	pDepthStencilView = pDepthStencilView_in;
+	ID3D11RenderTargetView* tabRTV[1];
+	tabRTV[0] = pRenderTargetView; 
+	pImmediateContext->OMSetRenderTargets(1, tabRTV, pDepthStencilView); 
+}
+
 } // namespace PM3D

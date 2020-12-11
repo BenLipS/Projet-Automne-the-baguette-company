@@ -39,6 +39,8 @@ public:
 	void ResetViewPortDimension();
 	void SetNormalRSState();
 
+	void SetRenderTargetView(ID3D11RenderTargetView* pRenderTargetView_in, ID3D11DepthStencilView* pDepthStencilView_in);
+
 	//
 private:
 	ID3D11Device * pD3DDevice;

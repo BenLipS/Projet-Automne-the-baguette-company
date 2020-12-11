@@ -212,6 +212,9 @@
     <ClCompile Include="source\PM3D\Moteur.cpp" />
     <ClCompile Include="source\PM3D\MoteurWindows.cpp" />
     <ClCompile Include="source\PM3D\ObjetMesh.cpp" />
+    <ClCompile Include="source\PM3D\PanneauPE.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="source\PM3D\PetitMoteur3D.cpp" />
     <ClCompile Include="source\PM3D\sommetbloc.cpp" />
     <ClCompile Include="source\PM3D\Terrain.cpp" />
@@ -243,6 +246,9 @@
     <ClInclude Include="header\PM3D\MoteurWindows.h" />
     <ClInclude Include="header\PM3D\objet3d.h" />
     <ClInclude Include="header\PM3D\ObjetMesh.h" />
+    <ClInclude Include="header\PM3D\PanneauPE.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="header\PM3D\PetitMoteur3D.h" />
     <ClInclude Include="header\PM3D\Resource.h" />
     <ClInclude Include="header\PM3D\sommetbloc.h" />
@@ -258,6 +264,9 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MiniPhong.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="PostEffect.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="PS_MiniPhong.hlsl">
