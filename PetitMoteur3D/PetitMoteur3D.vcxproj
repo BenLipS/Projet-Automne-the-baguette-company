@@ -194,6 +194,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\PM3D\AfficheurSprite.cpp" />
+    <ClCompile Include="source\PM3D\Bloc.cpp" />
+    <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
     <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp" />
     <ClCompile Include="source\PM3D\BlocStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocDynamic.cpp" />
@@ -228,6 +230,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\PM3D\AfficheurSprite.h" />
+    <ClInclude Include="header\PM3D\Bloc.h" />
+    <ClInclude Include="header\PM3D\BlocEffet1.h" />
     <ClInclude Include="header\PM3D\BlocRollerDynamic.h" />
     <ClInclude Include="header\PM3D\BlocStatic.h" />
     <ClInclude Include="header\PM3D\BlocDynamic.h" />

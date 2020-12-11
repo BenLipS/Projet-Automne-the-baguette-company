@@ -45,7 +45,7 @@ namespace PM3D
 		int nbSommets;
 		int nbPolygones;
 
-		// Définitions des valeurs d'animation
+		// Dï¿½finitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;
 		XMMATRIX matWorld;
 		float rotation;

@@ -27,14 +27,14 @@ struct ShadersParams // toujours un multiple de 16 pour les constantes
 	XMMATRIX matWorldViewProj;	// la matrice totale 
 	XMMATRIX matWorldViewProjLight;	// WVP pour lumiere 
 	XMMATRIX matWorld;			// matrice de transformation dans le monde 
-	XMVECTOR vLumiere; 			// la position de la source d'éclairage (Point)
-	XMVECTOR vCamera; 			// la position de la caméra
-	XMVECTOR vAEcl; 			// la valeur ambiante de l'éclairage
-	XMVECTOR vAMat; 			// la valeur ambiante du matériau
-	XMVECTOR vDEcl; 			// la valeur diffuse de l'éclairage 
-	XMVECTOR vDMat; 			// la valeur diffuse du matériau 
-	XMVECTOR vSEcl; 			// la valeur spéculaire de l'éclairage 
-	XMVECTOR vSMat; 			// la valeur spéculaire du matériau 
+	XMVECTOR vLumiere; 			// la position de la source d'ï¿½clairage (Point)
+	XMVECTOR vCamera; 			// la position de la camï¿½ra
+	XMVECTOR vAEcl; 			// la valeur ambiante de l'ï¿½clairage
+	XMVECTOR vAMat; 			// la valeur ambiante du matï¿½riau
+	XMVECTOR vDEcl; 			// la valeur diffuse de l'ï¿½clairage 
+	XMVECTOR vDMat; 			// la valeur diffuse du matï¿½riau 
+	XMVECTOR vSEcl; 			// la valeur spï¿½culaire de l'ï¿½clairage 
+	XMVECTOR vSMat; 			// la valeur spï¿½culaire du matï¿½riau 
 	float puissance;
 	int bTex;					// Texture ou materiau 
 	XMFLOAT2 remplissage;
@@ -56,7 +56,7 @@ CObjetMesh::CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* _pDispositif
 }
 
 // Constructeur de conversion
-// Constructeur pour test ou pour création d'un objet de format OMB
+// Constructeur pour test ou pour crï¿½ation d'un objet de format OMB
 CObjetMesh::CObjetMesh(const IChargeur& chargeur, const std::string& nomfichier, CDispositifD3D11* _pDispositif)
 	: pDispositif(_pDispositif) // prendre en note le dispositif
 	, matWorld(XMMatrixIdentity())
@@ -115,7 +115,7 @@ void CObjetMesh::InitEffet()
 	// Compilation et chargement du vertex shader
 	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
-	// Création d'un tampon pour les constantes du VS
+	// Crï¿½ation d'un tampon pour les constantes du VS
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
@@ -139,7 +139,7 @@ void CObjetMesh::InitEffet()
 	pTechnique = pEffet->GetTechniqueByIndex(0);
 	pPasse = pTechnique->GetPassByIndex(0);
 
-	// Créer l'organisation des sommets pour les VS de notre effet
+	// Crï¿½er l'organisation des sommets pour les VS de notre effet
 
 	D3DX11_PASS_SHADER_DESC effectVSDesc;
 	pPasse->GetVertexShaderDesc(&effectVSDesc);
@@ -196,7 +196,7 @@ void CObjetMesh::InitEffet()
 
 
 
-	// Initialisation des paramètres de sampling de la texture
+	// Initialisation des paramï¿½tres de sampling de la texture
 	D3D11_SAMPLER_DESC samplerDesc;
 
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
@@ -213,7 +213,7 @@ void CObjetMesh::InitEffet()
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	// Création de l'état de sampling
+	// Crï¿½ation de l'ï¿½tat de sampling
 	pD3DDevice->CreateSamplerState(&samplerDesc, &pSampleState);
 
 	
@@ -225,7 +225,7 @@ void CObjetMesh::InitEffet()
 	// Description de la texture
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
 
-	// Cette texture sera utilisée comme cible de rendu et 
+	// Cette texture sera utilisï¿½e comme cible de rendu et 
 	// comme ressource de shader
 	textureDesc.Width = SHADOWMAP_DIM;
 	textureDesc.Height = SHADOWMAP_DIM;
@@ -238,7 +238,7 @@ void CObjetMesh::InitEffet()
 	textureDesc.CPUAccessFlags = 0;
 	textureDesc.MiscFlags = 0;
 
-	// Création de la texture
+	// Crï¿½ation de la texture
 	pD3DDevice->CreateTexture2D(&textureDesc, nullptr, &pTextureShadowMap);
 
 	// VUE - Cible de rendu
@@ -246,18 +246,18 @@ void CObjetMesh::InitEffet()
 	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	// Création de la vue.
+	// Crï¿½ation de la vue.
 	pD3DDevice->CreateRenderTargetView(pTextureShadowMap,
 		&renderTargetViewDesc,
 		&pRenderTargetView);
 
-	// VUE – Ressource de shader
+	// VUE ï¿½ Ressource de shader
 	shaderResourceViewDesc.Format = textureDesc.Format;
 	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
 	shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
-	// Création de la vue.
+	// Crï¿½ation de la vue.
 	pD3DDevice->CreateShaderResourceView(pTextureShadowMap,
 		&shaderResourceViewDesc,
 		&pShadowMapView);
@@ -278,7 +278,7 @@ void CObjetMesh::Anime(float tempsEcoule)
 	CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 	CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 
-	// Vérifier l'état de la touche gauche
+	// Vï¿½rifier l'ï¿½tat de la touche gauche
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT))
 	{
 		rotation = rotation + ((XM_PI * 2.0f) / 7.0f * tempsEcoule);
@@ -287,7 +287,7 @@ void CObjetMesh::Anime(float tempsEcoule)
 		matWorld = XMMatrixRotationY(rotation);
 	}
 
-	// Vérifier l'état de la touche droite
+	// Vï¿½rifier l'ï¿½tat de la touche droite
 	if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT))
 	{
 		rotation = rotation - ((XM_PI * 2.0f) / 7.0f * tempsEcoule);
@@ -297,7 +297,7 @@ void CObjetMesh::Anime(float tempsEcoule)
 	}
 
 	// ******** POUR LA SOURIS ************
-	// Vérifier si déplacement vers la gauche
+	// Vï¿½rifier si dï¿½placement vers la gauche
 	if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) &&
 		(rGestionnaireDeSaisie.EtatSouris().lX < 0))
 	{
@@ -307,7 +307,7 @@ void CObjetMesh::Anime(float tempsEcoule)
 		matWorld = XMMatrixRotationY(rotation);
 	}
 
-	// Vérifier si déplacement vers la droite
+	// Vï¿½rifier si dï¿½placement vers la droite
 	if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) &&
 		(rGestionnaireDeSaisie.EtatSouris().lX > 0))
 	{
@@ -337,7 +337,7 @@ void CObjetMesh::Draw()
 	pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
 	
-	// ***** OMBRES ---- Premier Rendu - Création du Shadow Map
+	// ***** OMBRES ---- Premier Rendu - Crï¿½ation du Shadow Map
 	// Utiliser la surface de la texture comme surface de rendu
 	pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView,
 		pDepthStencilView);
@@ -357,7 +357,7 @@ void CObjetMesh::Draw()
 	// input layout des sommets
 	pImmediateContext->IASetInputLayout(pVertexLayoutShadow);
 
-	// Initialiser et sélectionner les «constantes» de l'effet
+	// Initialiser et sï¿½lectionner les ï¿½constantesï¿½ de l'effet
 	ShadersParams sp;
 	sp.matWorldViewProjLight = XMMatrixTranspose(matWorld * mVPLight);
 
@@ -380,7 +380,7 @@ void CObjetMesh::Draw()
 		}
 	}
 
-	// ***** OMBRES ---- Deuxième Rendu - Affichage de l'objet avec ombres
+	// ***** OMBRES ---- Deuxiï¿½me Rendu - Affichage de l'objet avec ombres
 		// Ramener la surface de rendu
 	ID3D11RenderTargetView* tabRTV[1];
 	tabRTV[0] = pDispositif->GetRenderTargetView();
@@ -388,14 +388,14 @@ void CObjetMesh::Draw()
 		tabRTV,
 		pDispositif->GetDepthStencilView());
 
-	// Dimension du viewport - défaut
+	// Dimension du viewport - dï¿½faut
 	pDispositif->ResetViewPortDimension();
 
 	// Choix de la technique
 	pTechnique = pEffet->GetTechniqueByName("MiniPhong");
 	pPasse = pTechnique->GetPassByIndex(0);
 
-	// Initialiser et sélectionner les «constantes» de l'effet
+	// Initialiser et sï¿½lectionner les ï¿½constantesï¿½ de l'effet
 	XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 
 	sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
@@ -480,7 +480,7 @@ void CObjetMesh::Draw() {
 	UINT offset = 0; 
 	pImmediateContext->IASetVertexBuffers( 0, 1, &pVertexBuffer, &stride, &offset ); 
 	
-	// Initialiser et sélectionner les « constantes » de l’effet 
+	// Initialiser et sï¿½lectionner les ï¿½ constantes ï¿½ de lï¿½effet 
 	ShadersParams sp; 
 	XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj(); 
 	
@@ -523,7 +523,7 @@ void CObjetMesh::Draw() {
 			// IMPORTANT pour ajuster les param. 
 			pPasse->Apply(0, pImmediateContext);
 
-			// Nous n’avons qu’un seul CBuffer 
+			// Nous nï¿½avons quï¿½un seul CBuffer 
 			ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");
 			pCB->SetConstantBuffer(pConstantBuffer);
 			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
@@ -537,7 +537,7 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 {
 	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
-	// 1. SOMMETS a) Créations des sommets dans un tableau temporaire
+	// 1. SOMMETS a) Crï¿½ations des sommets dans un tableau temporaire
 	{
 		const size_t nombreSommets = chargeur.GetNombreSommets();
 		std::unique_ptr<CSommetMesh[]> ts(new CSommetMesh[nombreSommets]);
@@ -549,7 +549,7 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 			ts[i].coordTex = chargeur.GetCoordTex(i);
 		}
 
-		// 1. SOMMETS b) Création du vertex buffer et copie des sommets
+		// 1. SOMMETS b) Crï¿½ation du vertex buffer et copie des sommets
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
@@ -566,8 +566,8 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer), DXE_CREATIONVERTEXBUFFER);
 	}
 
-	// 2. INDEX - Création de l'index buffer et copie des indices
-	//            Les indices étant habituellement des entiers, j'ai
+	// 2. INDEX - Crï¿½ation de l'index buffer et copie des indices
+	//            Les indices ï¿½tant habituellement des entiers, j'ai
 	//            pris directement ceux du chargeur mais attention au 
 	//            format si vous avez autre chose que DXGI_FORMAT_R32_UINT
 	{
@@ -591,18 +591,18 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 	// 3. Les sous-objets
 	NombreSubset = chargeur.GetNombreSubset();
 
-	//    Début de chaque sous-objet et un pour la fin
+	//    Dï¿½but de chaque sous-objet et un pour la fin
 	SubsetIndex.reserve(NombreSubset);
 	chargeur.CopieSubsetIndex(SubsetIndex);
 
 	// 4. MATERIAUX
-	// 4a) Créer un matériau de défaut en index 0
-	//     Vous pourriez changer les valeurs, j'ai conservé 
+	// 4a) Crï¿½er un matï¿½riau de dï¿½faut en index 0
+	//     Vous pourriez changer les valeurs, j'ai conservï¿½ 
 	//     celles du constructeur
 	Material.reserve(chargeur.GetNombreMaterial() + 1);
 	Material.emplace_back(CMaterial());
 
-	// 4b) Copie des matériaux dans la version locale
+	// 4b) Copie des matï¿½riaux dans la version locale
 	for (int32_t i = 0; i < chargeur.GetNombreMaterial(); ++i)
 	{
 		CMaterial mat;
@@ -632,7 +632,7 @@ void CObjetMesh::TransfertObjet(const IChargeur& chargeur)
 
 		if (index >= Material.size())
 		{
-			index = 0;  // valeur de défaut
+			index = 0;  // valeur de dï¿½faut
 		}
 		SubsetMaterialIndex.push_back(index);
 	}
@@ -656,7 +656,7 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 {
 	std::ofstream fichier;
 	fichier.open(nomFichier, std::ios::out | std::ios_base::binary);
-	// 1. SOMMETS a) Créations des sommets dans un tableau temporaire
+	// 1. SOMMETS a) Crï¿½ations des sommets dans un tableau temporaire
 	{
 		int32_t nombreSommets = static_cast<int32_t>(chargeur.GetNombreSommets());
 		std::unique_ptr<CSommetMesh[]> ts(new CSommetMesh[nombreSommets]);
@@ -668,7 +668,7 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 			ts[i].coordTex = chargeur.GetCoordTex(i);
 		}
 
-		// 1. SOMMETS b) Écriture des sommets dans un fichier binaire
+		// 1. SOMMETS b) ï¿½criture des sommets dans un fichier binaire
 		fichier.write((char*)&nombreSommets, sizeof(nombreSommets));
 		fichier.write((char*)ts.get(), nombreSommets * sizeof(CSommetMesh));
 	}
@@ -682,7 +682,7 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 	// 3. Les sous-objets
 	const int32_t NombreSubsetp = chargeur.GetNombreSubset();
 
-	//    Début de chaque sous-objet et un pour la fin
+	//    Dï¿½but de chaque sous-objet et un pour la fin
 	std::vector<int32_t> SI;
 	SI.reserve(NombreSubsetp);
 	chargeur.CopieSubsetIndex(SI);
@@ -691,15 +691,15 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 	fichier.write((char*)SI.data(), (NombreSubsetp + 1) * sizeof(int32_t));
 
 	// 4. MATERIAUX
-	// 4a) Créer un matériau de défaut en index 0
-	//     Vous pourriez changer les valeurs, j'ai conservé 
+	// 4a) Crï¿½er un matï¿½riau de dï¿½faut en index 0
+	//     Vous pourriez changer les valeurs, j'ai conservï¿½ 
 	//     celles du constructeur
 	int32_t NbMaterial = static_cast<int32_t>(chargeur.GetNombreMaterial());
 	std::vector<CMaterial> MatLoad;
 	MatLoad.reserve(NbMaterial + 1);
 	MatLoad.emplace_back(CMaterial());
 
-	// 4b) Copie des matériaux dans la version locale
+	// 4b) Copie des matï¿½riaux dans la version locale
 	CMaterial mat;
 	for (int32_t i = 0; i < NbMaterial; ++i)
 	{
@@ -734,7 +734,7 @@ void CObjetMesh::EcrireFichierBinaire(const IChargeur& chargeur, const std::stri
 			if (MatLoad[index].NomMateriau == chargeur.GetMaterialName(i)) break;
 		}
 
-		if (index >= MatLoad.size()) index = 0;  // valeur de défaut
+		if (index >= MatLoad.size()) index = 0;  // valeur de dï¿½faut
 
 		SubsetMI.push_back(index);
 	}
@@ -750,17 +750,17 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 	fichier.open(nomFichier, std::ios::in | std::ios_base::binary);
 	assert(fichier.is_open());
 
-	// 1. SOMMETS a) Créations des sommets dans un tableau temporaire
+	// 1. SOMMETS a) Crï¿½ations des sommets dans un tableau temporaire
 	{
 		int32_t nombreSommets;
 		fichier.read((char*)&nombreSommets, sizeof(nombreSommets));
 
 		std::unique_ptr<CSommetMesh[]> ts(new CSommetMesh[nombreSommets]);
 
-		// 1. SOMMETS b) Lecture des sommets à partir d'un fichier binaire
+		// 1. SOMMETS b) Lecture des sommets ï¿½ partir d'un fichier binaire
 		fichier.read((char*)ts.get(), nombreSommets * sizeof(CSommetMesh));
 
-		// 1. SOMMETS b) Création du vertex buffer et copie des sommets
+		// 1. SOMMETS b) Crï¿½ation du vertex buffer et copie des sommets
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
@@ -804,7 +804,7 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 
 	// 3. Les sous-objets
 	fichier.read((char*)&NombreSubset, sizeof(NombreSubset));
-	//    Début de chaque sous-objet et un pour la fin
+	//    Dï¿½but de chaque sous-objet et un pour la fin
 	{
 		std::unique_ptr<int32_t[]> si(new int32_t[NombreSubset + 1]);
 
@@ -813,8 +813,8 @@ void CObjetMesh::LireFichierBinaire(const std::string& nomFichier)
 	}
 
 	// 4. MATERIAUX
-	// 4a) Créer un matériau de défaut en index 0
-	//     Vous pourriez changer les valeurs, j'ai conservé 
+	// 4a) Crï¿½er un matï¿½riau de dï¿½faut en index 0
+	//     Vous pourriez changer les valeurs, j'ai conservï¿½ 
 	//     celles du constructeur
 	CMaterial mat;
 
@@ -874,7 +874,7 @@ void CObjetMesh::InitDepthBuffer()
 		pD3DDevice->CreateTexture2D(&depthTextureDesc, nullptr, &pDepthTexture),
 		DXE_ERREURCREATIONTEXTURE);
 
-	// Création de la vue du tampon de profondeur (ou de stencil)
+	// Crï¿½ation de la vue du tampon de profondeur (ou de stencil)
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSView;
 	ZeroMemory(&descDSView, sizeof(descDSView));
 	descDSView.Format = depthTextureDesc.Format;
@@ -887,15 +887,15 @@ void CObjetMesh::InitDepthBuffer()
 
 void CObjetMesh::InitMatricesShadowMap()
 {
-	// Matrice de la vision vu par la lumière - Le point TO est encore 0,0,0
+	// Matrice de la vision vu par la lumiï¿½re - Le point TO est encore 0,0,0
 	mVLight = XMMatrixLookAtLH(
 		XMVectorSet(-5.0f, 5.0f, -5.0f, 1.0f),
 		XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
 		XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
-	const float champDeVision = XM_PI / 4;  // 45 degrés
+	const float champDeVision = XM_PI / 4;  // 45 degrï¿½s
 	const float ratioDAspect = 1.0f; 	// 512/512
-	const float planRapproche = 2.0f; 	// Pas besoin d'être trop près
+	const float planRapproche = 2.0f; 	// Pas besoin d'ï¿½tre trop prï¿½s
 	const float planEloigne = 100.0f;	// Suffisemment pour avoir tous les objets
 	mPLight = XMMatrixPerspectiveFovLH(champDeVision,
 		ratioDAspect,

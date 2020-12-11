@@ -104,7 +104,7 @@ private:
 	void InitMatricesShadowMap();
 	
 
-	// ****  Données membres
+	// ****  Donnï¿½es membres
 	XMMATRIX matWorld;				// Matrice de transformation dans le monde
 	float rotation;
 
@@ -116,10 +116,10 @@ private:
 
 	// Les sous-objets
 	int NombreSubset;				// Nombre de sous-objets dans le mesh
-	std::vector<int> SubsetMaterialIndex;// Index des matériaux
+	std::vector<int> SubsetMaterialIndex;// Index des matï¿½riaux
 	std::vector<int> SubsetIndex;		// Index des sous-objets
 
-	std::vector<CMaterial> Material;		// Vecteur des matériaux
+	std::vector<CMaterial> Material;		// Vecteur des matï¿½riaux
 
 	// Pour les effets et shaders
 	ID3D11SamplerState* pSampleState;
