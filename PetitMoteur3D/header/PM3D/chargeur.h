@@ -13,6 +13,12 @@ public:
 		bInverserCulling = false;
 		bMainGauche = false;
 	}
+	CParametresChargement(std::string NomFichier_, std::string NomChemin_, bool bInverserCulling_, bool bMainGauche_) {
+		NomFichier = NomFichier_;
+		NomChemin = NomChemin_;
+		bInverserCulling = bInverserCulling_;
+		bMainGauche = bMainGauche_;
+	}
 
 	std::string NomFichier;
 	std::string NomChemin;
@@ -23,6 +29,8 @@ public:
 class IChargeur
 {
 public:
+
+	
 	virtual ~IChargeur() = default;
 
 	virtual void Chargement(const CParametresChargement& param) = 0;

@@ -1,146 +1,105 @@
 #pragma once
 #include "objet3d.h"
 #include "d3dx11effect.h"
+#include "dispositifD3D11.h"
+#include "chargeur.h"
+
+#include <vector>
+using namespace std;
 
 namespace PM3D
 {
-class IChargeur;
-class CDispositifD3D11;
 
-class CObjetMesh : public CObjet3D
-{
-private:
-	struct CSommetMesh
+	class CObjetMesh : public CObjet3D
 	{
-		CSommetMesh() = default;
-		CSommetMesh(const XMFLOAT3& _position, const XMFLOAT3& _normal, const XMFLOAT2& _coordTex = XMFLOAT2(0, 0))
-			: position(_position)
-			, normal(_normal)
-			, coordTex(_coordTex)
-		{
-		}
 
-		static UINT numElements;
-		static D3D11_INPUT_ELEMENT_DESC layout[];
+	public:
+		CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* pDispositif);
+		virtual ~CObjetMesh(void);
+	private: 
+		CObjetMesh();
 
-		XMFLOAT3 position;
-		XMFLOAT3 normal;
-		XMFLOAT2 coordTex;
+		struct ShadersParams {
+			XMMATRIX matWorldViewProj; // la matrice totale 
+			XMMATRIX matWorld; // matrice de transformation dans le monde
+			XMVECTOR vLumiere; // la position de la source d’éclairage (Point)
+			XMVECTOR vCamera; // la position de la caméra
+			XMVECTOR vAEcl; // la valeur ambiante de l’éclairage
+			XMVECTOR vAMat; // la valeur ambiante du matériau
+			XMVECTOR vDEcl; // la valeur diffuse de l’éclairage
+			XMVECTOR vDMat; // la valeur diffuse du matériau
+			XMVECTOR vSEcl;	// la valeur spéculaire de l'éclairage
+			XMVECTOR vSMat;	// la valeur spéculaire du matériau
+			float puissance; // la puissance de spécularité
+			int bTex; // Texture ou matériau
+			XMFLOAT2 remplissage;
+		};
+
+		class CMaterial {
+
+		public:
+			string NomFichierTexture;
+			string NomMateriau;
+			ID3D11ShaderResourceView* pTextureD3D;
+			XMFLOAT4 Ambient;
+			XMFLOAT4 Diffuse;
+			XMFLOAT4 Specular;
+			float Puissance;
+			bool transparent;
+
+			CMaterial() {
+				Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+				Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+				Specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+				transparent = false;
+				Puissance = 0;
+				pTextureD3D = NULL;
+				NomFichierTexture = "";
+			}
+		};
+
+		class CSommetMesh {
+		public:
+			CSommetMesh() {};
+			CSommetMesh(XMFLOAT3 _position, XMFLOAT3 _normal, XMFLOAT2 _coordTex = XMFLOAT2(0, 0));
+
+		public:
+			static UINT numElements;
+			static D3D11_INPUT_ELEMENT_DESC layout[];
+
+			XMFLOAT3 position;
+			XMFLOAT3 normal;
+			XMFLOAT2 coordTex;
+		};
+
+		// **** Données membres 
+		XMMATRIX matWorld; // Matrice de transformation dans le monde 
+		float rotation; 
+		
+		// Pour le dessin 
+		CDispositifD3D11* pDispositif; // On prend en note le dispositif 
+		ID3D11Buffer* pVertexBuffer;
+		ID3D11Buffer* pIndexBuffer; 
+		
+		// Les sous-objets 
+		int NombreSubmesh; // Nombre de sous-objets dans le mesh 
+		vector<int> SubmeshMaterialIndex; // Index des matériaux 
+		vector<int> SubmeshIndex; // Index des sous-objets 
+		
+		vector<CMaterial> Material; // Vecteur des matériaux 
+		
+	    // Pour les effets et shaders 
+		ID3D11SamplerState* pSampleState; 
+		ID3D11Buffer* pConstantBuffer; 
+		ID3DX11Effect* pEffet; 
+		ID3DX11EffectTechnique* pTechnique;
+		ID3DX11EffectPass* pPasse; 
+		ID3D11InputLayout* pVertexLayout;
+
+		void TransfertObjet(const IChargeur& chargeur);
+		void InitEffet();
+		void Draw();
+		void Anime(float tempsEcoule);
+
 	};
-
-	struct MaterialBlock
-	{
-		char NomFichierTexture[200];
-		char NomMateriau[60];
-		XMFLOAT4 Ambient;
-		XMFLOAT4 Diffuse;
-		XMFLOAT4 Specular;
-		float Puissance;
-		bool transparent;
-	};
-
-	struct CMaterial
-	{
-		std::string NomFichierTexture;
-		std::string NomMateriau;
-		ID3D11ShaderResourceView* pTextureD3D;
-
-		XMFLOAT4 Ambient;
-		XMFLOAT4 Diffuse;
-		XMFLOAT4 Specular;
-		float Puissance;
-		bool transparent;
-
-		CMaterial()
-			: pTextureD3D(nullptr)
-			, Ambient(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f))
-			, Diffuse(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f))
-			, Specular(XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))
-			, Puissance(1.0f)
-			, transparent(false)
-		{
-		}
-
-		void MatToBlock(MaterialBlock& mb)
-		{
-			strcpy_s(mb.NomFichierTexture, NomFichierTexture.c_str());
-			strcpy_s(mb.NomMateriau, NomMateriau.c_str());
-			mb.Ambient = Ambient;
-			mb.Diffuse = Diffuse;
-			mb.Specular = Specular;
-			mb.Puissance = Puissance;
-			mb.transparent = transparent;
-
-		}
-
-		void BlockToMat(MaterialBlock& mb)
-		{
-			NomFichierTexture.append(mb.NomFichierTexture);
-			NomMateriau.append(mb.NomMateriau);
-			Ambient = mb.Ambient;
-			Diffuse = mb.Diffuse;
-			Specular = mb.Specular;
-			Puissance = mb.Puissance;
-			transparent = mb.transparent;
-		}
-	};
-
-public:
-	CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* pDispositif);
-	CObjetMesh(const IChargeur& chargeur, const std::string& nomfichier, CDispositifD3D11* _pDispositif);
-	CObjetMesh(const std::string& nomfichier, CDispositifD3D11* _pDispositif);
-
-	virtual ~CObjetMesh();
-
-	virtual void Anime(float tempsEcoule) override;
-	virtual void Draw() override;
-
-private:
-	void TransfertObjet(const IChargeur& chargeur);
-	void InitEffet();
-	void EcrireFichierBinaire(const IChargeur& chargeur, const std::string& nomFichier);
-	void LireFichierBinaire(const std::string& nomFichier);
-	void InitDepthBuffer();
-	void InitMatricesShadowMap();
-	
-
-	// ****  Donn�es membres
-	XMMATRIX matWorld;				// Matrice de transformation dans le monde
-	float rotation;
-
-	// Pour le dessin
-	CDispositifD3D11* pDispositif;		// On prend en note le dispositif
-
-	ID3D11Buffer* pVertexBuffer;
-	ID3D11Buffer* pIndexBuffer;
-
-	// Les sous-objets
-	int NombreSubset;				// Nombre de sous-objets dans le mesh
-	std::vector<int> SubsetMaterialIndex;// Index des mat�riaux
-	std::vector<int> SubsetIndex;		// Index des sous-objets
-
-	std::vector<CMaterial> Material;		// Vecteur des mat�riaux
-
-	// Pour les effets et shaders
-	ID3D11SamplerState* pSampleState;
-	ID3D11Buffer* pConstantBuffer;
-	ID3DX11Effect* pEffet;
-	ID3DX11EffectTechnique* pTechnique;
-	ID3DX11EffectPass* pPasse;
-	ID3D11InputLayout* pVertexLayout;
-
-	static const int SHADOWMAP_DIM = 512;
-
-	ID3D11InputLayout* pVertexLayoutShadow;
-	ID3D11Texture2D* pTextureShadowMap;         // Texture pour le shadow map
-	ID3D11RenderTargetView* pRenderTargetView;  // Vue cible de rendu
-	ID3D11ShaderResourceView* pShadowMapView;   // Vue ressource de shader
-	ID3D11Texture2D* pDepthTexture;				// texture de profondeur
-	ID3D11DepthStencilView* pDepthStencilView;  // Vue tampon de profondeur
-
-	XMMATRIX mVLight;
-	XMMATRIX mPLight;
-	XMMATRIX mVPLight;
-};
-
-} // // namespace PM3D
+}

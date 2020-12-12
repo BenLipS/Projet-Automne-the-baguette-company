@@ -21,6 +21,7 @@
 #include "ObjetMesh.h"
 #include "AfficheurSprite.h"
 #include "PanneauPE.h"
+#include "chargeur.h"
 
 #include <fstream>
 
@@ -208,7 +209,6 @@ namespace PM3D
 			{
 				return 1;
 			}
-
 			/*
 			// Initialisation des matrices View et Proj
 			// Dans notre cas, ces matrices sont fixes
@@ -245,13 +245,17 @@ namespace PM3D
 		{
 			//Affichage du tunnel (10/12/2020)
 
-			//CObjetMesh* pMesh;
 
 			// Constructeur abec format bianaire
 			
 			//std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>("C:\\Users\\reymi\\OneDrive\\Documents\\GitHub\\projet-automne-the-baguette-company\\PetitMoteur3D\\src\\Jin\\jin.OMB", pDispositif);
 			
-			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(".\\modeles\\Jin\\jin.OMB", pDispositif);
+			CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
+			CChargeurOBJ chargeur = CChargeurOBJ();
+			chargeur.Chargement(paramOBJ);
+
+			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(chargeur, pDispositif);
+			
 
 			// Puis il est ajouté à la scène
 			scenePhysic_->ListeScene_.push_back(std::move(pMesh));
@@ -282,8 +286,8 @@ namespace PM3D
 			XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f) // vDMat
 			};
 
-			std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif);
-			bloc->SetTexture(TexturesManager.GetNewTexture(L".\\src\\dirt.dds", pDispositif));
+			//std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif);
+			//bloc->SetTexture(TexturesManager.GetNewTexture(L".\\src\\dirt.dds", pDispositif));
 
 			//CTexture* dirt = TexturesManager.GetNewTexture(L".\\src\\dirt.dds", pDispositif);
 			
@@ -294,7 +298,7 @@ namespace PM3D
 				
 			// Puis, il est ajout� � la sc�ne
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1450.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif));
-			scenePhysic_->ListeScene_.emplace_back(move(bloc));
+			//scenePhysic_->ListeScene_.emplace_back(move(bloc));
 
 
 			Light_Manager LMB{
