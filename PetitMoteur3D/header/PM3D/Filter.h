@@ -9,7 +9,8 @@ namespace PM3D {
 		VEHICULE = (1 << 0),
 		OBSTACLE = (1 << 1),
 		TERRAIN = (1 << 2),
-		MUR = (1 << 3)
+		MUR = (1 << 3),
+		BONUS = (1 << 4)
 	};
 
 	static PxFilterFlags FilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,

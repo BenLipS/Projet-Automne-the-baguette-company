@@ -12,6 +12,25 @@ namespace PM3D {
 
 	}
 
+	void ContactModification::onTrigger(PxTriggerPair* pairs, PxU32 count) {
+
+		for (PxU32 i = 0; i < count; ++i) {
+
+			PxTriggerPair& pair = pairs[i];
+
+			if (pair.triggerActor != NULL && pair.otherActor != NULL) {
+
+				//auto act0 = pair.triggerShape->getSimulationFilterData().word0;
+				//auto act1 = pair.otherShape->getSimulationFilterData().word0;
+
+				PxRigidStatic* bodyTrigger = static_cast<PxRigidStatic*>(pair.triggerActor);
+
+			}
+
+		}
+
+	}
+
 	void ContactModification::onContactModify(PxContactModifyPair* const pairs, PxU32 count) {
 
 		for (PxU32 i = 0; i < count; ++i) {

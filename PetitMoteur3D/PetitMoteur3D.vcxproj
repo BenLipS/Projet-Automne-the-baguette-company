@@ -190,6 +190,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\PM3D\Bonus.cpp" />
     <ClCompile Include="source\PM3D\ContactModification.cpp" />
     <ClCompile Include="source\PM3D\PlanStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp" />
@@ -219,6 +220,7 @@
     <ClCompile Include="source\PM3D\TerrainStatic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\PM3D\Bonus.h" />
     <ClInclude Include="header\PM3D\ContactModification.h" />
     <ClInclude Include="header\PM3D\BlocRollerDynamic.h" />
     <ClInclude Include="header\PM3D\BlocStatic.h" />

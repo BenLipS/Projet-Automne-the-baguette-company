@@ -7,16 +7,21 @@
 #include "BlocRollerDynamic.h"
 #include "Camera.h"
 #include "Terrain.h"
+#include "TerrainStatic.h"
+#include "Bonus.h"
+
 #include <d3d11.h>
 #include <PxPhysicsAPI.h>
 #include <fstream>
-#include "TerrainStatic.h"
+#include <list>
 
 using namespace physx;
 
 namespace PM3D {
 
 	class CDispositifD3D11;
+
+	static std::list<Bonus*> listeBonus;
 
 	class Level {
 	public:
@@ -34,6 +39,7 @@ namespace PM3D {
 		CDispositifD3D11* pDispositif_;
 		void initJoueur();
 		void initPente(Light_Manager lm);
+		void initBonus(Light_Manager lm, float _x, float _y);
 		void initBloc(Light_Manager lm, float _x, float _y);
 		void initHM(Light_Manager lm, int numPente);
 	};
