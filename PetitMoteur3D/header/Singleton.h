@@ -19,7 +19,7 @@ namespace PM3D
 	{
 	public:
         // Renvoie l'instance unique de la classe
-        static T& GetInstance()
+        static T& GetInstance() noexcept
         {
             return Instance;
         }

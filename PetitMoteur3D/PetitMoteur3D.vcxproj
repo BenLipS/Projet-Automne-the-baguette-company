@@ -130,7 +130,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CONSOLE;RENDER_SNIPPET;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_CHARACTER_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -196,6 +196,8 @@
     <ClCompile Include="source\PM3D\AfficheurSprite.cpp" />
     <ClCompile Include="source\PM3D\Bloc.cpp" />
     <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
+    <ClCompile Include="source\PM3D\ContactModification.cpp" />
+    <ClCompile Include="source\PM3D\PlanStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp" />
     <ClCompile Include="source\PM3D\BlocStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocDynamic.cpp" />
@@ -218,6 +220,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="source\PM3D\PetitMoteur3D.cpp" />
+    <ClCompile Include="source\PM3D\Level.cpp" />
     <ClCompile Include="source\PM3D\sommetbloc.cpp" />
     <ClCompile Include="source\PM3D\Terrain.cpp" />
     <ClCompile Include="source\PM3D\Texture.cpp" />
@@ -227,11 +230,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="source\PM3D\TerrainStatic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\PM3D\AfficheurSprite.h" />
     <ClInclude Include="header\PM3D\Bloc.h" />
     <ClInclude Include="header\PM3D\BlocEffet1.h" />
+    <ClInclude Include="header\PM3D\ContactModification.h" />
     <ClInclude Include="header\PM3D\BlocRollerDynamic.h" />
     <ClInclude Include="header\PM3D\BlocStatic.h" />
     <ClInclude Include="header\PM3D\BlocDynamic.h" />
@@ -243,6 +248,7 @@
     <ClInclude Include="header\PM3D\dispositif.h" />
     <ClInclude Include="header\PM3D\dispositifD3D11.h" />
     <ClInclude Include="header\PM3D\GestionnaireDeTextures.h" />
+    <ClInclude Include="header\PM3D\Filter.h" />
     <ClInclude Include="header\PM3D\IndexModel.h" />
     <ClInclude Include="header\PM3D\InfoDispositif.h" />
     <ClInclude Include="header\PM3D\Horloge.h" />
@@ -255,6 +261,7 @@
     </ClInclude>
     <ClInclude Include="header\PM3D\PetitMoteur3D.h" />
     <ClInclude Include="header\PM3D\Resource.h" />
+    <ClInclude Include="header\PM3D\Level.h" />
     <ClInclude Include="header\PM3D\sommetbloc.h" />
     <ClInclude Include="header\PM3D\sommetTerrain.h" />
     <ClInclude Include="header\PM3D\Terrain.h" />
@@ -265,6 +272,8 @@
     <ClInclude Include="header\PM3D\Objet3Dphysic.h" />
     <ClInclude Include="header\PM3D\Objet3DStatic.h" />
     <ClInclude Include="header\PM3D\Objet3DDynamic.h" />
+    <ClInclude Include="header\PM3D\TerrainStatic.h" />
+    <ClInclude Include="header\PM3D\PlanStatic.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MiniPhong.fx">

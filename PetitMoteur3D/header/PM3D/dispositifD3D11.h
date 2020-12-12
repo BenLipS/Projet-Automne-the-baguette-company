@@ -20,15 +20,15 @@ public:
 	virtual void PresentSpecific() override;
 
 	// Fonction d'accès aux membres protégés
-	ID3D11Device*           GetD3DDevice() { return pD3DDevice; }
-	ID3D11DeviceContext*    GetImmediateContext() { return pImmediateContext; }
-	IDXGISwapChain*         GetSwapChain() { return pSwapChain; }
-	ID3D11RenderTargetView* GetRenderTargetView() { return pRenderTargetView; }
+	ID3D11Device*           GetD3DDevice() noexcept { return pD3DDevice; }
+	ID3D11DeviceContext*    GetImmediateContext() noexcept { return pImmediateContext; }
+	IDXGISwapChain*         GetSwapChain() noexcept { return pSwapChain; }
+	ID3D11RenderTargetView* GetRenderTargetView() noexcept { return pRenderTargetView; }
 
 	uint32_t GetLargeur() const;
 	uint32_t GetHauteur() const;
 
-	ID3D11DepthStencilView* GetDepthStencilView() { return pDepthStencilView; }
+	ID3D11DepthStencilView* GetDepthStencilView() noexcept { return pDepthStencilView; }
 
 
 	void ActiverMelangeAlpha();
