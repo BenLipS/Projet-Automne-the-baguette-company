@@ -23,6 +23,11 @@
 #include "Filter.h"
 #include "ContactModification.h"
 
+#include "ChargeurOBJ.h"
+#include "GestionnaireDeTextures.h"
+#include "ObjetMesh.h"
+#include "chargeur.h"
+
 using namespace std;
 using namespace physx;
 
@@ -176,6 +181,8 @@ namespace PM3D
 				scenePhysic_->ListeScene_.erase(it);
 		}
 
+		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
+
 	protected:
 
 		virtual ~CMoteur()
@@ -306,8 +313,19 @@ namespace PM3D
 
 		bool InitObjets()
 		{
-			//
+			
 			Level const niveau(scenePhysic_, pDispositif, 200, 200, 755.0f); // scale en X Y et Z
+
+			// PROVISOIRE
+			CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
+			CChargeurOBJ chargeur = CChargeurOBJ();
+			chargeur.Chargement(paramOBJ);
+
+			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(chargeur, pDispositif);
+
+			// Puis il est ajouté à la scène
+			scenePhysic_->ListeScene_.push_back(std::move(pMesh));
+
 			//Light_Manager LMP{
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere2
@@ -440,5 +458,8 @@ namespace PM3D
 
 		// Gestion des collisions
 		ContactModification contactModif_{};
+
+		// Le gestionnaire de texture
+		CGestionnaireDeTextures TexturesManager;
 	};
 } // namespace PM3D

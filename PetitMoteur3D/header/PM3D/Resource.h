@@ -29,6 +29,7 @@
 #define ERREUR_CREATION_FORMAT_CLAVIER  120
 #define ERREUR_CREATION_SOURIS          121
 #define ERREUR_CREATION_FORMAT_SOURIS   122
+#define DXE_FICHIERTEXTUREINTROUVABLE   123
 #define IDR_MAINFRAME                   128
 #define IDC_STATIC                      -1
 
