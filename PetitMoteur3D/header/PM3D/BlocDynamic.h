@@ -24,8 +24,8 @@ namespace PM3D
 		// Destructeur
 		virtual ~BlocDynamic();
 
-		virtual void Anime(float tempsEcoule) override;
-		virtual void Draw() override;
+		virtual void Anime(float tempsEcoule);
+		virtual void Draw();
 		
 
 	private:

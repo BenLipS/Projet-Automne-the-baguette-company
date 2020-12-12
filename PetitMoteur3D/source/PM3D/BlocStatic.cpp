@@ -152,7 +152,7 @@ namespace PM3D
 		InitShaders();
 	}
 
-	void BlocStatic::Anime(float tempsEcoule)
+	void BlocStatic::Anime(float tempsEcoule) noexcept
 	{
 		tempsEcoule;
 

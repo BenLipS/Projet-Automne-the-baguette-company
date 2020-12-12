@@ -26,11 +26,11 @@ namespace PM3D
 		// Destructeur
 		virtual ~BlocRollerDynamic();
 
-		virtual void Anime(float tempsEcoule) override;
-		virtual void Draw() override;
+		virtual void Anime(float tempsEcoule);
+		virtual void Draw();
 
 
-		PxRigidActor* getBody() { return body_; }
+		PxRigidActor* getBody() noexcept { return body_; }
 
 	private:
 		CDispositifD3D11* pDispositif;

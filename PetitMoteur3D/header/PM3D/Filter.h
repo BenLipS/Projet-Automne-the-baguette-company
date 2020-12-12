@@ -38,7 +38,7 @@ namespace PM3D {
 		filterData.word1 = filterMask;
 
 		const PxU32 nbShapes = actor->getNbShapes();
-		PxShape** shapes = (PxShape**)malloc(sizeof(PxShape*) * nbShapes);
+		PxShape** shapes = static_cast<PxShape**>(malloc(sizeof(PxShape*) * nbShapes));
 		actor->getShapes(shapes, nbShapes);
 
 		for (PxU32 i = 0; i < nbShapes; i++) {

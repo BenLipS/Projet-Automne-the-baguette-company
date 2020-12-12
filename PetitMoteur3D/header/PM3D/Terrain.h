@@ -16,7 +16,7 @@ namespace PM3D
 		// Destructeur
 		virtual ~Terrain();
 
-		virtual void Anime(float tempsEcoule) override;
+		virtual void Anime(float tempsEcoule) noexcept override;
 		virtual void Draw() override;
 
 

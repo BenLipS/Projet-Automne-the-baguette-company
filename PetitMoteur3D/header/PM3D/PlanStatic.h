@@ -13,7 +13,7 @@ namespace PM3D {
     {
     public:
         PlanStatic(Scene* _scene, PxVec3 _point, PxVec3 _normale, PxVec3 _direction);
-        void Draw() {};
+        void Draw() noexcept override {};
         PxTransform getTerrainNormale();
         PxVec3 getDirection();
         PxVec3 getNormale();

@@ -15,10 +15,10 @@ public:
 public:
 	static UINT numElements;
 	static D3D11_INPUT_ELEMENT_DESC layout[];
-	XMFLOAT3 getPosition() { return m_Position; };
-	XMFLOAT3 getNormal() { return m_Normal; };
-	void setPosition(XMFLOAT3 v) { m_Position = v; };
-	void setNormal(XMFLOAT3 v) { m_Normal = v; };
+	XMFLOAT3 getPosition() noexcept { return m_Position; };
+	XMFLOAT3 getNormal() noexcept { return m_Normal; };
+	void setPosition(XMFLOAT3 v) noexcept { m_Position = v; };
+	void setNormal(XMFLOAT3 v) noexcept { m_Normal = v; };
 
 protected:
 	XMFLOAT3 m_Position;

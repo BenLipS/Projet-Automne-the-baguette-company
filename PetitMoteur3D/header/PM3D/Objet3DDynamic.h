@@ -11,7 +11,7 @@ namespace PM3D {
 		Objet3DDynamic(PxScene* _scene, PxRigidDynamic* _body) : Objet3DPhysic(_scene, _body) {};
 	public:
 
-		virtual ~Objet3DDynamic() = default;
+		~Objet3DDynamic() = default;
 
 		virtual void Anime(float) {}
 		virtual void Draw() = 0;

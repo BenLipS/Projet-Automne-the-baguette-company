@@ -13,9 +13,9 @@ namespace PM3D {
 		Objet3DStatic(PxScene* _scene, PxRigidStatic* _body) : Objet3DPhysic(_scene, _body) {};
 	public:
 		
-		virtual ~Objet3DStatic() = default;
+		~Objet3DStatic() = default;
 
-		virtual void Anime(float) {}
+		virtual void Anime(float) noexcept {}
 		virtual void Draw() = 0;
     };
 } // namespace PM3D

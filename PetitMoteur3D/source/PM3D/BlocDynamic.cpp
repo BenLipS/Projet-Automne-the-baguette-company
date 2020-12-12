@@ -167,8 +167,8 @@ namespace PM3D
 		pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		// Source des sommets
-		const UINT stride = sizeof(CSommetBloc);
-		const UINT offset = 0;
+		constexpr UINT stride = sizeof(CSommetBloc);
+		constexpr UINT offset = 0;
 		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
 		// Source des index
@@ -181,8 +181,8 @@ namespace PM3D
 		pImmediateContext->VSSetShader(pVertexShader, nullptr, 0);
 
 		// Initialiser et s�lectionner les �constantes� du VS
-		ShadersParams sp;
-		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+		ShadersParams sp{};
+		XMMATRIX const viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 		sp.vLumiere1 = XMVectorSet(0.0f, 2000.0f, 0.0f, 1.0f); // vLumiere1

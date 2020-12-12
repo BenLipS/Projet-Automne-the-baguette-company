@@ -13,9 +13,9 @@ namespace PM3D {
 		PxDefaultAllocator allocator_ = PxDefaultAllocator();
 		PxDefaultErrorCallback errorCallback_ = PxDefaultErrorCallback();
 
-		PxSimulationFilterShader filterShader;
-		PxSimulationEventCallback* eventCallback;
-		PxContactModifyCallback* modifyCallback;
+		PxSimulationFilterShader filterShader = PxDefaultSimulationFilterShader;
+		PxSimulationEventCallback* eventCallback = NULL;
+		PxContactModifyCallback* modifyCallback = NULL;
 
 		PxFoundation* foundation_ = NULL;
 		PxDefaultCpuDispatcher* dispatcher_ = NULL;
