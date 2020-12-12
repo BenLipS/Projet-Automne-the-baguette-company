@@ -9,7 +9,6 @@
 #include <iostream>
 #include "IndexModel.h"
 #include "tools.h"
-#include "Filter.h"
 
 using namespace physx;
 using namespace DirectX;
@@ -33,10 +32,9 @@ namespace PM3D
 		XMVECTOR vDEcl;     // la valeur diffuse de l��clairage
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
+	
 
-	constexpr float BlocRollerDynamic::vitesseMax_ = 6000.0f;
-	constexpr float BlocRollerDynamic::vitesseMin_ = 100.0f;
-
+	constexpr float BlocRollerDynamic::vitesseMax_ = 2000.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
 		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene->scene_, createRigidBody(_scene, _position, _radius))
@@ -54,18 +52,18 @@ namespace PM3D
 		for( unsigned int i = 0; i < 10; i++)
 			speedY_buffer.push(0.0f);
 
-		typeTag = "vehicule";
+		typeTag = "Bloc";
 		// Les points
 		XMFLOAT3 point[8] =
 		{
-			XMFLOAT3(-_radius, _radius, -_radius),
-			XMFLOAT3(_radius, _radius, -_radius),
-			XMFLOAT3(_radius, -_radius, -_radius),
-			XMFLOAT3(-_radius, -_radius, -_radius),
-			XMFLOAT3(-_radius, _radius, _radius),
-			XMFLOAT3(-_radius, -_radius, _radius),
-			XMFLOAT3(_radius, -_radius, _radius),
-			XMFLOAT3(_radius, _radius, _radius)
+			XMFLOAT3(-_radius / 2, _radius / 2, -_radius / 2),
+			XMFLOAT3(_radius / 2, _radius / 2, -_radius / 2),
+			XMFLOAT3(_radius / 2, -_radius / 2, -_radius / 2),
+			XMFLOAT3(-_radius / 2, -_radius / 2, -_radius / 2),
+			XMFLOAT3(-_radius / 2, _radius / 2, _radius / 2),
+			XMFLOAT3(-_radius / 2, -_radius / 2, _radius / 2),
+			XMFLOAT3(_radius / 2, -_radius / 2, _radius / 2),
+			XMFLOAT3(_radius / 2, _radius / 2, _radius / 2)
 		};
 
 		// Calculer les normales
@@ -146,9 +144,6 @@ namespace PM3D
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer),
 			DXE_CREATIONINDEXBUFFER);
 
-		// Filtre pour les collisions
-		setupFiltering(body_, FILTER_TYPE::VEHICULE, FILTER_TYPE::OBSTACLE | FILTER_TYPE::TERRAIN);
-
 		// Inititalisation des shaders
 		InitShaders();
 	}
@@ -157,63 +152,64 @@ namespace PM3D
 	{
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
-		auto body = static_cast<PxRigidDynamic*>(body_);
+		auto body = (PxRigidDynamic*)(body_);
 		auto speed = body->getLinearVelocity();
 
 		
-		//PxTransform terrain = CMoteurWindows::GetInstance().getTerrainNormale();
-		pair<PxVec3, PxVec3> const terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
-
-		//PxVec3 normale = terrain.q.getBasisVector1();
-		PxVec3 const normale = terrainPair.first;
-
-		PxVec3 const gauche = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
-		PxVec3 const droite = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
+		
+		PxVec3 gauche = PxVec3(0.0f, -1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
+		PxVec3 droite = PxVec3(0.0f, 1.0f, 0.0f).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
 
 		PxVec3 vVitesse = speed;
+		//upPressed_ = false;
 
 		// V�rifier l��tat de la touche gauche
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
-			auto const direction = gauche * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
+			auto direction = gauche * speed.magnitude();
+			vVitesse += (direction.getNormalized() * 50);
 		}
 
 		// V�rifier l��tat de la touche droite
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
-			auto const direction = droite * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
+			auto direction = droite * speed.magnitude();
+			vVitesse += (direction.getNormalized() * 50);
 		}
 
 		vVitesse = vVitesse.getNormalized() * speed.magnitude();
 
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
 			//upPressed_ = true;
-			vVitesse = vVitesse * 1.05f;
+			vVitesse = PxVec3{ vVitesse.x * 1.1f,vVitesse.y,vVitesse.z * 1.1f };
 		}
 
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
-			vVitesse = vVitesse * 0.99f;
+			vVitesse = PxVec3{ vVitesse.x * 0.95f,vVitesse.y,vVitesse.z * 0.95f };
 		}
+
+		if (vVitesse.magnitude() > vitesseMax_)
+			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMax_);
+		else
+			body->setLinearVelocity(vVitesse);
 
 		tempsEcoule;
 
 		//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
 
-		/*PxTransform pose = body_->getGlobalPose();
+		PxTransform pose = body_->getGlobalPose();
 		//pose.q = PxQuat(0.1f, PxVec3(1.0f, 0.0f, 0.0f));
 
 		if (pose.p.x > 2375.0f) {
 			pose.p.x = 2375.0f;
 			PxVec3 vitesse = body->getLinearVelocity();
-			body->setLinearVelocity({ vitesse.x, vitesse.y, vitesse.z });
+			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
 		}
 		else if (pose.p.x < -2375.0f) {
 			pose.p.x = -2375.0f;
 			PxVec3 vitesse = body->getLinearVelocity();
-			body->setLinearVelocity({ vitesse.y, vitesse.y, vitesse.z });
+			body->setLinearVelocity({ 0.0f, vitesse.y, vitesse.z });
 		}
 
-		body_->setGlobalPose(pose);*/
+		body_->setGlobalPose(pose);
 
 		speedY_buffer.pop();
 		speedY_buffer.push(speed.y);
@@ -227,35 +223,13 @@ namespace PM3D
 		}
 
 		speed.y = moyenne/10.0f;
-		
-		PxVec3 const direction = speed.getNormalized();
-		//normale = CMoteurWindows::GetInstance().getTerrainNormale();
-		PxVec3 const sens = PxVec3(0.0f, 0.0f, 1.0f);
-		PxVec3 const projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
-		float angle = acos(projete.dot(sens));
 
-		PxVec3 const directionPente = terrainPair.second;
-		if ((direction.cross(directionPente).y > 0)) {
-			angle = -angle;
-		}
+		PxVec3 base = PxVec3(1.0f, 0.0f, 0.0f);
+		PxVec3 direction = speed.getNormalized();
 
+		PxQuat orientation = PxQuat(PxAcos(base.dot(direction)), base.cross(direction).getNormalized());
 
-		PxVec3 const largeurPente = normale.cross(directionPente);
-		PxQuat const pente = PxQuat(acos(normale.dot(PxVec3(0.0f,1.0f,0.0f))), largeurPente);
-		PxQuat const orientation = PxQuat(angle, normale).getNormalized();
-
-		float const valProjete = normale.dot(vVitesse);
-		PxVec3 const vitesseFinale{ vVitesse - (valProjete * normale) };
-		if (vitesseFinale.magnitude() > vitesseMax_)
-			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
-		else if (vitesseFinale.magnitude() < vitesseMin_)
-			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
-		else
-			body->setLinearVelocity(vitesseFinale);
-
-		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
-		matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
-		matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
+		matWorld = XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position
 	}
 
@@ -268,8 +242,8 @@ namespace PM3D
 		pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		// Source des sommets
-		constexpr UINT stride = sizeof(CSommetBloc);
-		constexpr UINT offset = 0;
+		const UINT stride = sizeof(CSommetBloc);
+		const UINT offset = 0;
 		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
 		// Source des index
@@ -282,8 +256,8 @@ namespace PM3D
 		pImmediateContext->VSSetShader(pVertexShader, nullptr, 0);
 
 		// Initialiser et s�lectionner les �constantes� du VS
-		ShadersParams sp{};
-		XMMATRIX const viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+		ShadersParams sp;
+		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 		sp.vLumiere1 = XMVectorSet(0.0f, 20000.0f, 0.0f, 1.0f);

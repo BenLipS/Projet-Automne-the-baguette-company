@@ -31,10 +31,10 @@ private:
 	static LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 	static INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
-	HACCEL hAccelTable{};						// handle Windows de la table des accélérateurs
+	HACCEL hAccelTable;						// handle Windows de la table des accélérateurs
 	static HINSTANCE hAppInstance;			// handle Windows de l'instance actuelle de l'application
-	HWND hMainWnd{};							// handle Windows de la fenêtre principale
-	TCHAR szWindowClass[MAX_LOADSTRING]{};	// le nom de la classe de fenêtre principale
+	HWND hMainWnd;							// handle Windows de la fenêtre principale
+	TCHAR szWindowClass[MAX_LOADSTRING];	// le nom de la classe de fenêtre principale
 
 	Horloge m_Horloge;
 };
