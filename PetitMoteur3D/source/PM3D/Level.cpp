@@ -81,8 +81,16 @@ namespace PM3D {
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_));
 	}
 	void Level::initHM(Light_Manager _lm, int numPente) {
-
-		char* filename = new char[50]{ "./src/heighmap_Proj52.bmp" };
+		char* filename{};
+		if (numPente == 0) {
+			filename = new char[50]{ "./src/heighmap_Proj52_part1.bmp" };
+		}
+		else if (numPente == 1) {
+			filename = new char[50]{ "./src/heighmap_Proj52_part2.bmp" };
+		}
+		else {
+			filename = new char[50]{ "./src/heighmap_Proj52_part2.bmp" };
+		}
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente));
 	};
 	void Level::initPente(Light_Manager _lm) {
