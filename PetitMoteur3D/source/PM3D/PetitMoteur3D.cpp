@@ -1,4 +1,4 @@
-// PetitMoteur3D.cppï¿½: dï¿½finit le point d'entrï¿½e pour l'application.
+// PetitMoteur3D.cpp : définit le point d'entrée pour l'application.
 //
 
 #include "stdafx.h"
@@ -20,10 +20,10 @@ int APIENTRY _tWinMain(
 
 	try
 	{
-		// Crï¿½ation de l'objet Moteur
+		// Création de l'objet Moteur
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 
-		// Spï¿½cifiques ï¿½ une application Windows
+		// Spécifiques à une application Windows
 		rMoteur.SetWindowsAppInstance(hInstance);
 
 		// Initialisation du moteur
