@@ -55,7 +55,7 @@ namespace PM3D
 
 	void CChargeurOBJ::Chargement(const CParametresChargement& param)
 	{
-		// Les indices de OBJ commencent à 1
+		// Les indices de OBJ commencent ï¿½ 1
 		Position.emplace_back(0.0f, 0.0f, 0.0f);
 		CoordTex.emplace_back(0.0f, 0.0f);
 		Normale.emplace_back(0.0f, 0.0f, 0.0f);
@@ -67,7 +67,7 @@ namespace PM3D
 		bInverserCulling = param.bInverserCulling;
 		bMainGauche = param.bMainGauche;
 
-		// On suppose que tout est au même endroit 
+		// On suppose que tout est au mï¿½me endroit 
 		cheminModele = param.NomChemin;
 
 		LireFichier(cheminModele + param.NomFichier);
@@ -101,7 +101,7 @@ namespace PM3D
 	{
 		std::ifstream fichier(nomFichier, std::ifstream::in);
 
-		// **** Partie 1 - Lire le fichier en mémoire tampon
+		// **** Partie 1 - Lire le fichier en mï¿½moire tampon
 		if (!fichier.is_open())
 		{
 			return false;
@@ -225,18 +225,18 @@ namespace PM3D
 
 				Extraire(iss, x, y, z);
 
-				// Si le modèle est main droite, on inverse le Z
+				// Si le modï¿½le est main droite, on inverse le Z
 				Position.emplace_back(x, y, bMainGauche ? z : z * -1.0f);
 			}
 
-			if (leCar == 't')	//vt - coordonnées d'application de texture
+			if (leCar == 't')	//vt - coordonnï¿½es d'application de texture
 			{
 				float tu, tv;
 
 				iss.get();
 				Extraire(iss, tu, tv);
 
-				// Si le modèle est main droite, on inverse le tv
+				// Si le modï¿½le est main droite, on inverse le tv
 				CoordTex.emplace_back(tu, bMainGauche ? tv : 1.0f - tv);
 
 				bCoordTex = true;
@@ -264,16 +264,16 @@ namespace PM3D
 			leCar = static_cast<char>(iss.get());
 
 			// On ne prend pas en note le nom du groupe (il est optionnel)
-			// ... Mais ça pourrait être intéressant pour des animations spécifiques.
-			SubsetIndex.push_back(static_cast<int>(tabIndex.size()));  // Point de départ des indices pour ce subset
+			// ... Mais ï¿½a pourrait ï¿½tre intï¿½ressant pour des animations spï¿½cifiques.
+			SubsetIndex.push_back(static_cast<int>(tabIndex.size()));  // Point de dï¿½part des indices pour ce subset
 			NombreSubset++;
 			materialName.push_back(std::string("")); // On s'assure d'avoir un nom de materiau pour chaque subset
 			break;
 
 			// Les sommets et index des polygones (Faces)
-		case 'f':	// f - pour face (en réalité un triangle - presque toujours!!!)
+		case 'f':	// f - pour face (en rï¿½alitï¿½ un triangle - presque toujours!!!)
 			leCar = static_cast<char>(iss.get());		// Sauter le blanc
-			leCar = static_cast<char>(iss.get());      // Premier caractère
+			leCar = static_cast<char>(iss.get());      // Premier caractï¿½re
 
 			while (leCar != '\0')
 			{
@@ -282,7 +282,7 @@ namespace PM3D
 				{
 					nbrSlash++;
 				}// Compter les /
-				leCar = static_cast<char>(iss.get());			// Caractère suivant
+				leCar = static_cast<char>(iss.get());			// Caractï¿½re suivant
 			}
 
 			if (nbrSlash > 6)
@@ -300,7 +300,7 @@ namespace PM3D
 					faceVertex.NormalIndex,
 					bCoordTex, bNormales);
 
-				// Les indices peuvent être relatifs à la fin
+				// Les indices peuvent ï¿½tre relatifs ï¿½ la fin
 				if (faceVertex.PositionIndex < 0)
 				{
 					faceVertex.PositionIndex = static_cast<int>(Position.size()) + faceVertex.PositionIndex;
@@ -393,7 +393,7 @@ namespace PM3D
 			// On ne fait rien
 			break;
 
-		case 'd':   // d - Tranparence , peut aussi être Tr
+		case 'd':   // d - Tranparence , peut aussi ï¿½tre Tr
 		{
 			leCar = static_cast<char>(iss.get()); // Oter le blanc
 			float Transparency;
@@ -448,7 +448,7 @@ namespace PM3D
 				material[NombreMateriaux - 1].NomFichierTexture = cheminModele;
 				iss.get();	// oter blanc
 
-				// Nom du fichier (et chemin) Lecture «car. par car.» parce qu'il peut y avoir des blancs
+				// Nom du fichier (et chemin) Lecture ï¿½car. par car.ï¿½ parce qu'il peut y avoir des blancs
 				leCar = static_cast<char>(iss.get());
 
 				while (!iss.eof())
@@ -466,7 +466,7 @@ namespace PM3D
 		}
 		break;
 
-		case 'n':	// newmtl - Nouveau matériau
+		case 'n':	// newmtl - Nouveau matï¿½riau
 		{
 			std::string str;
 			iss >> str;
@@ -475,7 +475,7 @@ namespace PM3D
 			{
 				leCar = static_cast<char>(iss.get());
 
-				// Nouveau matériau
+				// Nouveau matï¿½riau
 				OBJMaterial tempMat;
 				material.push_back(tempMat);
 				iss >> material[NombreMateriaux].NomMateriau;
@@ -485,7 +485,7 @@ namespace PM3D
 		}
 		break;
 
-		case 'N':     // Nd - Puissance de spécularité
+		case 'N':     // Nd - Puissance de spï¿½cularitï¿½
 		{
 			leCar = static_cast<char>(iss.get());
 
@@ -497,7 +497,7 @@ namespace PM3D
 		}
 		break;
 
-		case 'T':   // Tr - Tranparence , peut aussi être d
+		case 'T':   // Tr - Tranparence , peut aussi ï¿½tre d
 			leCar = static_cast<char>(iss.get());
 			if (leCar == 'r')
 			{
@@ -524,7 +524,7 @@ namespace PM3D
 
 	int CChargeurOBJ::TrouverVertex(const OBJVertexInfo& vertex)
 	{
-		int index = 0;  // Pas trouvé
+		int index = 0;  // Pas trouvï¿½
 		bool trouve = false;
 
 		while (index < tabVertexInfo.size() && !trouve)

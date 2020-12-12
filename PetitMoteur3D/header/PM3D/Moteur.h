@@ -294,17 +294,6 @@ namespace PM3D
 			// Constructeur abec format bianaire
 			
 			//std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>("C:\\Users\\reymi\\OneDrive\\Documents\\GitHub\\projet-automne-the-baguette-company\\PetitMoteur3D\\src\\Jin\\jin.OMB", pDispositif);
-			
-			CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
-			CChargeurOBJ chargeur = CChargeurOBJ();
-			chargeur.Chargement(paramOBJ);
-
-			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(chargeur, pDispositif);
-			
-
-			// Puis il est ajouté à la scène
-			scenePhysic_->ListeScene_.push_back(std::move(pMesh));
-		
 
 			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif, LMBOr));
 
@@ -326,6 +315,14 @@ namespace PM3D
 			//scenePhysic_->ListeScene_.emplace_back(move(bloc));
 
 			Level const niveau(scenePhysic_, pDispositif, 200, 200, 755.0f); // scale en X Y et Z
+
+			//charger un obj
+			/*CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
+			CChargeurOBJ chargeur = CChargeurOBJ();
+			chargeur.Chargement(paramOBJ);
+			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(chargeur, pDispositif);
+			// Puis il est ajouté à la scène
+			scenePhysic_->ListeScene_.push_back(std::move(pMesh));*/
 
 			return true;
 		}
