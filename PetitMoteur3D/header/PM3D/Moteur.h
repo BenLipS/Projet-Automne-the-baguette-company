@@ -20,6 +20,8 @@
 #include "TerrainStatic.h"
 #include "PlanStatic.h"
 #include "Level.h"
+#include "Filter.h"
+#include "ContactModification.h"
 
 using namespace std;
 using namespace physx;
@@ -27,8 +29,8 @@ using namespace physx;
 namespace PM3D
 {
 
-	const int IMAGESPARSECONDE = 60;
-	const double EcartTemps = 1.0 / static_cast<double>(IMAGESPARSECONDE);
+	constexpr int IMAGESPARSECONDE = 60;
+	constexpr double EcartTemps = 1.0 / static_cast<double>(IMAGESPARSECONDE);
 
 	//
 	//   TEMPLATE�: CMoteur
@@ -131,7 +133,7 @@ namespace PM3D
 				start++;
 
 			if (start != end) {
-				PlanStatic* terrain = static_cast<PlanStatic*>(start->get());
+				PlanStatic* terrain = dynamic_cast<PlanStatic*>(start->get());
 				pair<PxVec3, PxVec3> pair{ terrain->getNormale(), terrain->getDirection() };
 				return pair;
 			}
@@ -140,11 +142,11 @@ namespace PM3D
 			}
 		}
 
-		CDIManipulateur& GetGestionnaireDeSaisie() { return GestionnaireDeSaisie; }
+		CDIManipulateur& GetGestionnaireDeSaisie() noexcept { return GestionnaireDeSaisie; }
 
-		const XMMATRIX& GetMatView() const { return m_MatView; }
-		const XMMATRIX& GetMatProj() const { return m_MatProj; }
-		const XMMATRIX& GetMatViewProj() const { return m_MatViewProj; }
+		const XMMATRIX& GetMatView() const noexcept { return m_MatView; }
+		const XMMATRIX& GetMatProj() const noexcept { return m_MatProj; }
+		const XMMATRIX& GetMatViewProj() const noexcept { return m_MatViewProj; }
 
 	protected:
 
@@ -191,7 +193,7 @@ namespace PM3D
 			return true;
 		}
 
-		virtual void Cleanup()
+		virtual void Cleanup() noexcept
 		{
 			// d�truire les objets
 			scenePhysic_->ListeScene_.clear();
@@ -221,7 +223,13 @@ namespace PM3D
 			sceneDesc.gravity = PxVec3(0.0f, -2000.0f, 0.0f);
 			scenePhysic_->dispatcher_ = PxDefaultCpuDispatcherCreate(2);
 			sceneDesc.cpuDispatcher = scenePhysic_->dispatcher_;
-			sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+			//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+			scenePhysic_->filterShader = FilterShader;
+			sceneDesc.filterShader = scenePhysic_->filterShader;
+			scenePhysic_->eventCallback = &contactModif_;
+			sceneDesc.simulationEventCallback = scenePhysic_->eventCallback;
+			scenePhysic_->modifyCallback = &contactModif_;
+			sceneDesc.contactModifyCallback = scenePhysic_->modifyCallback;
 			scenePhysic_->scene_ = scenePhysic_->physic_->createScene(sceneDesc);
 
 			scenePhysic_->material_ = scenePhysic_->physic_->createMaterial(0.5f, 0.5f, 0.6f);
@@ -247,10 +255,11 @@ namespace PM3D
 			m_MatViewProj = m_MatView * m_MatProj;
 			*/
 
-			const float champDeVision = XM_PI / 3; 	// 45 degr�s
+			constexpr float champDeVision = XM_PI / 3; 	// 45 degr�s
 			const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 			const float planRapproche = 2.0f;
 			const float planEloigne = 1000000.0f;
+
 
 			m_MatProj = XMMatrixPerspectiveFovLH(
 				champDeVision,
@@ -260,7 +269,7 @@ namespace PM3D
 
 			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj,CCamera::CAMERA_TYPE::CUBE);
 
-			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
 			camera.update(character);
 
@@ -270,7 +279,7 @@ namespace PM3D
 		bool InitObjets()
 		{
 			//
-			Level niveau(scenePhysic_, pDispositif, 200, 200, 755.0f); // scale en X Y et Z
+			Level const niveau(scenePhysic_, pDispositif, 200, 200, 755.0f); // scale en X Y et Z
 			//Light_Manager LMP{
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere2
@@ -362,7 +371,7 @@ namespace PM3D
 			{
 				object3D->Anime(tempsEcoule);
 			}
-			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
 			//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 			camera.update(character, tempsEcoule);
@@ -372,33 +381,36 @@ namespace PM3D
 
 	protected:
 		// Variables pour le temps de l'animation
-		int64_t TempsSuivant;
-		int64_t TempsCompteurPrecedent;
+		int64_t TempsSuivant{};
+		int64_t TempsCompteurPrecedent{};
 
 		// Le dispositif de rendu
-		TClasseDispositif* pDispositif;
+		TClasseDispositif* pDispositif{};
 
 		// La seule sc�ne
 		//std::vector<std::unique_ptr<CObjet3D>> ListeScene;
 
 		// Les matrices
-		XMMATRIX m_MatView;
-		XMMATRIX m_MatProj;
-		XMMATRIX m_MatViewProj;
+		XMMATRIX m_MatView{};
+		XMMATRIX m_MatProj{};
+		XMMATRIX m_MatViewProj{};
 
 		// Les saisies
-		CDIManipulateur GestionnaireDeSaisie;
+		CDIManipulateur GestionnaireDeSaisie{};
 
 		// La camera
-		CCamera camera;
+		CCamera camera{};
 
 		// Le Terrain
 		//Terrain* terrain;
 
 		// La scene physique
-		Scene* scenePhysic_;
+		Scene* scenePhysic_{};
 
 		//ControllerManager
 		//PxControllerManager * controllerManager_;
+
+		// Gestion des collisions
+		ContactModification contactModif_{};
 	};
 } // namespace PM3D

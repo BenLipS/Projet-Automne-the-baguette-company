@@ -269,7 +269,7 @@ namespace PM3D {
 		return y / counter;
 	}
 
-	void Terrain::Anime(float tempsEcoule)
+	void Terrain::Anime(float tempsEcoule) noexcept
 	{
 		tempsEcoule;
 

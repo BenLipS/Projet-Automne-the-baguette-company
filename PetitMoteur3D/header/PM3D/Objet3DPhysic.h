@@ -24,7 +24,7 @@ namespace PM3D
 			scene_->addActor(*body_);
 		};
 	public:
-		virtual ~Objet3DPhysic() { scene_->removeActor(*body_); };
+		~Objet3DPhysic() { scene_->removeActor(*body_); }
 
 		virtual void Anime(float) {};
 		virtual void Draw() = 0;

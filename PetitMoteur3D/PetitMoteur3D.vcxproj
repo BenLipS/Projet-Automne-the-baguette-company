@@ -99,7 +99,7 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)DLL</OutDir>
+    <OutDir>$(ProjectDir)DLL\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -190,6 +190,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\PM3D\ContactModification.cpp" />
     <ClCompile Include="source\PM3D\PlanStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp" />
     <ClCompile Include="source\PM3D\BlocStatic.cpp" />
@@ -218,6 +219,7 @@
     <ClCompile Include="source\PM3D\TerrainStatic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\PM3D\ContactModification.h" />
     <ClInclude Include="header\PM3D\BlocRollerDynamic.h" />
     <ClInclude Include="header\PM3D\BlocStatic.h" />
     <ClInclude Include="header\PM3D\BlocDynamic.h" />
@@ -225,6 +227,7 @@
     <ClInclude Include="header\PM3D\DIManipulateur.h" />
     <ClInclude Include="header\PM3D\dispositif.h" />
     <ClInclude Include="header\PM3D\dispositifD3D11.h" />
+    <ClInclude Include="header\PM3D\Filter.h" />
     <ClInclude Include="header\PM3D\IndexModel.h" />
     <ClInclude Include="header\PM3D\InfoDispositif.h" />
     <ClInclude Include="header\PM3D\Horloge.h" />

@@ -1,4 +1,5 @@
 #pragma once
+#include <dinput.h>
 
 namespace PM3D {
 	class CDIManipulateur

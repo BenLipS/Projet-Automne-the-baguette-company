@@ -9,6 +9,7 @@
 #include <iostream>
 #include "IndexModel.h"
 #include "tools.h"
+#include "Filter.h"
 
 using namespace physx;
 using namespace DirectX;
@@ -33,7 +34,7 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMax_ = 60000.0f;
+	constexpr float BlocRollerDynamic::vitesseMax_ = 6000.0f;
 	constexpr float BlocRollerDynamic::vitesseMin_ = 100.0f;
 
 
@@ -145,6 +146,9 @@ namespace PM3D
 		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer),
 			DXE_CREATIONINDEXBUFFER);
 
+		// Filtre pour les collisions
+		setupFiltering(body_, FILTER_TYPE::VEHICULE, FILTER_TYPE::OBSTACLE | FILTER_TYPE::TERRAIN);
+
 		// Inititalisation des shaders
 		InitShaders();
 	}
@@ -153,31 +157,31 @@ namespace PM3D
 	{
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
-		auto body = (PxRigidDynamic*)(body_);
+		auto body = static_cast<PxRigidDynamic*>(body_);
 		auto speed = body->getLinearVelocity();
 
 		
 		//PxTransform terrain = CMoteurWindows::GetInstance().getTerrainNormale();
-		pair<PxVec3, PxVec3> terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
+		pair<PxVec3, PxVec3> const terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
 
 		//PxVec3 normale = terrain.q.getBasisVector1();
-		PxVec3 normale = terrainPair.first;
+		PxVec3 const normale = terrainPair.first;
 
-		PxVec3 gauche = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
-		PxVec3 droite = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
+		PxVec3 const gauche = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
+		PxVec3 const droite = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
 
 		PxVec3 vVitesse = speed;
 
 		// V�rifier l��tat de la touche gauche
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
-			auto direction = gauche * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 30));
+			auto const direction = gauche * speed.magnitude();
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
 		}
 
 		// V�rifier l��tat de la touche droite
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
-			auto direction = droite * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 30));
+			auto const direction = droite * speed.magnitude();
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
 		}
 
 		vVitesse = vVitesse.getNormalized() * speed.magnitude();
@@ -190,13 +194,6 @@ namespace PM3D
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
 			vVitesse = vVitesse * 0.99f;
 		}
-
-		if (vVitesse.magnitude() > vitesseMax_)
-			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMax_);
-		else if (vVitesse.magnitude() < vitesseMin_)
-			body->setLinearVelocity(vVitesse.getNormalized() * vitesseMin_);
-		else
-			body->setLinearVelocity(vVitesse);
 
 		tempsEcoule;
 
@@ -231,21 +228,30 @@ namespace PM3D
 
 		speed.y = moyenne/10.0f;
 		
-		PxVec3 direction = speed.getNormalized();
+		PxVec3 const direction = speed.getNormalized();
 		//normale = CMoteurWindows::GetInstance().getTerrainNormale();
-		PxVec3 sens = PxVec3(0.0f, 0.0f, 1.0f);
-		PxVec3 projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
+		PxVec3 const sens = PxVec3(0.0f, 0.0f, 1.0f);
+		PxVec3 const projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
 		float angle = acos(projete.dot(sens));
 
-		PxVec3 directionPente = terrainPair.second;
+		PxVec3 const directionPente = terrainPair.second;
 		if ((direction.cross(directionPente).y > 0)) {
 			angle = -angle;
 		}
 
 
-		PxVec3 largeurPente = normale.cross(directionPente);
-		PxQuat pente = PxQuat(acos(normale.dot(PxVec3(0.0f,1.0f,0.0f))), largeurPente);
-		PxQuat orientation = PxQuat(angle, normale).getNormalized();
+		PxVec3 const largeurPente = normale.cross(directionPente);
+		PxQuat const pente = PxQuat(acos(normale.dot(PxVec3(0.0f,1.0f,0.0f))), largeurPente);
+		PxQuat const orientation = PxQuat(angle, normale).getNormalized();
+
+		float const valProjete = normale.dot(vVitesse);
+		PxVec3 const vitesseFinale{ vVitesse - (valProjete * normale) };
+		if (vitesseFinale.magnitude() > vitesseMax_)
+			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
+		else if (vitesseFinale.magnitude() < vitesseMin_)
+			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
+		else
+			body->setLinearVelocity(vitesseFinale);
 
 		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
 		matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
@@ -262,8 +268,8 @@ namespace PM3D
 		pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		// Source des sommets
-		const UINT stride = sizeof(CSommetBloc);
-		const UINT offset = 0;
+		constexpr UINT stride = sizeof(CSommetBloc);
+		constexpr UINT offset = 0;
 		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 
 		// Source des index
@@ -276,8 +282,8 @@ namespace PM3D
 		pImmediateContext->VSSetShader(pVertexShader, nullptr, 0);
 
 		// Initialiser et s�lectionner les �constantes� du VS
-		ShadersParams sp;
-		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+		ShadersParams sp{};
+		XMMATRIX const viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 		sp.vLumiere1 = XMVectorSet(0.0f, 20000.0f, 0.0f, 1.0f);
