@@ -69,7 +69,6 @@ bool CDIManipulateur::Init(HINSTANCE hInstance, HWND hWnd)
 
 void PM3D::CDIManipulateur::StatutClavier()
 {
-	pClavier->Acquire();
 	pClavier->GetDeviceState(sizeof(tamponClavier), (void*)& tamponClavier);
 }
 
@@ -79,7 +78,6 @@ bool PM3D::CDIManipulateur::ToucheAppuyee(UINT touche)
 }
 
 void CDIManipulateur::SaisirEtatSouris() {
-	pSouris->Acquire();
 	pSouris->GetDeviceState(sizeof(mouseState), (void*)& mouseState);
 }
 

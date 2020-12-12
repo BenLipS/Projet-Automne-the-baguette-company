@@ -130,7 +130,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CONSOLE;RENDER_SNIPPET;_CRT_SECURE_NO_WARNINGS;PX_PHYSX_CHARACTER_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -146,6 +146,9 @@
       <AdditionalDependencies>dinput8.lib;dxguid.lib;d3d11.lib;d3dcompiler.lib;DXGI.lib;Effects11d.lib;$(ProjectDir)lib\PhysX_64.lib;$(ProjectDir)lib\PhysXCommon_64.lib;$(ProjectDir)lib\PhysXCooking_64.lib;$(ProjectDir)lib\PhysXExtensions_static_64.lib;$(ProjectDir)lib\PhysXFoundation_64.lib;$(ProjectDir)lib\PhysXPvdSDK_static_64.lib;$(ProjectDir)lib\win64_glut\glut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -190,12 +193,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+
     <ClCompile Include="source\PM3D\Bonus.cpp" />
     <ClCompile Include="source\PM3D\ContactModification.cpp" />
     <ClCompile Include="source\PM3D\PlanStatic.cpp" />
+    <ClCompile Include="source\PM3D\AfficheurSprite.cpp" />
+    <ClCompile Include="source\PM3D\Bloc.cpp" />
+    <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
+
     <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp" />
     <ClCompile Include="source\PM3D\BlocStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocDynamic.cpp" />
+    <ClCompile Include="source\PM3D\ChargeurOBJ.cpp" />
+    <ClCompile Include="source\PM3D\DDSTextureLoader.cpp" />
+    <ClCompile Include="source\PM3D\GestionnaireDeTextures.cpp" />
     <ClCompile Include="source\PM3D\Objet3DDynamic.cpp" />
     <ClCompile Include="source\PM3D\Objet3DStatic.cpp" />
     <ClCompile Include="source\PM3D\Objet3Dphysic.cpp" />
@@ -207,52 +218,68 @@
     <ClCompile Include="source\PM3D\Horloge.cpp" />
     <ClCompile Include="source\PM3D\Moteur.cpp" />
     <ClCompile Include="source\PM3D\MoteurWindows.cpp" />
+    <ClCompile Include="source\PM3D\ObjetMesh.cpp" />
+    <ClCompile Include="source\PM3D\PanneauPE.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="source\PM3D\PetitMoteur3D.cpp" />
-    <ClCompile Include="source\PM3D\Level.cpp" />
     <ClCompile Include="source\PM3D\sommetbloc.cpp" />
     <ClCompile Include="source\PM3D\Terrain.cpp" />
+    <ClCompile Include="source\PM3D\Texture.cpp" />
     <ClCompile Include="source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="source\PM3D\TerrainStatic.cpp" />
   </ItemGroup>
   <ItemGroup>
+
     <ClInclude Include="header\PM3D\Bonus.h" />
     <ClInclude Include="header\PM3D\ContactModification.h" />
+
+    <ClInclude Include="header\PM3D\AfficheurSprite.h" />
+    <ClInclude Include="header\PM3D\Bloc.h" />
+    <ClInclude Include="header\PM3D\BlocEffet1.h" />
     <ClInclude Include="header\PM3D\BlocRollerDynamic.h" />
     <ClInclude Include="header\PM3D\BlocStatic.h" />
     <ClInclude Include="header\PM3D\BlocDynamic.h" />
     <ClInclude Include="header\PM3D\Camera.h" />
+    <ClInclude Include="header\PM3D\chargeur.h" />
+    <ClInclude Include="header\PM3D\ChargeurOBJ.h" />
+    <ClInclude Include="header\PM3D\DDSTextureLoader.h" />
     <ClInclude Include="header\PM3D\DIManipulateur.h" />
     <ClInclude Include="header\PM3D\dispositif.h" />
     <ClInclude Include="header\PM3D\dispositifD3D11.h" />
-    <ClInclude Include="header\PM3D\Filter.h" />
+    <ClInclude Include="header\PM3D\GestionnaireDeTextures.h" />
     <ClInclude Include="header\PM3D\IndexModel.h" />
     <ClInclude Include="header\PM3D\InfoDispositif.h" />
     <ClInclude Include="header\PM3D\Horloge.h" />
     <ClInclude Include="header\PM3D\Moteur.h" />
     <ClInclude Include="header\PM3D\MoteurWindows.h" />
     <ClInclude Include="header\PM3D\objet3d.h" />
+    <ClInclude Include="header\PM3D\ObjetMesh.h" />
+    <ClInclude Include="header\PM3D\PanneauPE.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="header\PM3D\PetitMoteur3D.h" />
     <ClInclude Include="header\PM3D\Resource.h" />
-    <ClInclude Include="header\PM3D\Level.h" />
     <ClInclude Include="header\PM3D\sommetbloc.h" />
     <ClInclude Include="header\PM3D\sommetTerrain.h" />
     <ClInclude Include="header\PM3D\Terrain.h" />
+    <ClInclude Include="header\PM3D\Texture.h" />
     <ClInclude Include="header\PM3D\tools.h" />
     <ClInclude Include="header\stdafx.h" />
     <ClInclude Include="header\PM3D\util.h" />
     <ClInclude Include="header\PM3D\Objet3Dphysic.h" />
     <ClInclude Include="header\PM3D\Objet3DStatic.h" />
     <ClInclude Include="header\PM3D\Objet3DDynamic.h" />
-    <ClInclude Include="header\PM3D\TerrainStatic.h" />
-    <ClInclude Include="header\PM3D\PlanStatic.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MiniPhong.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="PostEffect.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="PS_MiniPhong.hlsl">
@@ -260,6 +287,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="sprite1.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="VS_MiniPhong.hlsl">
@@ -304,6 +334,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <None Include="src\jin.OMB" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PetitMoteur3D.rc" />

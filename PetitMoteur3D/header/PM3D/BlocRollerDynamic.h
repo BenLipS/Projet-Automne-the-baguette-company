@@ -26,15 +26,16 @@ namespace PM3D
 		// Destructeur
 		virtual ~BlocRollerDynamic();
 
-		virtual void Anime(float tempsEcoule);
-		virtual void Draw();
+		virtual void Anime(float tempsEcoule) override;
+		virtual void Draw() override;
+
 
 		PxRigidActor* getBody() { return body_; }
 		float getVitesseMax() { return vitesseMax_; }
 		void setVitesseMax(float _vitesse) { vitesseMax_ = _vitesse; }
 
 		int getNbBonus() { return nbBonus_; }
-		void addBonus() { 
+		void addBonus() {
 			if (nbBonus_ < 5) {
 				vitesseMax_ += 2000.0f;
 				nbBonus_++;

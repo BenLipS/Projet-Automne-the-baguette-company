@@ -2,7 +2,9 @@
 #include "Objet3DStatic.h"
 #include <DirectXMath.h>
 #include <d3d11.h>
+#include <d3dx11effect.h>
 #include "tools.h"
+#include "Texture.h"
 
 #include "PxPhysicsAPI.h"
 
@@ -30,8 +32,9 @@ namespace PM3D {
 		// Destructeur
 		virtual ~BlocStatic();
 
-		virtual void Anime(float tempsEcoule) noexcept override;
+		virtual void Anime(float tempsEcoule) override;
 		virtual void Draw() override;
+		void SetTexture(CTexture* pTexture);
 
 	private:
 
@@ -40,6 +43,9 @@ namespace PM3D {
 
 		CDispositifD3D11* pDispositif;
 		void InitShaders();
+		// Initialisation de l’effet
+		void InitEffet();
+
 
 		ID3D11Buffer* pVertexBuffer;
 		ID3D11Buffer* pIndexBuffer;
@@ -47,6 +53,14 @@ namespace PM3D {
 		ID3D11VertexShader* pVertexShader;
 		ID3D11PixelShader* pPixelShader;
 		ID3D11InputLayout* pVertexLayout;
+
+		ID3D11ShaderResourceView* pTextureD3D;
+		ID3D11SamplerState* pSampleState;
+
+		// Pour les effets
+		ID3DX11Effect* pEffet;
+		ID3DX11EffectTechnique* pTechnique;
+		ID3DX11EffectPass* pPasse;
 
 		
 

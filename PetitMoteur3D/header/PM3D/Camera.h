@@ -1,26 +1,23 @@
 #pragma once
 #include <vector>
 #include <DirectXMath.h>
-#include "BlocRollerDynamic.h"
 #include "objet3d.h"
 #include "PxPhysicsAPI.h"
 
 namespace PM3D {
 	class CCamera
 	{
-		DirectX::XMVECTOR position{};
-		DirectX::XMVECTOR direction{};
-		DirectX::XMVECTOR up{};
-		DirectX::XMMATRIX* pMatView{};
-		DirectX::XMMATRIX* pMatProj{};
-		DirectX::XMMATRIX* pMatViewProj{};
-
-		//float pchampDeVision, pratiodAspect, pplanRapproche, pplanEloigne;
+		DirectX::XMVECTOR position;
+		DirectX::XMVECTOR direction;
+		DirectX::XMVECTOR up;
+		DirectX::XMMATRIX* pMatView;
+		DirectX::XMMATRIX* pMatProj;
+		DirectX::XMMATRIX* pMatViewProj;
 
 	public:
 		static const int HEIGHT = 100;
 
-		enum class CAMERA_TYPE {
+		enum CAMERA_TYPE {
 			FREE,
 			CUBE
 		};
@@ -33,21 +30,21 @@ namespace PM3D {
 	public:
 		bool waitForSwap = false;
 		CCamera() = default;
-		CCamera(const DirectX::XMVECTOR& position_in, const DirectX::XMVECTOR& direction_in, const DirectX::XMVECTOR& up_in, DirectX::XMMATRIX* pMatView_in, DirectX::XMMATRIX* pMatProj_in, DirectX::XMMATRIX* pMatViewProj_in, CAMERA_TYPE type = CAMERA_TYPE::FREE);
+		CCamera(const DirectX::XMVECTOR& position_in, const DirectX::XMVECTOR& direction_in, const DirectX::XMVECTOR& up_in, DirectX::XMMATRIX* pMatView_in, DirectX::XMMATRIX* pMatProj_in, DirectX::XMMATRIX* pMatViewProj_in, CAMERA_TYPE type = FREE);
 
-		void init(const DirectX::XMVECTOR& position_in, const DirectX::XMVECTOR& direction_in, const DirectX::XMVECTOR& up_in, DirectX::XMMATRIX* pMatView_in, DirectX::XMMATRIX* pMatProj_in, DirectX::XMMATRIX* pMatViewProj_in, CAMERA_TYPE type = CAMERA_TYPE::FREE);
+		void init(const DirectX::XMVECTOR& position_in, const DirectX::XMVECTOR& direction_in, const DirectX::XMVECTOR& up_in, DirectX::XMMATRIX* pMatView_in, DirectX::XMMATRIX* pMatProj_in, DirectX::XMMATRIX* pMatViewProj_in, CAMERA_TYPE type = FREE);
 
 		void setPosition(const DirectX::XMVECTOR& position_in);
 		void setDirection(const DirectX::XMVECTOR& direction_in);
 		void setUp(const DirectX::XMVECTOR& up_in);
 
-		CAMERA_TYPE getType() noexcept { return type; }
-		XMVECTOR getPosition() noexcept { return position; }
+		CAMERA_TYPE getType() { return type; }
+		XMVECTOR getPosition() { return position; }
 
 		void swapCameraMode();
 
 		void update(float tempsEcoule = 0.0f);
 		void update(float y, float tempsEcoule);
-		void update(BlocRollerDynamic*, float tempsEcoule = 0);
+		void update(physx::PxRigidBody*);
 	};
 }
