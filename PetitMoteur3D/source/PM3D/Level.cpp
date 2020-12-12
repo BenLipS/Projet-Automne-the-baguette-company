@@ -61,6 +61,13 @@ namespace PM3D {
 		initBloc(LMBOr, 920, 20);
 
 		initBonus(LMB, 100, 0);
+		initBonus(LMB, 200, 0);
+		initBonus(LMB, 300, 0);
+		initBonus(LMB, 400, 0);
+		initBonus(LMB, 500, 0);
+		initBonus(LMB, 600, 0);
+		initBonus(LMB, 700, 0);
+		initBonus(LMB, 800, 0);
 		// Mur final
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif_, LMBOr));
 
@@ -142,11 +149,8 @@ namespace PM3D {
 		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
 		float const posY = _y * scaleY_;
-		std::unique_ptr<Bonus> bonus = std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, _lm);
 
-		listeBonus.push_back(bonus.get());
-
-		scenePhysic_->ListeScene_.push_back(std::move(bonus));
+		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, _lm));
 		
 	}
 }

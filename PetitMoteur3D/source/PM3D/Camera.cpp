@@ -202,7 +202,7 @@ namespace PM3D {
 		PxTransform pose = _character->getBody()->getGlobalPose();
 		
 		PxVec3 vecVitesse = body->getLinearVelocity();
-		float vitesseMax = _character->getVitesseMax();
+		float vitesseMax = _character->getVitesseBonusMax();
 		float pourcentageVmax = vecVitesse.magnitude() / vitesseMax;
 
 		float offsetY =1000.f + 5000.f * pourcentageVmax;

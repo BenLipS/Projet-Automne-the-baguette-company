@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ContactModification.h"
 #include "Filter.h"
+#include "MoteurWindows.h"
 
 namespace PM3D {
 
@@ -20,10 +21,13 @@ namespace PM3D {
 
 			if (pair.triggerActor != NULL && pair.otherActor != NULL) {
 
-				//auto act0 = pair.triggerShape->getSimulationFilterData().word0;
-				//auto act1 = pair.otherShape->getSimulationFilterData().word0;
-
-				PxRigidStatic* bodyTrigger = static_cast<PxRigidStatic*>(pair.triggerActor);
+				auto bodyTrigger = pair.triggerActor;
+				CMoteurWindows::GetInstance().eraseBody(bodyTrigger);
+				auto bodyVehicule = static_cast<PxRigidDynamic*>(pair.otherActor);
+				BlocRollerDynamic* vehicule = CMoteurWindows::GetInstance().findVehiculeFromBody(bodyVehicule);
+				if (vehicule != nullptr) {
+					vehicule->addBonus();
+				}
 
 			}
 

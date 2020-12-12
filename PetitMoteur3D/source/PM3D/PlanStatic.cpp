@@ -5,7 +5,7 @@
 namespace PM3D {
 
 	PlanStatic::PlanStatic(Scene* _scene, PxVec3 _point, PxVec3 _normale, PxVec3 _direction) :
-		Objet3DStatic(_scene->scene_, createRigidBody(_scene, _point, _normale))
+		Objet3DStatic(_scene, createRigidBody(_scene, _point, _normale))
 		, normale_(_normale)
 		, direction_(_direction)
 	{

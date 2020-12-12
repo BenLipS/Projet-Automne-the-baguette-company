@@ -10,7 +10,7 @@ namespace PM3D {
         public Objet3DPhysic
     {
 	protected:
-		Objet3DStatic(PxScene* _scene, PxRigidStatic* _body) : Objet3DPhysic(_scene, _body) {};
+		Objet3DStatic(Scene* _scene, PxRigidStatic* _body) : Objet3DPhysic(_scene, _body) {};
 	public:
 		
 		~Objet3DStatic() = default;

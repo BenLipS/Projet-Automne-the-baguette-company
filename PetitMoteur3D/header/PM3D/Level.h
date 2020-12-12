@@ -13,15 +13,12 @@
 #include <d3d11.h>
 #include <PxPhysicsAPI.h>
 #include <fstream>
-#include <list>
 
 using namespace physx;
 
 namespace PM3D {
 
 	class CDispositifD3D11;
-
-	static std::list<Bonus*> listeBonus;
 
 	class Level {
 	public:

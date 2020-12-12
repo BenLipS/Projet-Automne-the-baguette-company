@@ -10,8 +10,6 @@ namespace PM3D {
 
 	class CDispositifD3D11;
 
-	static int nextIdBonus_ = 0;
-
 	class Bonus :
 		public Objet3DStatic
 	{
@@ -57,8 +55,6 @@ namespace PM3D {
 		//float rotation;
 
 		float radius_, height_;
-
-		int id_;
 
 		static PxRigidStatic* createRigidBody(Scene* _scene, PxTransform _position,
 			const float _radius, const float _Hheight);

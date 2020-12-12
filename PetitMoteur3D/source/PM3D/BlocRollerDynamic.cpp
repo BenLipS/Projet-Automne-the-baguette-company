@@ -34,12 +34,12 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMax_ = 6000.0f;
-	constexpr float BlocRollerDynamic::vitesseMin_ = 100.0f;
-
+	constexpr float BlocRollerDynamic::vitesseMaxDefault_ = 6000.0f;
+	constexpr float BlocRollerDynamic::vitesseMinDefault_ = 100.0f;
+	constexpr float BlocRollerDynamic::vitesseBonusMax_ = 16000.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
-		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene->scene_, createRigidBody(_scene, _position, _radius))
+		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, _radius))
 		, pDispositif(_pDispositif) // Prendre en note le dispositif
 		, matWorld(XMMatrixIdentity())
 		, pVertexBuffer(nullptr)
@@ -49,6 +49,8 @@ namespace PM3D
 		, pVertexLayout(nullptr)
 		, pConstantBuffer(nullptr)
 		, radius_(_radius)
+		, vitesseMax_(vitesseMaxDefault_)
+		, vitesseMin_(vitesseMinDefault_)
 
 	{
 		for( unsigned int i = 0; i < 10; i++)

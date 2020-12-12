@@ -34,7 +34,7 @@ namespace PM3D
 
 
 	BlocDynamic::BlocDynamic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
-		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene->scene_, createRigidBody(_scene, _position, dx/2, dy/2, dz/2))
+		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, dx/2, dy/2, dz/2))
 		, pDispositif(_pDispositif) // Prendre en note le dispositif
 		, matWorld(XMMatrixIdentity())
 		, pVertexBuffer(nullptr)

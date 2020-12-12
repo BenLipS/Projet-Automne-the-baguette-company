@@ -148,6 +148,34 @@ namespace PM3D
 		const XMMATRIX& GetMatProj() const noexcept { return m_MatProj; }
 		const XMMATRIX& GetMatViewProj() const noexcept { return m_MatViewProj; }
 
+		BlocRollerDynamic* findVehiculeFromBody(PxRigidActor* _body) {
+			for (int i = 0; i < scenePhysic_->ListeScene_.size(); ++i) {
+				if (scenePhysic_->ListeScene_[i].get()->isPhysic() && static_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[i].get())->getBody() == _body)
+					return static_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[i].get());
+			}
+			return nullptr;
+		}
+
+		void eraseBody(PxRigidActor* _body) {
+			auto it = scenePhysic_->ListeScene_.begin();
+			bool erased = false;
+			while (it != scenePhysic_->ListeScene_.end() && !erased) {
+				if (it->get() != nullptr && it->get()->isPhysic()) {
+					if (static_cast<Objet3DPhysic*>(it->get())->getBody() == _body) {
+						erased = true;
+					}
+					else {
+						it++;
+					}
+				}
+				else {
+					it++;
+				}
+			}
+			if (erased) 
+				scenePhysic_->ListeScene_.erase(it);
+		}
+
 	protected:
 
 		virtual ~CMoteur()
