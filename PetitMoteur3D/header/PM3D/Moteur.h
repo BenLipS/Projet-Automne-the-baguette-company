@@ -282,12 +282,15 @@ namespace PM3D
 			XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f) // vDMat
 			};
 
-			CTexture* dirt = TexturesManager.GetNewTexture(L".\\src\\dirt.dds", pDispositif);
 			std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif);
-			//dirt;
+			bloc->SetTexture(TexturesManager.GetNewTexture(L".\\src\\dirt.dds", pDispositif));
+
+			//CTexture* dirt = TexturesManager.GetNewTexture(L".\\src\\dirt.dds", pDispositif);
+			
+		
 
 			//std::unique_ptr<BlocStatic> bloc = std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 100.0f, 0.0f, PxQuat(0.0f, PxVec3(1.0f, 0.0f, 0.0f))), 500.0f, 500.1f, 500.0f, pDispositif, LMP);
-			bloc.get()->SetTexture(dirt);
+			
 				
 			// Puis, il est ajout� � la sc�ne
 			scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1450.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif));

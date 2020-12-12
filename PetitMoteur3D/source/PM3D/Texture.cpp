@@ -6,6 +6,7 @@
 #include "util.h"
 #include "DDSTextureLoader.h"
 
+
 using namespace DirectX;
 
 namespace PM3D
@@ -13,7 +14,7 @@ namespace PM3D
 
 CTexture::~CTexture()
 {
-	DXRelacher(m_TexturResource);
+	//DXRelacher(m_TexturResource);
 	DXRelacher(m_Texture);
 }
 
@@ -26,7 +27,8 @@ CTexture::CTexture(const std::wstring& filename, CDispositifD3D11* pDispositif)
 	// Charger la texture en ressource
 	DXEssayer(CreateDDSTextureFromFile(pDevice,
 		m_Filename.c_str(),
-		&m_TexturResource,
+		nullptr,
+		//&m_TexturResource,
 		&m_Texture), DXE_FICHIERTEXTUREINTROUVABLE);
 }
 
