@@ -159,8 +159,8 @@ namespace PM3D
 
 	void BlocRollerDynamic::Anime(float tempsEcoule)
 	{
-
-
+		float constexpr vitesseBonus = 2000.f;
+		setVitesseMax(nbBonus_ * vitesseBonus + vitesseMaxDefault_);
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 		auto body = static_cast<PxRigidDynamic*>(body_);
@@ -168,10 +168,10 @@ namespace PM3D
 
 		if (isContact()) {
 			totalTempsEcoule += tempsEcoule;
-			if (totalTempsEcoule > 1.0f) {
+			if (totalTempsEcoule > .75f) {
 				updateContact(false);
 				totalTempsEcoule = 0.f;
-				body->setLinearVelocity(PxZero);
+				//body->setLinearVelocity(PxZero);
 			}
 		}
 		
@@ -281,8 +281,18 @@ namespace PM3D
 		//body->addForce({ 10000000000.f,0.f,0.f }, PxForceMode::eIMPULSE);
 
 		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
-		matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
-		matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
+		if (!isContact()) {
+			matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
+			matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
+			
+		}
+		else {
+			matWorld = XMMatrixRotationQuaternion(XMVectorSet(body_->getGlobalPose().q.x, body_->getGlobalPose().q.y, body_->getGlobalPose().q.z, body_->getGlobalPose().q.w)); //Orientation
+			if (abs(totalTempsEcoule - tempsEcoule) < 0.0001f) {
+				body->setLinearVelocity(vitesseFinale * 0.5f);
+				suppBonus();
+			}
+		}
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position
 
 	}

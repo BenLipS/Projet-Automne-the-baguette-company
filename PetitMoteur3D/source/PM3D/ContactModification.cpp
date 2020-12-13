@@ -51,7 +51,7 @@ namespace PM3D {
 
 				//PxTransform poseVehicule = body0->getGlobalPose();
 				//PxVec3 vitesseVehicule = body0->getLinearVelocity();
-				//BlocRollerDynamic* vehicule;
+				BlocRollerDynamic* vehicule;
 				/*PxTransform poseTerrain;
 				PxVec3 normaleTerrain;
 				PxVec3 vitesseVehicule;
@@ -60,13 +60,14 @@ namespace PM3D {
 				switch (act0 | act1) {
 
 				case FILTER_TYPE::VEHICULE | FILTER_TYPE::OBSTACLE:
-					//body0->addForce({ -5000000000000.f, 0, 0 }, PxForceMode::eIMPULSE);
-					/*body0->addForce(- vitesseVehicule.getNormalized() * 30000000000000.0f, PxForceMode::eIMPULSE);
+					//body0->addForce({ -50000000000.f, 0, 0 }, PxForceMode::eIMPULSE);
+					//body0->addTorque({ -5000000000000000000.f, -5000000000000000000.f, -5000000000000000000.f }, PxForceMode::eIMPULSE);
+					/*body0->addForce(- vitesseVehicule.getNormalized() * 30000000000000.0f, PxForceMode::eIMPULSE);*/
 					vehicule = CMoteurWindows::GetInstance().findVehiculeFromBody(body0);
-					vehicule->updateContact(true);*/
+					vehicule->updateContact(true);
 
 					//body0->setGlobalPose({ poseVehicule.p,PxQuat(PxPi,PxVec3{0.0f,1.0f,0.0f}) });
-					//body0->setLinearVelocity(PxZero);
+					//body0->setAngularVelocity({ 10000000.f, 10000000.f,10000000.f });
 					//body0->setLinearDamping(1000);
 					break;
 				case FILTER_TYPE::VEHICULE | FILTER_TYPE::TERRAIN:
