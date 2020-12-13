@@ -205,6 +205,9 @@ namespace PM3D {
 		float vitesseMax = _character->getVitesseBonusMax();
 		float pourcentageVmax = vecVitesse.magnitude() / vitesseMax;
 
+		if (pourcentageVmax < 0.25f)// pour eviter les tremblement a faible vitesse
+			pourcentageVmax = 0.25f; 
+
 		float offsetY =1000.f + 5000.f * pourcentageVmax;
 		float offsetZ = 500.f + 2000.f * pourcentageVmax;
 		

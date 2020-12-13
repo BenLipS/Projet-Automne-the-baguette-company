@@ -61,11 +61,21 @@ namespace PM3D
 
 	void BlocRollerDynamic::Anime(float tempsEcoule)
 	{
+		float constexpr vitesseBonus = 2000.f;
+		setVitesseMax(nbBonus_ * vitesseBonus + vitesseMaxDefault_);
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 		auto body = static_cast<PxRigidDynamic*>(body_);
 		auto speed = body->getLinearVelocity();
 
+		if (isContact()) {
+			totalTempsEcoule += tempsEcoule;
+			if (totalTempsEcoule > .75f) {
+				updateContact(false);
+				totalTempsEcoule = 0.f;
+				//body->setLinearVelocity(PxZero);
+			}
+		}
 		
 		//PxTransform terrain = CMoteurWindows::GetInstance().getTerrainNormale();
 		pair<PxVec3, PxVec3> const terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
@@ -79,29 +89,29 @@ namespace PM3D
 		PxVec3 vVitesse = speed;
 
 		// V�rifier l��tat de la touche gauche
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
-			auto const direction = gauche * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
+		float constexpr coeffMoveCote = 25;
+		if (!isContact()) {
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
+				auto const direction = gauche * speed.magnitude();
+				vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
+			}
+			// V�rifier l��tat de la touche droite
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
+				auto const direction = droite * speed.magnitude();
+				vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
+			}
+
+			vVitesse = vVitesse.getNormalized() * speed.magnitude();
+
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
+				//upPressed_ = true;
+				vVitesse = vVitesse * 1.05f;
+			}
+
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
+				vVitesse = vVitesse * 0.99f;
+			}
 		}
-
-		// V�rifier l��tat de la touche droite
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
-			auto const direction = droite * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
-		}
-
-		vVitesse = vVitesse.getNormalized() * speed.magnitude();
-
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
-			//upPressed_ = true;
-			vVitesse = vVitesse * 1.05f;
-		}
-
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
-			vVitesse = vVitesse * 0.99f;
-		}
-
-		tempsEcoule;
 
 		//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
 
@@ -151,18 +161,42 @@ namespace PM3D
 		PxQuat const orientation = PxQuat(angle, normale).getNormalized();
 
 		float const valProjete = normale.dot(vVitesse);
-		PxVec3 const vitesseFinale{ vVitesse - (valProjete * normale) };
-		if (vitesseFinale.magnitude() > vitesseMax_)
-			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
-		else if (vitesseFinale.magnitude() < vitesseMin_)
-			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
-		else
-			body->setLinearVelocity(vitesseFinale);
+		PxVec3 vitesseFinale{ vVitesse - (valProjete * normale) };
+		float const ValProjPente = directionPente.dot(vitesseFinale);
+
+		if (ValProjPente >= 0) {
+			if (vitesseFinale.magnitude() > vitesseMax_)
+				body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
+			else if (vitesseFinale.magnitude() < vitesseMin_)
+				body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
+			else
+				body->setLinearVelocity(vitesseFinale);
+		}
+		else {
+			float const coeffRemontePente = 0.9f;
+			if (abs(ValProjPente) > 2000.f) {//Pour pas remonter la pente
+				body->setLinearVelocity(vitesseFinale * coeffRemontePente);
+			}
+			else
+				body->setLinearVelocity(vitesseFinale);
+		}
+		//body->addForce({ 10000000000.f,0.f,0.f }, PxForceMode::eIMPULSE);
 
 		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
-		matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
-		matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
+		if (!isContact()) {
+			matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
+			matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
+			
+		}
+		else {
+			matWorld = XMMatrixRotationQuaternion(XMVectorSet(body_->getGlobalPose().q.x, body_->getGlobalPose().q.y, body_->getGlobalPose().q.z, body_->getGlobalPose().q.w)); //Orientation
+			if (abs(totalTempsEcoule - tempsEcoule) < 0.0001f) {
+				body->setLinearVelocity(vitesseFinale * 0.5f);
+				suppBonus();
+			}
+		}
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position
+
 	}
 
 	BlocRollerDynamic::~BlocRollerDynamic()
@@ -241,6 +275,7 @@ namespace PM3D
 		PxRigidDynamic* bodyDynamic = PxCreateDynamic(*(_scene->physic_), _position, PxSphereGeometry(_radius), *(_scene->material_), 10.0f);
 		//dynamic->setAngularDamping(0.5f);
 		//dynamic->setLinearVelocity(velocity);
+		//bodyDynamic->setMass(100);
 		return bodyDynamic;
 	}
 } // namespace PM3D

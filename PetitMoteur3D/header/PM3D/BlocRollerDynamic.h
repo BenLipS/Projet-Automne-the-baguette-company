@@ -36,11 +36,18 @@ namespace PM3D
 		int getNbBonus() { return nbBonus_; }
 		void addBonus() { 
 			if (nbBonus_ < 5) {
-				vitesseMax_ += 2000.0f;
 				nbBonus_++;
 			}
 		}
+		void suppBonus() {
+			if (nbBonus_ > 0) {
+				nbBonus_--;
+			}
+		}
 		float getVitesseBonusMax() { return vitesseBonusMax_; }
+
+		bool isContact() { return contact_; }
+		void updateContact(bool _contact) { contact_ = _contact; }
 
 	private:
 		void InitShaders();
@@ -63,6 +70,9 @@ namespace PM3D
 
 		bool upPressed_ = false;
 		std::queue<float> speedY_buffer;
+		bool contact_ = false;
+
+		float totalTempsEcoule{};
 	};
 
 } // namespace PM3D

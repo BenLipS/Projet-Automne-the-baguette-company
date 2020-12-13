@@ -55,9 +55,9 @@ namespace PM3D {
 		initHM(LMB, 0);
 		initHM(LMB, 1);
 
-		initBloc(LMBOr, 100, 100); //X Y
-		initBloc(LMBOr , 220, -100);
-		initBloc(LMBOr, 420, 40);
+		initBloc(LMBOr, 100, 0); //X Y
+		initBloc(LMBOr , 220, 0);
+		initBloc(LMBOr, 420, 0);
 		initBloc(LMBOr, 550, -35);
 		initBloc(LMBOr, 680, -18);
 		initBloc(LMBOr, 730, -90);
@@ -104,7 +104,7 @@ namespace PM3D {
 			filename = new char[50]{ "./src/heighmap_Proj52_part1.bmp" };
 		}
 		else if (numPente == 1) {
-			filename = new char[50]{ "./src/heighmap_Proj52_part2.bmp" };
+			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie_vallee.bmp" };
 		}
 		else {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2.bmp" };
@@ -145,9 +145,9 @@ namespace PM3D {
 
 		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
 		// Pente
-		float constexpr longueur = 500.0f;
-		float constexpr largeur = 500.0f;
-		float constexpr epaisseur = 500.0f;
+		float constexpr longueur = 1000.0f;
+		float constexpr largeur = 1000.0f;
+		float constexpr epaisseur = 1000.0f;
 
 		float const offsetZ = 250 / (cos(XM_PI - anglePente_));
 		float const posZ =  tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
