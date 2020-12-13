@@ -58,9 +58,12 @@ namespace PM3D {
 				switch (act0 | act1) {
 
 				case FILTER_TYPE::VEHICULE | FILTER_TYPE::OBSTACLE:
-					/*body0->addForce(- vitesseVehicule.getNormalized() * 3000.0f, PxForceMode::eIMPULSE);
+					//body0->
+					body0->addForce({ -1000000000000000.f, -100000.f, -100000.f }, PxForceMode::eFORCE);
+					//body0->
+					//body0->addForce(- vitesseVehicule.getNormalized() * 3000.0f, PxForceMode::eIMPULSE);
 					//body0->setLinearVelocity(PxVec3{ 0.0f,0.0f,0.0f });
-					body0->setLinearDamping(1000);*/
+					//body0->setLinearDamping(1000);
 					break;
 				case FILTER_TYPE::VEHICULE | FILTER_TYPE::TERRAIN:
 					/*poseTerrain = body1->getGlobalPose();

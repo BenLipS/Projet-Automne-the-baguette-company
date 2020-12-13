@@ -153,6 +153,8 @@ namespace PM3D
 
 		// Inititalisation des shaders
 		InitShaders();
+
+
 	}
 
 	void BlocRollerDynamic::Anime(float tempsEcoule)
@@ -175,15 +177,15 @@ namespace PM3D
 		PxVec3 vVitesse = speed;
 
 		// V�rifier l��tat de la touche gauche
+		float constexpr coeffMoveCote = 25;
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
 			auto const direction = gauche * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
 		}
-
 		// V�rifier l��tat de la touche droite
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
 			auto const direction = droite * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
+			vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
 		}
 
 		vVitesse = vVitesse.getNormalized() * speed.magnitude();
@@ -248,12 +250,24 @@ namespace PM3D
 
 		float const valProjete = normale.dot(vVitesse);
 		PxVec3 const vitesseFinale{ vVitesse - (valProjete * normale) };
-		if (vitesseFinale.magnitude() > vitesseMax_)
-			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
-		else if (vitesseFinale.magnitude() < vitesseMin_)
-			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
-		else
-			body->setLinearVelocity(vitesseFinale);
+		float const ValProjPente = directionPente.dot(vitesseFinale);
+		if (ValProjPente >= 0) {
+			if (vitesseFinale.magnitude() > vitesseMax_)
+				body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
+			else if (vitesseFinale.magnitude() < vitesseMin_)
+				body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
+			else
+				body->setLinearVelocity(vitesseFinale);
+		}
+		else {
+			float const coeffRemontePente = 0.9f;
+			if (abs(ValProjPente) > 2000.f) {//Pour pas remonter la pente
+				body->setLinearVelocity(vitesseFinale * coeffRemontePente);
+			}
+			else
+				body->setLinearVelocity(vitesseFinale);
+		}
+		//body->addForce({ 10000000000.f,0.f,0.f }, PxForceMode::eIMPULSE);
 
 		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
 		matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
@@ -388,6 +402,7 @@ namespace PM3D
 		PxRigidDynamic* bodyDynamic = PxCreateDynamic(*(_scene->physic_), _position, PxSphereGeometry(_radius), *(_scene->material_), 10.0f);
 		//dynamic->setAngularDamping(0.5f);
 		//dynamic->setLinearVelocity(velocity);
+		//bodyDynamic->setMass(100);
 		return bodyDynamic;
 	}
 } // namespace PM3D
