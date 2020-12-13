@@ -13,7 +13,6 @@ namespace PM3D {
 
 		~Objet3DDynamic() = default;
 
-		virtual void Anime(float) {}
-		virtual void Draw() = 0;
+		virtual void Anime(float) = 0;
     };
 } //namespace PM3D

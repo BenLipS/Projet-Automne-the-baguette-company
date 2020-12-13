@@ -14,11 +14,11 @@ namespace PM3D
 	{
 
 	public:
+		CObjetMesh() = default;
 		CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* pDispositif);
 		virtual ~CObjetMesh(void);
 		void Orientation(XMVECTOR axis, float angle);
-	private: 
-		CObjetMesh();
+	protected: 
 
 		struct ShadersParams {
 			XMMATRIX matWorldViewProj; // la matrice totale 
@@ -100,7 +100,7 @@ namespace PM3D
 		void TransfertObjet(const IChargeur& chargeur);
 		void InitEffet();
 		void Draw();
-		void Anime(float tempsEcoule);
+		virtual void Anime(float) = 0;
 
 	};
 }

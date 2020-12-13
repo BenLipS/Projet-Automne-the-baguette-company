@@ -1,5 +1,5 @@
 #pragma once
-#include "objet3d.h"
+#include "objetMesh.h"
 #include <string>
 #include "PxPhysicsAPI.h"
 #include <DirectXMath.h>
@@ -16,7 +16,7 @@ namespace PM3D
 	//  BUT : 	Classe de base de tous nos objets 3D avec une physique
 	//
 	class Objet3DPhysic :
-		public PM3D::CObjet3D
+		public PM3D::CObjetMesh
 	{
 	protected:
 		PxRigidActor * body_; //Corps physique
@@ -28,8 +28,7 @@ namespace PM3D
 	public:
 		~Objet3DPhysic();
 
-		virtual void Anime(float) {};
-		virtual void Draw() = 0;
+		virtual void Anime(float) = 0;
 		bool isPhysic() { return true; }
 		PxRigidActor* getBody() { return body_; }
 

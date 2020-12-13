@@ -39,20 +39,21 @@ namespace PM3D
 
 	BlocStatic::BlocStatic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
 		CDispositifD3D11* _pDispositif, Light_Manager _sp) : Objet3DStatic(_scene, createRigidBody(_scene, _position, dx / 2, dy / 2, dz / 2))
-		, pDispositif(_pDispositif) // Prendre en note le dispositif
-		, matWorld(XMMatrixIdentity())
-		, pVertexBuffer(nullptr)
-		, pIndexBuffer(nullptr)
 		, pVertexShader(nullptr)
 		, pPixelShader(nullptr)
-		, pVertexLayout(nullptr)
-		, pConstantBuffer(nullptr)
 		, dx_(dx)
 		, dy_(dy)
 		, dz_(dz)
 		, LM_(_sp)
 		
 	{
+		CObjetMesh::pDispositif = _pDispositif; // Prendre en note le dispositif
+		CObjetMesh::matWorld = XMMatrixIdentity();
+		CObjetMesh::pVertexBuffer = nullptr;
+		CObjetMesh::pIndexBuffer = nullptr;
+		CObjetMesh::pVertexLayout = nullptr;
+		CObjetMesh::pConstantBuffer = nullptr;
+
 		typeTag = "Bloc";
 		// Les points
 		XMFLOAT3 point[8] =
@@ -149,67 +150,13 @@ namespace PM3D
 		setupFiltering(body_, FILTER_TYPE::OBSTACLE, FILTER_TYPE::VEHICULE);
 
 		// Inititalisation des shaders
-		InitShaders();
+		InitEffet();
 	}
 
-	void BlocStatic::Anime(float tempsEcoule) noexcept
+	void BlocStatic::Anime(float) noexcept
 	{
-		tempsEcoule;
-
-		//((PxRigidStatic*)body_)->set
-
 		matWorld = XMMatrixRotationQuaternion(XMVectorSet(body_->getGlobalPose().q.x, body_->getGlobalPose().q.y, body_->getGlobalPose().q.z, body_->getGlobalPose().q.w)); //Orientation
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position
-	}
-
-	void BlocStatic::Draw()
-	{
-		// Obtenir le contexte
-		ID3D11DeviceContext* pImmediateContext = pDispositif->GetImmediateContext();
-
-		// Choisir la topologie des primitives
-		pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		// Source des sommets
-		const UINT stride = sizeof(CSommetBloc);
-		const UINT offset = 0;
-		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
-
-		// Source des index
-		pImmediateContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
-		// input layout des sommets
-		pImmediateContext->IASetInputLayout(pVertexLayout);
-
-		// Activer le VS
-		pImmediateContext->VSSetShader(pVertexShader, nullptr, 0);
-
-		// Initialiser et s�lectionner les �constantes� du VS
-		ShadersParams sp;
-		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
-		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
-		sp.matWorld = XMMatrixTranspose(matWorld);
-		sp.vLumiere1 = LM_.vLumiere1;
-		sp.vLumiere2 = LM_.vLumiere2;
-		sp.vCamera = LM_.vCamera;
-		sp.vAEcl = LM_.vAEcl;
-		sp.vAMat = LM_.vAMat;
-		sp.vDEcl = LM_.vDEcl;
-		sp.vDMat = LM_.vDMat;
-
-		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
-
-		pImmediateContext->VSSetConstantBuffers(0, 1, &pConstantBuffer);
-
-		// Pas de Geometry Shader
-		pImmediateContext->GSSetShader(nullptr, nullptr, 0);
-
-		// Activer le PS
-		pImmediateContext->PSSetShader(pPixelShader, nullptr, 0);
-		pImmediateContext->PSSetConstantBuffers(0, 1, &pConstantBuffer);
-
-		// **** Rendu de l'objet
-		pImmediateContext->DrawIndexed(ARRAYSIZE(index_bloc), 0, 0);
 	}
 
 	BlocStatic::~BlocStatic()

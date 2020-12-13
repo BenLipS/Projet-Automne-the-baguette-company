@@ -16,6 +16,5 @@ namespace PM3D {
 		~Objet3DStatic() = default;
 
 		virtual void Anime(float) noexcept {}
-		virtual void Draw() = 0;
     };
 } // namespace PM3D

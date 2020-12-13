@@ -29,30 +29,17 @@ namespace PM3D {
 		// Destructeur
 		virtual ~Bonus();
 
-		virtual void Anime(float tempsEcoule) noexcept override;
-		virtual void Draw() override;
+		virtual void Anime(float) noexcept override;
 
 	private:
 
 
 		Light_Manager LM_;
 
-		CDispositifD3D11* pDispositif;
 		void InitShaders();
-
-		ID3D11Buffer* pVertexBuffer;
-		ID3D11Buffer* pIndexBuffer;
 
 		ID3D11VertexShader* pVertexShader;
 		ID3D11PixelShader* pPixelShader;
-		ID3D11InputLayout* pVertexLayout;
-
-
-
-		// D�finitions des valeurs d'animation
-		ID3D11Buffer* pConstantBuffer;
-		XMMATRIX matWorld;
-		//float rotation;
 
 		float radius_, height_;
 

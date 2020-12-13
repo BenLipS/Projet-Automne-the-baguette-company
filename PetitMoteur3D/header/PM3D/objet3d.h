@@ -15,7 +15,7 @@ class CObjet3D
 public:
 	virtual ~CObjet3D() = default;
 
-	virtual void Anime(float) {};
+	virtual void Anime(float) = 0;
 	virtual void Draw() = 0;
 	virtual bool isPhysic() { return false; }
 

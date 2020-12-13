@@ -26,8 +26,7 @@ namespace PM3D
 		// Destructeur
 		virtual ~BlocRollerDynamic();
 
-		virtual void Anime(float tempsEcoule);
-		virtual void Draw();
+		virtual void Anime(float tempsEcoule) override;
 
 		PxRigidActor* getBody() { return body_; }
 		float getVitesseMax() { return vitesseMax_; }
@@ -43,19 +42,11 @@ namespace PM3D
 		float getVitesseBonusMax() { return vitesseBonusMax_; }
 
 	private:
-		CDispositifD3D11* pDispositif;
 		void InitShaders();
-
-		ID3D11Buffer* pVertexBuffer;
-		ID3D11Buffer* pIndexBuffer;
 
 		ID3D11VertexShader* pVertexShader;
 		ID3D11PixelShader* pPixelShader;
-		ID3D11InputLayout* pVertexLayout;
 
-		// D�finitions des valeurs d'animation
-		ID3D11Buffer* pConstantBuffer;
-		XMMATRIX matWorld;
 		//float rotation;
 		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position, const float _radius);
 

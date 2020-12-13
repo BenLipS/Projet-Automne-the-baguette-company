@@ -325,14 +325,14 @@ namespace PM3D
 			jinInstance.Placement(XMFLOAT3(100000.0f, 200000.0f, 100000.0f));
 
 
-			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(jinInstance, pDispositif);
+			/*std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(jinInstance, pDispositif);
 
 			XMVECTOR axis = XMVectorSet(100000.0f, 1.0f, 100000.0f, 1.0f);
 
 			pMesh.get()->Orientation(axis, 1.57f);
 
 			// Puis il est ajouté à la scène
-			scenePhysic_->ListeScene_.push_back(std::move(pMesh));
+			scenePhysic_->ListeScene_.push_back(std::move(pMesh));*/
 
 			//Light_Manager LMP{
 			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1

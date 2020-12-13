@@ -269,56 +269,6 @@ namespace PM3D {
 		return y / counter;
 	}
 
-	void Terrain::Anime(float tempsEcoule) noexcept
-	{
-		tempsEcoule;
-
-		/*
-		rotation = rotation + ((XM_PI * 2.0f) / 9.0f * tempsEcoule);
-
-		// modifier la matrice de l'objet bloc
-		matWorld = XMMatrixRotationY(rotation);
-		*/
-
-		/*
-		
-		// Pour les mouvements, nous utilisons le gestionnaire de saisie
-		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
-		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie(); 
-		
-		// V�rifier l��tat de la touche gauche
-		if ( rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT))  {
-			rotation = rotation + ( (XM_PI * 2.0f) / 7.0f * tempsEcoule ); 
-			// modifier la matrice de l�objet X
-			matWorld = XMMatrixRotationY( rotation );
-		} 
-		
-		// V�rifier l��tat de la touche droite
-		if ( rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT))  {
-			rotation = rotation - ( (XM_PI * 2.0f) / 7.0f * tempsEcoule ); 
-			// modifier la matrice de l�objet X
-			matWorld = XMMatrixRotationY( rotation );
-		}
-		
-		// ******** POUR LA SOURIS ************  
-		//V�rifier si d�placement vers la gauche
-		if ( (rGestionnaireDeSaisie.EtatSouris().rgbButtons[0]&0x80) && (rGestionnaireDeSaisie.EtatSouris().lX < 0))  {
-			rotation = rotation + ( (XM_PI * 2.0f) / 4.0f * tempsEcoule ); 
-			// modifier la matrice de l�objet X
-			matWorld = XMMatrixRotationY(  rotation );
-		} 
-		
-		// V�rifier si d�placement vers la droite
-		if ( (rGestionnaireDeSaisie.EtatSouris().rgbButtons[0]&0x80) && (rGestionnaireDeSaisie.EtatSouris().lX > 0)) {
-			rotation = rotation - ((XM_PI * 2.0f) / 4.0f * tempsEcoule);
-			// modifier la matrice de l�objet X
-			matWorld = XMMatrixRotationY(  rotation );
-		} 
-
-		*/
-
-	}
-
 	void Terrain::Draw()
 	{
 		// Obtenir le contexte

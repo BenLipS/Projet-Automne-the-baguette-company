@@ -35,19 +35,19 @@ namespace PM3D
 
 	BlocDynamic::BlocDynamic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
 		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, dx/2, dy/2, dz/2))
-		, pDispositif(_pDispositif) // Prendre en note le dispositif
-		, matWorld(XMMatrixIdentity())
-		, pVertexBuffer(nullptr)
-		, pIndexBuffer(nullptr)
 		, pVertexShader(nullptr)
 		, pPixelShader(nullptr)
-		, pVertexLayout(nullptr)
-		, pConstantBuffer(nullptr)
 		, dx_(dx)
 		, dy_(dy)
 		, dz_(dz)
 
 	{
+		CObjetMesh::pDispositif = _pDispositif; // Prendre en note le dispositif
+		CObjetMesh::matWorld = XMMatrixIdentity();
+		CObjetMesh::pVertexBuffer = nullptr;
+		CObjetMesh::pIndexBuffer = nullptr;
+		CObjetMesh::pVertexLayout = nullptr;
+		CObjetMesh::pConstantBuffer = nullptr;
 		typeTag = "Bloc";
 		// Les points
 		XMFLOAT3 point[8] =
@@ -141,71 +141,15 @@ namespace PM3D
 			DXE_CREATIONINDEXBUFFER);
 
 		// Inititalisation des shaders
-		InitShaders();
+		InitEffet();
 	}
 
 	void BlocDynamic::Anime(float tempsEcoule)
 	{
 		tempsEcoule;
-		
-		//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
-
-		/*PxTransform pose = body_->getGlobalPose();
-		pose.q = PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f));
-		body_->setGlobalPose(pose);*/
 
 		matWorld = XMMatrixRotationQuaternion(XMVectorSet(body_->getGlobalPose().q.x, body_->getGlobalPose().q.y, body_->getGlobalPose().q.z, body_->getGlobalPose().q.w)); //Orientation
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position
-	}
-
-	void BlocDynamic::Draw()
-	{
-		// Obtenir le contexte
-		ID3D11DeviceContext* pImmediateContext = pDispositif->GetImmediateContext();
-
-		// Choisir la topologie des primitives
-		pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		// Source des sommets
-		constexpr UINT stride = sizeof(CSommetBloc);
-		constexpr UINT offset = 0;
-		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
-
-		// Source des index
-		pImmediateContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
-		// input layout des sommets
-		pImmediateContext->IASetInputLayout(pVertexLayout);
-
-		// Activer le VS
-		pImmediateContext->VSSetShader(pVertexShader, nullptr, 0);
-
-		// Initialiser et s�lectionner les �constantes� du VS
-		ShadersParams sp{};
-		XMMATRIX const viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
-		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
-		sp.matWorld = XMMatrixTranspose(matWorld);
-		sp.vLumiere1 = XMVectorSet(0.0f, 2000.0f, 0.0f, 1.0f); // vLumiere1
-		sp.vLumiere2 = XMVectorSet(0.0f, 2000.0f, 0.0f, 1.0f); // vLumiere2
-		sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
-		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vAMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
-		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		sp.vDMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
-
-		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
-
-		pImmediateContext->VSSetConstantBuffers(0, 1, &pConstantBuffer);
-
-		// Pas de Geometry Shader
-		pImmediateContext->GSSetShader(nullptr, nullptr, 0);
-
-		// Activer le PS
-		pImmediateContext->PSSetShader(pPixelShader, nullptr, 0);
-		pImmediateContext->PSSetConstantBuffers(0, 1, &pConstantBuffer);
-
-		// **** Rendu de l'objet
-		pImmediateContext->DrawIndexed(ARRAYSIZE(index_bloc), 0, 0);
 	}
 
 	BlocDynamic::~BlocDynamic()
