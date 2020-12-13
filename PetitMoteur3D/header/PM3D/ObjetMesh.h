@@ -16,6 +16,7 @@ namespace PM3D
 	public:
 		CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* pDispositif);
 		virtual ~CObjetMesh(void);
+		void Orientation(XMVECTOR axis, float angle);
 	private: 
 		CObjetMesh();
 

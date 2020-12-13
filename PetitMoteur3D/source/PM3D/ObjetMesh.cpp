@@ -281,6 +281,12 @@ namespace PM3D {
 		rotation = rotation + ((XM_PI * 2.0f) / 10.0f * tempsEcoule); 
 		
 		// modifier la matrice de l’objet bloc 
-		matWorld = XMMatrixRotationZ( rotation ); 
+		//XMVECTOR axis = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+		//matWorld = XMMatrixRotationZ( rotation ); 
+		//matWorld = XMMatrixRotationAxis(axis, rotation);
+	}
+
+	void CObjetMesh::Orientation(XMVECTOR axis, float angle) {
+		matWorld = XMMatrixRotationAxis(axis, angle);
 	}
 }

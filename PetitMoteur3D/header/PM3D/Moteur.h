@@ -318,10 +318,18 @@ namespace PM3D
 
 			// PROVISOIRE
 			CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
-			CChargeurOBJ chargeur = CChargeurOBJ();
-			chargeur.Chargement(paramOBJ);
+			CChargeurOBJ jinModel = CChargeurOBJ();
+			jinModel.Chargement(paramOBJ);
 
-			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(chargeur, pDispositif);
+			CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
+			jinInstance.Placement(XMFLOAT3(100000.0f, 200000.0f, 100000.0f));
+
+
+			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(jinInstance, pDispositif);
+
+			XMVECTOR axis = XMVectorSet(100000.0f, 1.0f, 100000.0f, 1.0f);
+
+			pMesh.get()->Orientation(axis, 1.57f);
 
 			// Puis il est ajouté à la scène
 			scenePhysic_->ListeScene_.push_back(std::move(pMesh));
