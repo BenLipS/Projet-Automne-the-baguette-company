@@ -39,7 +39,7 @@ namespace PM3D
 	constexpr float BlocRollerDynamic::vitesseBonusMax_ = 16000.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
-		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, _radius))
+		CDispositifD3D11* _pDispositif, const IChargeur& chargeur) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, _radius), _pDispositif, chargeur)
 		, pVertexShader(nullptr)
 		, pPixelShader(nullptr)
 		, radius_(_radius)
@@ -47,12 +47,6 @@ namespace PM3D
 		, vitesseMin_(vitesseMinDefault_)
 
 	{
-		CObjetMesh::pDispositif = _pDispositif; // Prendre en note le dispositif
-		CObjetMesh::matWorld = XMMatrixIdentity();
-		CObjetMesh::pVertexBuffer = nullptr;
-		CObjetMesh::pIndexBuffer = nullptr;
-		CObjetMesh::pVertexLayout = nullptr;
-		CObjetMesh::pConstantBuffer = nullptr;
 		for( unsigned int i = 0; i < 10; i++)
 			speedY_buffer.push(0.0f);
 
@@ -152,7 +146,7 @@ namespace PM3D
 		setupFiltering(body_, FILTER_TYPE::VEHICULE, FILTER_TYPE::OBSTACLE | FILTER_TYPE::TERRAIN);
 
 		// Inititalisation des shaders
-		InitEffet();
+		//InitEffet();
 	}
 
 	void BlocRollerDynamic::Anime(float tempsEcoule)

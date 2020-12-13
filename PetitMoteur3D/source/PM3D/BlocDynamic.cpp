@@ -34,7 +34,7 @@ namespace PM3D
 
 
 	BlocDynamic::BlocDynamic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
-		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, dx/2, dy/2, dz/2))
+		CDispositifD3D11* _pDispositif, const IChargeur& chargeur) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, dx/2, dy/2, dz/2), _pDispositif, chargeur)
 		, pVertexShader(nullptr)
 		, pPixelShader(nullptr)
 		, dx_(dx)
@@ -42,12 +42,6 @@ namespace PM3D
 		, dz_(dz)
 
 	{
-		CObjetMesh::pDispositif = _pDispositif; // Prendre en note le dispositif
-		CObjetMesh::matWorld = XMMatrixIdentity();
-		CObjetMesh::pVertexBuffer = nullptr;
-		CObjetMesh::pIndexBuffer = nullptr;
-		CObjetMesh::pVertexLayout = nullptr;
-		CObjetMesh::pConstantBuffer = nullptr;
 		typeTag = "Bloc";
 		// Les points
 		XMFLOAT3 point[8] =
@@ -141,7 +135,7 @@ namespace PM3D
 			DXE_CREATIONINDEXBUFFER);
 
 		// Inititalisation des shaders
-		InitEffet();
+		//InitEffet();
 	}
 
 	void BlocDynamic::Anime(float tempsEcoule)

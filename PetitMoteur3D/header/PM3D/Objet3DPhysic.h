@@ -25,6 +25,10 @@ namespace PM3D
 		Objet3DPhysic(Scene* _scene, PxRigidActor* _body) : scene_(_scene), body_(_body) {
 			scene_->scene_->addActor(*body_);
 		};
+
+		Objet3DPhysic(Scene* _scene, PxRigidActor* _body, CDispositifD3D11* _pDispositif, const IChargeur& chargeur) : CObjetMesh(chargeur, _pDispositif), scene_(_scene), body_(_body) {
+			scene_->scene_->addActor(*body_);
+		};
 	public:
 		~Objet3DPhysic();
 

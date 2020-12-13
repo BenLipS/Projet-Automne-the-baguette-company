@@ -38,7 +38,7 @@ namespace PM3D
 
 
 	Bonus::Bonus(Scene* _scene, PxTransform _position, const float _radius, const float _height,
-		CDispositifD3D11* _pDispositif, Light_Manager _sp) : Objet3DStatic(_scene, createRigidBody(_scene, _position, _radius, _height/2))
+		CDispositifD3D11* _pDispositif, const IChargeur& chargeur, Light_Manager _sp) : Objet3DStatic(_scene, createRigidBody(_scene, _position, _radius, _height/2), _pDispositif, chargeur)
 		, pVertexShader(nullptr)
 		, pPixelShader(nullptr)
 		, radius_(_radius)
@@ -46,14 +46,6 @@ namespace PM3D
 		, LM_(_sp)
 
 	{
-
-		CObjetMesh::pDispositif = _pDispositif; // Prendre en note le dispositif
-		CObjetMesh::matWorld = XMMatrixIdentity();
-		CObjetMesh::pVertexBuffer = nullptr;
-		CObjetMesh::pIndexBuffer = nullptr;
-		CObjetMesh::pVertexLayout = nullptr;
-		CObjetMesh::pConstantBuffer = nullptr;
-
 		typeTag = "bonus";
 		// Les points
 		XMFLOAT3 point[8] =
@@ -150,7 +142,7 @@ namespace PM3D
 		setupFiltering(body_, FILTER_TYPE::BONUS, FILTER_TYPE::VEHICULE);
 
 		// Inititalisation des shaders
-		InitEffet();
+		//InitEffet();
 	}
 
 	void Bonus::Anime(float) noexcept

@@ -12,15 +12,18 @@ namespace PM3D {
 	
 	CObjetMesh::CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* _pDispositif)
 		: pDispositif(_pDispositif) // prendre en note le dispositif
-	{ 
+	{
+		matWorld = XMMatrixIdentity();
+		rotation = 0.0f;
+		pVertexBuffer = nullptr;
+		pIndexBuffer = nullptr;
+		pVertexLayout = nullptr;
+		pConstantBuffer = nullptr;
 		// Placer l'objet sur la carte graphique 
 		TransfertObjet(chargeur);
 
 		// Initialisation de l'effet 
 		InitEffet();
-
-		matWorld = XMMatrixIdentity(); 
-		rotation = 0.0f;
 	} 
 	
 	CObjetMesh::~CObjetMesh(void)

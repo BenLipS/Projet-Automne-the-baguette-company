@@ -17,7 +17,6 @@
 #include "BlocDynamic.h"
 #include "BlocStatic.h"
 #include "BlocRollerDynamic.h"
-#include "TerrainStatic.h"
 #include "PlanStatic.h"
 #include "Level.h"
 #include "Filter.h"
@@ -317,12 +316,12 @@ namespace PM3D
 			Level const niveau(scenePhysic_, pDispositif, 200, 200, 755.0f); // scale en X Y et Z
 
 			// PROVISOIRE
-			CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
-			CChargeurOBJ jinModel = CChargeurOBJ();
-			jinModel.Chargement(paramOBJ);
+			//CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
+			//CChargeurOBJ jinModel = CChargeurOBJ();
+			//jinModel.Chargement(paramOBJ);
 
-			CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
-			jinInstance.Placement(XMFLOAT3(100000.0f, 200000.0f, 100000.0f));
+			//CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
+			//jinInstance.Placement(XMFLOAT3(100000.0f, 200000.0f, 100000.0f));
 
 
 			/*std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(jinInstance, pDispositif);

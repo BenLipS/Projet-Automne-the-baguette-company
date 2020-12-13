@@ -7,8 +7,8 @@
 #include "BlocRollerDynamic.h"
 #include "Camera.h"
 #include "Terrain.h"
-#include "TerrainStatic.h"
 #include "Bonus.h"
+#include "ChargeurOBJ.h"
 
 #include <d3d11.h>
 #include <PxPhysicsAPI.h>
@@ -27,6 +27,11 @@ namespace PM3D {
 		~Level() = default;
 
 	private:
+		//DELETE THAT
+		CChargeurOBJ jinModel;
+
+
+
 		void initlevel();
 
 		float scaleX_, scaleY_, scaleZ_;
