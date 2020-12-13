@@ -49,6 +49,7 @@ namespace PM3D {
 		jinModel = CChargeurOBJ();
 		jinModel.Chargement(paramOBJ);
 
+
 		initJoueur();
 		initPente( LMB);
 		initHM(LMB, 0);
@@ -155,7 +156,7 @@ namespace PM3D {
 
 
 
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, jinInstance, _lm));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, jinInstance, _lm));
 	}
 
 	void Level::initBonus(Light_Manager _lm, float _x, float _y) {
@@ -170,7 +171,7 @@ namespace PM3D {
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
 		float const posY = _y * scaleY_;
 
-		//scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, jinInstance, _lm));
+		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, jinInstance, _lm));
 		
 	}
 }
