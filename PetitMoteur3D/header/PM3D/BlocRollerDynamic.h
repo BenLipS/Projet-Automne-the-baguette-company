@@ -42,6 +42,9 @@ namespace PM3D
 		}
 		float getVitesseBonusMax() { return vitesseBonusMax_; }
 
+		bool isContact() { return contact_; }
+		void updateContact(bool _contact) { contact_ = _contact; }
+
 	private:
 		CDispositifD3D11* pDispositif;
 		void InitShaders();
@@ -71,6 +74,9 @@ namespace PM3D
 
 		bool upPressed_ = false;
 		std::queue<float> speedY_buffer;
+		bool contact_ = false;
+
+		float totalTempsEcoule{};
 	};
 
 } // namespace PM3D
