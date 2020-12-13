@@ -95,7 +95,7 @@ namespace PM3D {
 			filename = new char[50]{ "./src/heighmap_Proj52_part1.bmp" };
 		}
 		else if (numPente == 1) {
-			filename = new char[50]{ "./src/heighmap_Proj52_part2.bmp" };
+			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie_vallee.bmp" };
 		}
 		else {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2.bmp" };
