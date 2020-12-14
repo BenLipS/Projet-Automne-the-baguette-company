@@ -41,6 +41,7 @@ public:
 
 	virtual void Chargement(const CParametresChargement& param) = 0;
 
+	virtual std::string GetNomFichier() = 0;
 	virtual size_t GetNombreSommets() const = 0;
 	virtual size_t GetNombreIndex() const = 0;
 	virtual const void* GetIndexData()  const = 0;

@@ -69,6 +69,7 @@ namespace PM3D
 
 		// On suppose que tout est au m�me endroit 
 		cheminModele = param.NomChemin;
+		nomFichier = param.NomFichier;
 
 		LireFichier(cheminModele + param.NomFichier);
 

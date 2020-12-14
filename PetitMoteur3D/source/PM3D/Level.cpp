@@ -94,9 +94,9 @@ namespace PM3D {
 	};
 	void Level::initJoueur() {
 
-		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
-		CChargeurOBJ boxInstance = CChargeurOBJ(boxModel);
-		const std::vector<IChargeur*> listModels{ &jinInstance, &boxInstance };
+		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
+		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
+		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance };
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
@@ -150,9 +150,9 @@ namespace PM3D {
 
 	void Level::initBloc(Light_Manager _lm, float _x, float _y) {
 
-		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
-		CChargeurOBJ boxInstance = CChargeurOBJ(boxModel);
-		const std::vector<IChargeur*> listModels{ &jinInstance, &boxInstance };
+		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
+		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
+		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance };
 
 		// Pente
 		float constexpr longueur = 1000.0f;
@@ -171,9 +171,9 @@ namespace PM3D {
 
 	void Level::initBonus(Light_Manager _lm, float _x, float _y) {
 
-		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
-		CChargeurOBJ boxInstance = CChargeurOBJ(boxModel);
-		const std::vector<IChargeur*> listModels{ &jinInstance, &boxInstance };
+		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
+		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
+		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance };
 
 		// Pente
 		float constexpr rayon = 500.0f;

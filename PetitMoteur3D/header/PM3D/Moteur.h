@@ -222,6 +222,19 @@ namespace PM3D
 			// Appeler les fonctions de dessin de chaque objet de la sc�ne
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
+				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur") {
+					CObjetMesh* objetMesh = static_cast<CObjetMesh*>(object3D.get());
+					std::vector<IChargeur*> chargeurs = objetMesh->getChargeurs();
+					if (object3D.get()->isPhysic()) {
+						Objet3DPhysic* objetPhys = static_cast<Objet3DPhysic*>(object3D.get());
+						PxRigidActor* body = objetPhys->getBody();
+						IChargeur* chargeur = objetPhys->getChargeurLODMoteur(chargeurs, body);
+						if (chargeur->GetNomFichier() != objetMesh->getChargeurCourant()->GetNomFichier()) {
+							objetMesh->setChargeurCourant(chargeur);
+							objetMesh->TransfertObjet(*chargeur);
+						}
+					}
+				}
 				object3D->Draw();
 			}
 

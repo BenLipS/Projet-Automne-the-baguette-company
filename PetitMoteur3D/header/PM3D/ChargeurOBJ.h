@@ -51,6 +51,8 @@ namespace PM3D
 		void Chargement(const CParametresChargement& param) override;
 		void Placement(const XMFLOAT3& position);
 
+		std::string GetNomFichier() { return nomFichier; }
+
 		size_t GetNombreSommets() const override { return tabVertexInfo.size(); }
 		size_t GetNombreIndex() const override { return tabIndex.size(); }
 		const void* GetIndexData() const override { return tabIndex.data(); }
@@ -81,6 +83,7 @@ namespace PM3D
 		int TrouverVertex(const OBJVertexInfo& vertex);
 
 		std::string cheminModele;
+		std::string nomFichier;
 
 		// *** Les sommets 
 		std::vector<XMFLOAT3> Position;				// Tableau des positions ( v )

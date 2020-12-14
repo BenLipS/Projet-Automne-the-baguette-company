@@ -45,7 +45,7 @@ namespace PM3D {
 		, numTerrain_(numTerrain)
 	{
 		this->scale = scale;
-		typeTag = "Terrain";
+		typeTag = "terrain";
 		int error;
 		unsigned long long count;
 		BITMAPFILEHEADER bitmapFileHeader;

@@ -10,17 +10,20 @@
 
 namespace PM3D { 
 	
-	CObjetMesh::CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* _pDispositif)
+	CObjetMesh::CObjetMesh(IChargeur* chargeur, const std::vector<IChargeur*> chargeurs, CDispositifD3D11* _pDispositif)
 		: pDispositif(_pDispositif) // prendre en note le dispositif
+		, chargeurs_(chargeurs)
+		, chargeurCourant_(chargeur)
 	{
+		typeTag = "mesh";
 		matWorld = XMMatrixIdentity();
 		rotation = 0.0f;
 		pVertexBuffer = nullptr;
 		pIndexBuffer = nullptr;
 		pVertexLayout = nullptr;
 		pConstantBuffer = nullptr;
-		// Placer l'objet sur la carte graphique 
-		TransfertObjet(chargeur);
+		// Placer l'objet sur la carte graphique
+		TransfertObjet(*chargeur);
 
 		// Initialisation de l'effet 
 		InitEffet();
@@ -283,4 +286,5 @@ namespace PM3D {
 	void CObjetMesh::Orientation(XMVECTOR axis, float angle) {
 		matWorld = XMMatrixRotationAxis(axis, angle);
 	}
+
 }

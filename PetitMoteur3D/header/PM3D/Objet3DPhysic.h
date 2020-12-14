@@ -26,7 +26,7 @@ namespace PM3D
 			scene_->scene_->addActor(*body_);
 		};
 
-		Objet3DPhysic(Scene* _scene, PxRigidActor* _body, CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs) : CObjetMesh(*getChargeurLOD(chargeurs,_body), _pDispositif), scene_(_scene), body_(_body) {
+		Objet3DPhysic(Scene* _scene, PxRigidActor* _body, CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs) : CObjetMesh(getChargeurLOD(chargeurs,_body),chargeurs, _pDispositif), scene_(_scene), body_(_body) {
 			scene_->scene_->addActor(*body_);
 		};
 	public:
@@ -38,6 +38,8 @@ namespace PM3D
 
 		Objet3DPhysic() = delete;
 
+		IChargeur* getChargeurLODMoteur(std::vector<IChargeur*> chargeurs, PxRigidActor* body);
+		
 	private:
 		static IChargeur* getChargeurLOD(std::vector<IChargeur*> chargeurs, PxRigidActor* body);
 	};

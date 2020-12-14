@@ -4,7 +4,11 @@
 #include "dispositifD3D11.h"
 #include "chargeur.h"
 #include <vector>
+
+#include "PxPhysicsAPI.h"
+
 using namespace std;
+using namespace physx;
 
 namespace PM3D
 {
@@ -14,9 +18,13 @@ namespace PM3D
 
 	public:
 		CObjetMesh() = default;
-		CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* pDispositif);
+		CObjetMesh(IChargeur* chargeur, const std::vector<IChargeur*> chargeurs, CDispositifD3D11* pDispositif);
 		virtual ~CObjetMesh(void);
 		void Orientation(XMVECTOR axis, float angle);
+		void TransfertObjet(const IChargeur& chargeur);
+		std::vector<IChargeur*> getChargeurs() { return chargeurs_; }
+		IChargeur* getChargeurCourant() { return chargeurCourant_; }
+		void setChargeurCourant(IChargeur* chargeur) { chargeurCourant_ = chargeur; }
 	protected: 
 
 		struct ShadersParams {
@@ -96,7 +104,10 @@ namespace PM3D
 		ID3DX11EffectPass* pPasse; 
 		ID3D11InputLayout* pVertexLayout;
 
-		void TransfertObjet(const IChargeur& chargeur);
+		std::vector<IChargeur*> chargeurs_;
+		IChargeur* chargeurCourant_;
+		PxRigidActor* body_ = nullptr;
+
 		void InitEffet();
 		void Draw();
 		virtual void Anime(float) = 0;

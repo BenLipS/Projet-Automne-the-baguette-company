@@ -16,6 +16,7 @@ namespace PM3D {
 
 		}
 		else {
+			typeTag = "mur";
 			setupFiltering(body_, FILTER_TYPE::MUR, FILTER_TYPE::VEHICULE);
 		}
 	}
