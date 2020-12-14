@@ -3,6 +3,7 @@
 #include "d3dx11effect.h"
 #include "dispositifD3D11.h"
 #include "chargeur.h"
+#include "Texture.h"
 
 #include <vector>
 using namespace std;
@@ -18,6 +19,7 @@ namespace PM3D
 		CObjetMesh(const IChargeur& chargeur, CDispositifD3D11* pDispositif);
 		virtual ~CObjetMesh(void);
 		void Orientation(XMVECTOR axis, float angle);
+		void SetTexture(CTexture* pTexture);
 	protected: 
 
 		struct ShadersParams {
@@ -96,6 +98,9 @@ namespace PM3D
 		ID3DX11EffectTechnique* pTechnique;
 		ID3DX11EffectPass* pPasse; 
 		ID3D11InputLayout* pVertexLayout;
+
+		ID3D11ShaderResourceView* pTextureD3D; 
+		
 
 		void TransfertObjet(const IChargeur& chargeur);
 		void InitEffet();

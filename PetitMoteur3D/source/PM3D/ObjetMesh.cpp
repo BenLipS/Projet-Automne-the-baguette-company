@@ -229,11 +229,13 @@ namespace PM3D {
 		ShadersParams sp;
 		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 
+		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
+
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 
 		sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
-		sp.vCamera = XMVectorSet(0.0f, 3.0f, -5.0f, 1.0f);
+		sp.vCamera = rMoteur.getCamera().getPosition();
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
@@ -254,17 +256,30 @@ namespace PM3D {
 				sp.vDMat = XMLoadFloat4(&Material[SubmeshMaterialIndex[i]].Diffuse);
 				sp.vSMat = XMLoadFloat4(&Material[SubmeshMaterialIndex[i]].Specular);
 				sp.puissance = Material[SubmeshMaterialIndex[i]].Puissance;
-
+				
+				/*
+				// Activation de la texture 
+				ID3DX11EffectShaderResourceVariable* variableTexture;
+				
+				variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource(); 
+				variableTexture->SetResource(pTextureD3D); 
+				
+				// Le sampler state 
+				ID3DX11EffectSamplerVariable* variableSampler; 
+				variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler(); 
+				variableSampler->SetSampler(0, pSampleState);
+				*/
+				
 				// Activation de la texture ou non 
-				if (Material[SubmeshMaterialIndex[i]].pTextureD3D != nullptr) {
-
-					ID3DX11EffectShaderResourceVariable* variableTexture; variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
-					variableTexture->SetResource(Material[SubmeshMaterialIndex[i]].pTextureD3D);
-					sp.bTex = 1;
-				}
-				else {
+				if (Material[SubmeshMaterialIndex[i]].pTextureD3D != nullptr) { 
+					ID3DX11EffectShaderResourceVariable* variableTexture; 
+					variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
+					variableTexture->SetResource(Material[SubmeshMaterialIndex[i]].pTextureD3D); 
+					sp.bTex = 1; 
+				} else { 
 					sp.bTex = 0;
 				}
+				
 
 				// IMPORTANT pour ajuster les param. 
 				pPasse->Apply(0, pImmediateContext);
@@ -283,4 +298,6 @@ namespace PM3D {
 	void CObjetMesh::Orientation(XMVECTOR axis, float angle) {
 		matWorld = XMMatrixRotationAxis(axis, angle);
 	}
+
+	void CObjetMesh::SetTexture(CTexture* pTexture) { pTextureD3D = pTexture->GetD3DTexture(); }
 }

@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include "tools.h"
+#include "Texture.h"
 
 #include "PxPhysicsAPI.h"
 using namespace DirectX;
@@ -25,6 +26,8 @@ namespace PM3D
 		virtual ~BlocDynamic();
 
 		virtual void Anime(float tempsEcoule);
+
+		void SetTexture(CTexture* pTexture);
 		
 
 	private:
@@ -37,6 +40,11 @@ namespace PM3D
 
 		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position,
 			const float _dx, const float _dy, const float _dz);
+
+		ID3D11ShaderResourceView* pTextureD3D;
+		ID3D11SamplerState* pSampleState;
+
+	
 	};
 
 	/*static void cr�ationTubulaire(const int nbFacette, float longueur, float rayon) {

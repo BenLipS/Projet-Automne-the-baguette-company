@@ -10,7 +10,7 @@ class CSommetBloc
 {
 public:
 	CSommetBloc() = default;
-	CSommetBloc(const XMFLOAT3& position, const XMFLOAT3& normal);
+	CSommetBloc(const XMFLOAT3& position, const XMFLOAT3& normal, const XMFLOAT2& coordTex = XMFLOAT2(0.0f, 0.0f));
 
 public:
 	static UINT numElements;
@@ -23,6 +23,7 @@ public:
 protected:
 	XMFLOAT3 m_Position;
 	XMFLOAT3 m_Normal;
+	XMFLOAT2 m_CoordTex;
 };
 
 } // namespace PM3D

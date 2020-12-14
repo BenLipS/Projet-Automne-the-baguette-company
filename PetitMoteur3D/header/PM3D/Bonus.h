@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include "tools.h"
+#include "Texture.h"
 
 #include "PxPhysicsAPI.h"
 
@@ -30,6 +31,7 @@ namespace PM3D {
 		virtual ~Bonus();
 
 		virtual void Anime(float) noexcept override;
+		void SetTexture(CTexture* pTexture);
 
 	private:
 
@@ -45,6 +47,9 @@ namespace PM3D {
 
 		static PxRigidStatic* createRigidBody(Scene* _scene, PxTransform _position,
 			const float _radius, const float _Hheight);
+
+		ID3D11ShaderResourceView* pTextureD3D;
+		ID3D11SamplerState* pSampleState;
 	};
 
 } //namespace PM3D

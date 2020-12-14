@@ -5,6 +5,7 @@
 #include "tools.h"
 #include <queue>
 #include "chargeur.h"
+#include "Texture.h"
 
 #include "PxPhysicsAPI.h"
 using namespace DirectX;
@@ -49,6 +50,8 @@ namespace PM3D
 		bool isContact() { return contact_; }
 		void updateContact(bool _contact) { contact_ = _contact; }
 
+		void SetTexture(CTexture* pTexture);
+
 	private:
 		void InitShaders();
 
@@ -73,6 +76,9 @@ namespace PM3D
 		bool contact_ = false;
 
 		float totalTempsEcoule{};
+
+		ID3D11ShaderResourceView* pTextureD3D;
+		ID3D11SamplerState* pSampleState;
 	};
 
 } // namespace PM3D

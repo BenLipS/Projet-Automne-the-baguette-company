@@ -26,6 +26,7 @@
 #include "GestionnaireDeTextures.h"
 #include "ObjetMesh.h"
 #include "chargeur.h"
+#include "BlocEffet1.h"
 
 using namespace std;
 using namespace physx;
@@ -151,6 +152,8 @@ namespace PM3D
 		const XMMATRIX& GetMatView() const noexcept { return m_MatView; }
 		const XMMATRIX& GetMatProj() const noexcept { return m_MatProj; }
 		const XMMATRIX& GetMatViewProj() const noexcept { return m_MatViewProj; }
+		CCamera& getCamera() { return camera; };
+		Scene* getScenePhysic() { return scenePhysic_; }
 
 		BlocRollerDynamic* findVehiculeFromBody(PxRigidActor* _body) {
 			for (int i = 0; i < scenePhysic_->ListeScene_.size(); ++i) {
@@ -195,6 +198,7 @@ namespace PM3D
 
 		virtual int64_t GetTimeSpecific() const = 0;
 		virtual double GetTimeIntervalsInSec(int64_t start, int64_t stop) const = 0;
+		
 
 		virtual TClasseDispositif* CreationDispositifSpecific(const CDS_MODE cdsMode) = 0;
 		virtual void BeginRenderSceneSpecific() = 0;
@@ -313,7 +317,10 @@ namespace PM3D
 		bool InitObjets()
 		{
 			
-			Level const niveau(scenePhysic_, pDispositif, 200, 200, 755.0f); // scale en X Y et Z
+			Level const niveau(scenePhysic_, pDispositif, 200, 200, 755.0f, &TexturesManager); // scale en X Y et Z
+
+			
+
 
 			// PROVISOIRE
 			//CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
@@ -468,5 +475,7 @@ namespace PM3D
 
 		// Le gestionnaire de texture
 		CGestionnaireDeTextures TexturesManager;
+
+	
 	};
 } // namespace PM3D

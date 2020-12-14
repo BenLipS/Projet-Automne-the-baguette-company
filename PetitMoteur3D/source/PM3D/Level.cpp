@@ -1,19 +1,23 @@
 #include "StdAfx.h"
 #include "Level.h"
 #include "PlanStatic.h"
-
+#include "GestionnaireDeTextures.h"
 #include <cmath>
+#include "BlocEffet1.h"
 
 
 using namespace physx;
 
 namespace PM3D {
-	Level::Level(Scene* _sPhysique, CDispositifD3D11* _pDispositif, float _scaleX, float _scaleY, float _scaleZ)
-		:scenePhysic_{ _sPhysique }, pDispositif_{ _pDispositif }, scaleX_{ _scaleX }, scaleY_{ _scaleY }, scaleZ_{ _scaleZ }, scaleFixX_{ 1000 }, scaleFixY_{ 1000 }, scaleFixZ_{ 254 }
+	Level::Level(Scene* _sPhysique, CDispositifD3D11* _pDispositif, float _scaleX, float _scaleY, float _scaleZ, CGestionnaireDeTextures* gTexture)
+		:scenePhysic_{ _sPhysique }, pDispositif_{ _pDispositif }, scaleX_{ _scaleX }, scaleY_{ _scaleY }, scaleZ_{ _scaleZ }, scaleFixX_{ 1000 }, scaleFixY_{ 1000 }, scaleFixZ_{ 254 }, TexturesManager{gTexture}
 	{
 		anglePente_ = atan(scaleFixZ_ * scaleZ_ / (scaleFixX_ * scaleX_)) + 0.002f ;
 		initlevel();
 	}
+
+	
+
 	void Level::initlevel()
 	{
 		Light_Manager LMBOr{
@@ -44,6 +48,7 @@ namespace PM3D {
 			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
 			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f) // vDMat
 		};
+		
 		// PROVISOIRE
 		CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
 		jinModel = CChargeurOBJ();
@@ -88,16 +93,34 @@ namespace PM3D {
 	};
 	void Level::initJoueur() {
 
-		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
+		
 
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
 		float constexpr posY = 0.0f; // largeur // au centre de la pente
 		float const posZ = scaleFixZ_ * scaleZ_ + 200; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
+
+		
+		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 12900.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_));
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_,jinInstance));
+		
+		
+		/*
+		CChargeurOBJ jinInstance2 = CChargeurOBJ(jinModel);
+		std::unique_ptr<BlocStatic> bloc = std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))),5000.0f, 5000.0f, 5000.0f, pDispositif_, jinInstance2);
+		bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
+
+		scenePhysic_->ListeScene_.emplace_back(move(bloc));*/
+		
+
+		std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif_);
+		bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
+
+		scenePhysic_->ListeScene_.emplace_back(move(bloc));
 	}
+
 	void Level::initHM(Light_Manager _lm, int numPente) {
 		char* filename{};
 		if (numPente == 0) {
@@ -109,7 +132,13 @@ namespace PM3D {
 		else {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2.bmp" };
 		}
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente));
+
+		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente);
+		HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
+
+		scenePhysic_->ListeScene_.emplace_back(move(HM));
+
+
 	};
 	void Level::initPente(Light_Manager _lm) {
 		// Pente
@@ -157,6 +186,7 @@ namespace PM3D {
 
 
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, jinInstance, _lm));
+		
 	}
 
 	void Level::initBonus(Light_Manager _lm, float _x, float _y) {

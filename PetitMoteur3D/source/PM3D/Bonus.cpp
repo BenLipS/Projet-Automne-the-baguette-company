@@ -44,6 +44,8 @@ namespace PM3D
 		, radius_(_radius)
 		, height_(_height)
 		, LM_(_sp)
+		, pSampleState(nullptr)
+		, pTextureD3D(nullptr)
 
 	{
 		typeTag = "bonus";
@@ -141,4 +143,6 @@ namespace PM3D
 		bodyStatic->attachShape(*shape_bonus);
 		return bodyStatic;
 	}
+
+	void Bonus::SetTexture(CTexture* pTexture) { pTextureD3D = pTexture->GetD3DTexture(); }
 } // namespace PM3D
