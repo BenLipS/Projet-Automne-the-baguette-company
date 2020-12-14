@@ -7,6 +7,7 @@
 #include "chargeur.h"
 
 #include "PxPhysicsAPI.h"
+
 using namespace DirectX;
 
 namespace PM3D
@@ -22,7 +23,7 @@ namespace PM3D
 	{
 	public:
 		BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
-			CDispositifD3D11* _pDispositif, const IChargeur& chargeur);
+			CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs);
 
 		// Destructeur
 		virtual ~BlocRollerDynamic();

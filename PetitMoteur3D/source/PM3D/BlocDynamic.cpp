@@ -34,7 +34,7 @@ namespace PM3D
 
 
 	BlocDynamic::BlocDynamic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
-		CDispositifD3D11* _pDispositif, const IChargeur& chargeur) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, dx/2, dy/2, dz/2), _pDispositif, chargeur)
+		CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, dx/2, dy/2, dz/2), _pDispositif, chargeurs)
 		, pVertexShader(nullptr)
 		, pPixelShader(nullptr)
 		, dx_(dx)

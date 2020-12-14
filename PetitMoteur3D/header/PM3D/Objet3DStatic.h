@@ -11,7 +11,7 @@ namespace PM3D {
     {
 	protected:
 		Objet3DStatic(Scene* _scene, PxRigidStatic* _body) : Objet3DPhysic(_scene, _body) {};
-		Objet3DStatic(Scene* _scene, PxRigidStatic* _body, CDispositifD3D11* _pDispositif, const IChargeur& chargeur) : Objet3DPhysic(_scene, _body, _pDispositif, chargeur) {};
+		Objet3DStatic(Scene* _scene, PxRigidStatic* _body, CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs) : Objet3DPhysic(_scene, _body, _pDispositif, chargeurs) {};
 	public:
 		
 		~Objet3DStatic() = default;

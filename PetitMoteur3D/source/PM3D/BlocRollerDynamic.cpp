@@ -39,7 +39,7 @@ namespace PM3D
 	constexpr float BlocRollerDynamic::vitesseBonusMax_ = 16000.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
-		CDispositifD3D11* _pDispositif, const IChargeur& chargeur) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, _radius), _pDispositif, chargeur)
+		CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, _radius), _pDispositif, chargeurs)
 		, pVertexShader(nullptr)
 		, pPixelShader(nullptr)
 		, radius_(_radius)

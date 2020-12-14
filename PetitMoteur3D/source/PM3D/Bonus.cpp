@@ -38,7 +38,7 @@ namespace PM3D
 
 
 	Bonus::Bonus(Scene* _scene, PxTransform _position, const float _radius, const float _height,
-		CDispositifD3D11* _pDispositif, const IChargeur& chargeur, Light_Manager _sp) : Objet3DStatic(_scene, createRigidBody(_scene, _position, _radius, _height/2), _pDispositif, chargeur)
+		CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs, Light_Manager _sp) : Objet3DStatic(_scene, createRigidBody(_scene, _position, _radius, _height/2), _pDispositif, chargeurs)
 		, pVertexShader(nullptr)
 		, pPixelShader(nullptr)
 		, radius_(_radius)

@@ -3,7 +3,6 @@
 #include "d3dx11effect.h"
 #include "dispositifD3D11.h"
 #include "chargeur.h"
-
 #include <vector>
 using namespace std;
 

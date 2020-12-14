@@ -182,6 +182,8 @@ namespace PM3D
 
 		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
 
+		XMVECTOR getCameraPosition() { return camera.getPosition(); }
+
 	protected:
 
 		virtual ~CMoteur()

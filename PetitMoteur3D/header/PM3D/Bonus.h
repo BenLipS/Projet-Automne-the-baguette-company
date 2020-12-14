@@ -15,7 +15,7 @@ namespace PM3D {
 	{
 	public:
 		Bonus(Scene* _scene, PxTransform _position, const float _radius, const float _height,
-			CDispositifD3D11* _pDispositif, const IChargeur& chargeur, Light_Manager LM_ = {
+			CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs, Light_Manager LM_ = {
 
 			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f),
 			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f),

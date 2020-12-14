@@ -29,6 +29,7 @@ namespace PM3D {
 	private:
 		//DELETE THAT
 		CChargeurOBJ jinModel;
+		CChargeurOBJ boxModel;
 
 
 

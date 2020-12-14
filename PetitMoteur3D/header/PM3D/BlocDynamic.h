@@ -19,7 +19,7 @@ namespace PM3D
 	{
 	public:
 		BlocDynamic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
-			CDispositifD3D11* _pDispositif, const IChargeur& chargeur);
+			CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeur);
 
 		// Destructeur
 		virtual ~BlocDynamic();

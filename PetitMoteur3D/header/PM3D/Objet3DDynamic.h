@@ -8,7 +8,7 @@ namespace PM3D {
         public Objet3DPhysic
     {
 	protected:
-		Objet3DDynamic(Scene* _scene, PxRigidDynamic* _body, CDispositifD3D11* _pDispositif, const IChargeur& chargeur) : Objet3DPhysic(_scene, _body, _pDispositif, chargeur) {};
+		Objet3DDynamic(Scene* _scene, PxRigidDynamic* _body, CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs) : Objet3DPhysic(_scene, _body, _pDispositif, chargeurs) {};
 	public:
 
 		~Objet3DDynamic() = default;
