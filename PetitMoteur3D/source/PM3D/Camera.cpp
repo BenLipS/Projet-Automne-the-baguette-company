@@ -15,7 +15,8 @@ namespace PM3D {
 	void CCamera::init(const XMVECTOR& position_in, const XMVECTOR& direction_in, const XMVECTOR& up_in, XMMATRIX* pMatView_in, XMMATRIX* pMatProj_in, XMMATRIX* pMatViewProj_in, CCamera::CAMERA_TYPE type_in) {
 
 		type = type_in;
-		waitForSwap = false;
+		waitForSwapFree = false;
+		waitForSwapFP = false;
 
 		position = position_in;
 		direction = XMVector3Normalize(direction_in);
@@ -39,12 +40,19 @@ namespace PM3D {
 
 	void CCamera::setUp(const XMVECTOR& up_in) { up = XMVector3Normalize(up_in); }
 
-	void CCamera::swapCameraMode()
+	void CCamera::swapCameraModeFree()
 	{
 		if (type == CCamera::CAMERA_TYPE::FREE) type = CCamera::CAMERA_TYPE::CUBE;
 		else type = CCamera::CAMERA_TYPE::FREE;
 
-		waitForSwap = false;
+		waitForSwapFree = false;
+	}
+
+	void CCamera::swapCameraModeFP() {
+		if (type == CCamera::CAMERA_TYPE::FPCUBE) type = CCamera::CAMERA_TYPE::CUBE;
+		else type = CCamera::CAMERA_TYPE::FPCUBE;
+
+		waitForSwapFP = false;
 	}
 
 	void CCamera::update(float tempsEcoule)
@@ -83,10 +91,10 @@ namespace PM3D {
 		
 		// Vérifier l’état de la touche SwapMode
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_M)) {
-			waitForSwap = true;
+			waitForSwapFree = true;
 		}
 		else {
-			if (waitForSwap) swapCameraMode();
+			if (waitForSwapFree) swapCameraModeFree();
 		}
 		
 		// ******** POUR LA SOURIS ************  
@@ -152,10 +160,10 @@ namespace PM3D {
 
 		// Vérifier l’état de la touche SwapMode
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_M)) {
-			waitForSwap = true;
+			waitForSwapFree = true;
 		}
 		else {
-			if (waitForSwap) swapCameraMode();
+			if (waitForSwapFree) swapCameraModeFree();
 		}
 
 		// ******** POUR LA SOURIS ************  
@@ -200,19 +208,26 @@ namespace PM3D {
 		PxRigidBody* body = static_cast<PxRigidBody*>(_character->getBody());
 
 		PxTransform pose = _character->getBody()->getGlobalPose();
-		
 		PxVec3 vecVitesse = body->getLinearVelocity();
-		float vitesseMax = _character->getVitesseBonusMax();
-		float pourcentageVmax = vecVitesse.magnitude() / vitesseMax;
-
-		if (pourcentageVmax < 0.25f)// pour eviter les tremblement a faible vitesse
-			pourcentageVmax = 0.25f; 
-
-		float offsetY =1000.f + 5000.f * pourcentageVmax;
-		float offsetZ = 500.f + 2000.f * pourcentageVmax;
 		
-		setPosition(XMVECTOR{ pose.p.x, pose.p.y + offsetY, pose.p.z - offsetZ });
-		setDirection(XMVECTOR{ 0.0f, -offsetY, offsetZ });
+		if (type == CAMERA_TYPE::CUBE) {
+
+			float vitesseMax = _character->getVitesseBonusMax();
+			float pourcentageVmax = vecVitesse.magnitude() / vitesseMax;
+
+			if (pourcentageVmax < 0.25f)// pour eviter les tremblement a faible vitesse
+				pourcentageVmax = 0.25f;
+
+			float offsetY = 1000.f + 5000.f * pourcentageVmax;
+			float offsetZ = 500.f + 2000.f * pourcentageVmax;
+
+			setPosition(XMVECTOR{ pose.p.x, pose.p.y + offsetY, pose.p.z - offsetZ });
+			setDirection(XMVECTOR{ 0.0f, -offsetY, offsetZ });
+
+		} else {
+			setPosition(XMVECTOR{ pose.p.x, pose.p.y + 400.0f, pose.p.z });
+			setDirection(XMVECTOR{ vecVitesse.getNormalized().x, vecVitesse.getNormalized().y, vecVitesse.getNormalized().z });
+		}
 
 		//float z = XMVectorGetZ(position);
 		/*if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
@@ -230,10 +245,17 @@ namespace PM3D {
 
 		// Vérifier l’état de la touche SwapMode
 		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_M)) {
-			waitForSwap = true;
+			waitForSwapFree = true;
 		}
 		else {
-			if (waitForSwap) swapCameraMode();
+			if (waitForSwapFree) swapCameraModeFree();
+		}
+
+		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_1)) {
+			waitForSwapFP = true;
+		}
+		else {
+			if (waitForSwapFP) swapCameraModeFP();
 		}
 
 		// Matrice de la vision

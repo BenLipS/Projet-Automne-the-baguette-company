@@ -411,23 +411,18 @@ namespace PM3D
 			// Prendre en note l��tat de la souris
 			GestionnaireDeSaisie.SaisirEtatSouris();
 
-			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
-
-				for (auto& object3D : scenePhysic_->ListeScene_)
-				{
-					object3D->Anime(tempsEcoule);
-				}
-				camera.update(tempsEcoule);
-			}
-			else {
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
 				object3D->Anime(tempsEcoule);
 			}
-			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
-			//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
-			camera.update(character, tempsEcoule);
+			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
+				camera.update(tempsEcoule);
+			}
+			else {
+				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
+				camera.update(character, tempsEcoule);
 			}
 			return true;
 		}

@@ -73,6 +73,7 @@ namespace PM3D
 		bool contact_ = false;
 
 		float totalTempsEcoule{};
+
 	};
 
 } // namespace PM3D
