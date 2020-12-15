@@ -5,6 +5,7 @@
 #include "tools.h"
 #include <queue>
 #include "chargeur.h"
+#include "Texture.h"
 
 #include "PxPhysicsAPI.h"
 
@@ -35,7 +36,7 @@ namespace PM3D
 		void setVitesseMax(float _vitesse) { vitesseMax_ = _vitesse; }
 
 		int getNbBonus() { return nbBonus_; }
-		void addBonus() { 
+		void addBonus() {
 			if (nbBonus_ < 5) {
 				nbBonus_++;
 			}
@@ -49,6 +50,8 @@ namespace PM3D
 
 		bool isContact() { return contact_; }
 		void updateContact(bool _contact) { contact_ = _contact; }
+
+		void SetTexture(CTexture* pTexture);
 
 	private:
 		void InitShaders();
@@ -75,6 +78,8 @@ namespace PM3D
 
 		float totalTempsEcoule{};
 
+		ID3D11ShaderResourceView* pTextureD3D;
+		ID3D11SamplerState* pSampleState;
 	};
 
 } // namespace PM3D

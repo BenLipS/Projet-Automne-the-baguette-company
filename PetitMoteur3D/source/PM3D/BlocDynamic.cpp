@@ -40,6 +40,8 @@ namespace PM3D
 		, dx_(dx)
 		, dy_(dy)
 		, dz_(dz)
+		, pSampleState(nullptr)
+		, pTextureD3D(nullptr)
 
 	{
 		typeTag = "Bloc";
@@ -134,4 +136,6 @@ namespace PM3D
 		//dynamic->setLinearVelocity(velocity);
 		return bodyDynamic;
 	}
+
+	void BlocDynamic::SetTexture(CTexture* pTexture) { pTextureD3D = pTexture->GetD3DTexture(); }
 } // namespace PM3D

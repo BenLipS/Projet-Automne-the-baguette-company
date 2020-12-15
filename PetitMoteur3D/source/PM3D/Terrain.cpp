@@ -6,6 +6,10 @@
 
 #include "resource.h"
 #include "MoteurWindows.h"
+#include "ObjetMesh.h"
+#include "Moteur.h"
+#include "Camera.h"
+#include "BlocRollerDynamic.h"
 
 #include <fstream>
 
@@ -15,15 +19,21 @@ using namespace std;
 namespace PM3D {
 
 	struct ShadersParams {
-		XMMATRIX matWorldViewProj; // la matrice totale
-		XMMATRIX matWorld;    // matrice de transformation dans le monde
-		XMVECTOR vLumiere1;    // la position de la source d��clairage (Point)
-		XMVECTOR vLumiere2;    // la position de la source d��clairage (Point)
-		XMVECTOR vCamera;    // la position de la cam�ra
-		XMVECTOR vAEcl;        // la valeur ambiante de l��clairage
-		XMVECTOR vAMat;     // la valeur ambiante du mat�riau
-		XMVECTOR vDEcl;     // la valeur diffuse de l��clairage
-		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
+		XMMATRIX matWorldViewProj; // la matrice totale 
+		XMMATRIX matWorld; // matrice de transformation dans le monde
+		XMVECTOR vLumiere; // la position de la source d’éclairage (Point)
+		XMVECTOR vCamera; // la position de la caméra
+		XMVECTOR vAEcl; // la valeur ambiante de l’éclairage
+		XMVECTOR vAMat; // la valeur ambiante du matériau
+		XMVECTOR vDEcl; // la valeur diffuse de l’éclairage
+		XMVECTOR vDMat; // la valeur diffuse du matériau
+		XMVECTOR vSEcl;	// la valeur spéculaire de l'éclairage
+		XMVECTOR vSMat;	// la valeur spéculaire du matériau
+		XMVECTOR vLumiere1;
+		XMVECTOR vLumiere2;
+		float puissance; // la puissance de spécularité
+		int bTex; // Texture ou matériau
+		XMFLOAT2 remplissage;
 	};
 
 
@@ -43,6 +53,8 @@ namespace PM3D {
 		, scaleFixY_(scaleFixY)
 		, scaleFixZ_(scaleFixZ)
 		, numTerrain_(numTerrain)
+		, pSampleState(nullptr)
+		, pTextureD3D(nullptr)
 	{
 		this->scale = scale;
 		typeTag = "terrain";
@@ -101,7 +113,7 @@ namespace PM3D {
 				int heightValue = bitmapImage[k];
 				
 				// Cr�ation des sommmets aux bonnes coordonn�es (avec une normale par d�faut qui sera calcul�e plus tard)
-				sommets[index] = CSommetTerrain(XMFLOAT3((float)((i +/* scaleFixX_ * numTerrain*/ - width/2) * scale.x), (float)((heightValue - (scaleFixZ_ - 0.33f) * numTerrain)* scale.y), (float)((j + (scaleFixX_ -5)* numTerrain -height/2)* scale.z)),normale);
+				sommets[index] = CSommetTerrain(XMFLOAT3((float)((i +/* scaleFixX_ * numTerrain*/ - width/2) * scale.x), (float)((heightValue - (scaleFixZ_ - 0.33f) * numTerrain)* scale.y), (float)((j + (scaleFixX_ -5)* numTerrain -height/2)* scale.z)),normale, XMFLOAT2((float)i, (float)j));
 
 				k += 3;
 			}
@@ -230,7 +242,28 @@ namespace PM3D {
 
 		pVertexLayout = NULL;
 		DXEssayer(pD3DDevice->CreateInputLayout(CSommetBloc::layout, CSommetBloc::numElements, vsCodePtr, vsCodeLen, &pVertexLayout), DXE_CREATIONLAYOUT);
+
+		// Initialisation des paramètres de sampling de la texture
+		D3D11_SAMPLER_DESC samplerDesc; 
+		
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT; 
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP; 
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP; 
+		samplerDesc.MipLODBias = 0.0f; 
+		samplerDesc.MaxAnisotropy = 1; 
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS; 
+		samplerDesc.BorderColor[0] = 0;
+		samplerDesc.BorderColor[1] = 0; 
+		samplerDesc.BorderColor[2] = 0; 
+		samplerDesc.BorderColor[3] = 0; 
+		samplerDesc.MinLOD = 0; 
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX; 
+		
+		// Création de l’état de sampling 
+		pD3DDevice->CreateSamplerState(&samplerDesc, &pSampleState);
 	}
+
 
 	/*
 		Interpole les hauteurs des points suivants pour approximer la hauteur du terrain aux coordonn�es envoy�es en param�tres
@@ -287,25 +320,80 @@ namespace PM3D {
 
 		// input layout des sommets
 		pImmediateContext->IASetInputLayout(pVertexLayout);
+		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 
 		// Initialiser et s�lectionner les �constantes� du VS
 		ShadersParams sp;
 		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+
+		//XMVECTOR view_camera = XMVectorSet(XMVectorGetY(rMoteur.getCamera().getPosition()), XMVectorGetX(rMoteur.getCamera().getPosition()), XMVectorGetZ(rMoteur.getCamera().getPosition()), 1.0f);
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
-		sp.vLumiere1 = XMVectorSet(0.0f, 3000.0f, 0.0f, 1.0f);
-		sp.vLumiere2 = XMVectorSet(0.0f, 3000.0f, 0.0f, 1.0f);
-		sp.vCamera = XMVectorSet(1000.0f, 0.0f, -10.0f, 1.0f);
+		/*
+		sp.vLumiere1 = XMVectorSet(0.0f, 10000.0f, 0.0f, 1.0f);
+		sp.vLumiere2 = XMVectorSet(0.0f, 10000.0f, 0.0f, 1.0f);
+		sp.vCamera = view_camera;
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 		sp.vAMat = XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f);
 		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vDMat = XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f);
+		sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
+		sp.vSMat = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
+		sp.puissance = 100;*/
+
+		Scene* scenephysic = rMoteur.getScenePhysic();
+
+		XMVECTOR view_camera = {static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.x,
+								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.y,
+								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.z,
+								1.0f
+		};
+
+		sp.vLumiere1 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
+		sp.vLumiere2 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
+		sp.vCamera = view_camera;						//XMVectorSet(0.0f, 194220.0f, 0.0f, 0.0f);
+		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
+		sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		sp.vSMat = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+		sp.puissance = 1;
+		
 
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 
 		// Nous n�avons qu�un seul CBuffer
 		ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");
 		pCB->SetConstantBuffer(pConstantBuffer);
+
+		/*
+		// Activation de la texture 
+		ID3DX11EffectShaderResourceVariable* variableTexture; 
+		
+		variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
+		variableTexture->SetResource(pTextureD3D);
+		
+		// Le sampler state 
+		ID3DX11EffectSamplerVariable* variableSampler; 
+		variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
+		variableSampler->SetSampler(0, pSampleState);
+		*/
+		
+		// Activation de la texture ou non 
+		if (pTextureD3D != nullptr) {
+			ID3DX11EffectShaderResourceVariable* variableTexture;
+			variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
+			variableTexture->SetResource(pTextureD3D);
+			ID3DX11EffectSamplerVariable* variableSampler;
+			variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
+			variableSampler->SetSampler(0, pSampleState);
+			sp.bTex = 1;
+		}
+		else {
+			sp.bTex = 0;
+		}
+		
 		
 		// **** Rendu de l�objet
 		pPasse->Apply(0, pImmediateContext);
@@ -382,4 +470,6 @@ namespace PM3D {
 
 		pPSBlob->Release(); //  On n'a plus besoin du blob
 	}
+
+	void Terrain::SetTexture(CTexture* pTexture) { pTextureD3D = pTexture->GetD3DTexture(); }
 }

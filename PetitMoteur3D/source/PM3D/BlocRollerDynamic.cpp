@@ -45,6 +45,8 @@ namespace PM3D
 		, radius_(_radius)
 		, vitesseMax_(vitesseMaxDefault_)
 		, vitesseMin_(vitesseMinDefault_)
+		, pSampleState(nullptr)
+		, pTextureD3D(nullptr)
 
 	{
 		for( unsigned int i = 0; i < 10; i++)
@@ -277,4 +279,6 @@ namespace PM3D
 		//bodyDynamic->setMass(100);
 		return bodyDynamic;
 	}
+
+	void BlocRollerDynamic::SetTexture(CTexture* pTexture) { pTextureD3D = pTexture->GetD3DTexture(); }
 } // namespace PM3D

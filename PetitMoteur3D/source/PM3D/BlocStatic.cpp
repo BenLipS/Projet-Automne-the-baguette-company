@@ -36,7 +36,7 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-
+	
 	BlocStatic::BlocStatic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
 		CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs, Light_Manager _sp) : Objet3DStatic(_scene, createRigidBody(_scene, _position, dx / 2, dy / 2, dz / 2), _pDispositif, chargeurs)
 		, pVertexShader(nullptr)
@@ -45,6 +45,8 @@ namespace PM3D
 		, dy_(dy)
 		, dz_(dz)
 		, LM_(_sp)
+		, pSampleState(nullptr)
+		, pTextureD3D(nullptr)
 		
 	{
 		typeTag = "Bloc";
@@ -138,4 +140,6 @@ namespace PM3D
 		PxRigidStatic* bodyStatic = PxCreateStatic(*(_scene->physic_), _position, PxBoxGeometry(_dx, _dy, _dz), *(_scene->material_));
 		return bodyStatic;
 	}
+
+	void BlocStatic::SetTexture(CTexture* pTexture) { pTextureD3D = pTexture->GetD3DTexture(); }
 } // namespace PM3D

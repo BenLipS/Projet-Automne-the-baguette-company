@@ -9,6 +9,7 @@
 #include "Terrain.h"
 #include "Bonus.h"
 #include "ChargeurOBJ.h"
+#include "GestionnaireDeTextures.h"
 
 #include <d3d11.h>
 #include <PxPhysicsAPI.h>
@@ -20,7 +21,7 @@ namespace PM3D {
 
 	class Level {
 	public:
-		Level(Scene* sPhysique, CDispositifD3D11* pDispositif, float scaleX, float scaleY, float scaleZ);
+		Level(Scene* sPhysique, CDispositifD3D11* pDispositif, float scaleX, float scaleY, float scaleZ, CGestionnaireDeTextures* gTexture);
 		Level(const Level&) = delete;
 		~Level() = default;
 
@@ -39,6 +40,7 @@ namespace PM3D {
 		float anglePente_;
 		Scene* scenePhysic_;
 		CDispositifD3D11* pDispositif_;
+		CGestionnaireDeTextures* TexturesManager;
 		void initJoueur();
 		void initPente(Light_Manager lm);
 		void initBonus(Light_Manager lm, float _x, float _y);

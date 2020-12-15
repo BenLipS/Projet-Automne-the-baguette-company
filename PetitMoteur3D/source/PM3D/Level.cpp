@@ -1,19 +1,23 @@
 #include "StdAfx.h"
 #include "Level.h"
 #include "PlanStatic.h"
-
+#include "GestionnaireDeTextures.h"
 #include <cmath>
 #include <vector>
+#include "BlocEffet1.h"
 
 using namespace physx;
 
 namespace PM3D {
-	Level::Level(Scene* _sPhysique, CDispositifD3D11* _pDispositif, float _scaleX, float _scaleY, float _scaleZ)
-		:scenePhysic_{ _sPhysique }, pDispositif_{ _pDispositif }, scaleX_{ _scaleX }, scaleY_{ _scaleY }, scaleZ_{ _scaleZ }, scaleFixX_{ 1000 }, scaleFixY_{ 1000 }, scaleFixZ_{ 254 }
+	Level::Level(Scene* _sPhysique, CDispositifD3D11* _pDispositif, float _scaleX, float _scaleY, float _scaleZ, CGestionnaireDeTextures* gTexture)
+		:scenePhysic_{ _sPhysique }, pDispositif_{ _pDispositif }, scaleX_{ _scaleX }, scaleY_{ _scaleY }, scaleZ_{ _scaleZ }, scaleFixX_{ 1000 }, scaleFixY_{ 1000 }, scaleFixZ_{ 254 }, TexturesManager{gTexture}
 	{
 		anglePente_ = atan(scaleFixZ_ * scaleZ_ / (scaleFixX_ * scaleX_)) + 0.002f ;
 		initlevel();
 	}
+
+
+
 	void Level::initlevel()
 	{
 		Light_Manager LMBOr{
@@ -44,8 +48,9 @@ namespace PM3D {
 			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
 			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f) // vDMat
 		};
+
 		// PROVISOIRE
-		CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJ = CParametresChargement("bonusrocket.obj", ".\\modeles\\jin\\", true, false);
 		jinModel = CChargeurOBJ();
 		jinModel.Chargement(paramOBJ);
 
@@ -107,13 +112,32 @@ namespace PM3D {
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
 		float constexpr posY = 0.0f; // largeur // au centre de la pente
 		float const posZ = scaleFixZ_ * scaleZ_ + 200; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
+
+
+		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 12900.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_));
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_,listModels));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), 20.0f, pDispositif_,listModels));
+
+
+
+		/*
+		CChargeurOBJ jinInstance2 = CChargeurOBJ(jinModel);
+		std::unique_ptr<BlocStatic> bloc = std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))),5000.0f, 5000.0f, 5000.0f, pDispositif_, jinInstance2);
+		bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
+
+		scenePhysic_->ListeScene_.emplace_back(move(bloc));*/
+
+
+		std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif_);
+		bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
+
+		scenePhysic_->ListeScene_.emplace_back(move(bloc));
 	}
+
 	void Level::initHM(Light_Manager _lm, int numPente) {
 		char* filename{};
 		if (numPente == 0) {
-			filename = new char[50]{ "./src/heighmap_Proj52_part1.bmp" };
+			filename = new char[50]{ "./src/heighmap_Proj52_part1_montagne.bmp" };
 		}
 		else if (numPente == 1) {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie_vallee.bmp" };
@@ -121,7 +145,13 @@ namespace PM3D {
 		else {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2.bmp" };
 		}
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente));
+
+		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente);
+		HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
+
+		scenePhysic_->ListeScene_.emplace_back(move(HM));
+
+
 	};
 	void Level::initPente(Light_Manager _lm) {
 		// Pente
@@ -130,7 +160,7 @@ namespace PM3D {
 		float const posZ = scaleFixZ_ * scaleZ_ / 2  - 55.f; // hauteur // centre de la pente � la mi hauteur de la pente
 
 		float const longueur = sqrt(scaleFixZ_ * scaleZ_ * scaleFixZ_ * scaleZ_ + scaleX_ * scaleFixX_ * scaleX_ * scaleFixX_); // pythagor
-		float constexpr largeur = 80000.0f;
+		float constexpr largeur = 8000.0f;
 		float constexpr epaisseur = 0.1f;
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<TerrainStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, longueur, pDispositif_, _lm));
 
@@ -161,11 +191,11 @@ namespace PM3D {
 		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance, bonusInstance };
 
 		// Pente
-		float constexpr longueur = 1000.0f;
-		float constexpr largeur = 1000.0f;
-		float constexpr epaisseur = 1000.0f;
+		float constexpr longueur = 100.0f;
+		float constexpr largeur = 100.0f;
+		float constexpr epaisseur = 100.0f;
 
-		float const offsetZ = 250 / (cos(XM_PI - anglePente_));
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_))+300;
 		float const posZ =  tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_ )/ 2;
 		float const posY = _y * scaleY_;
@@ -183,15 +213,15 @@ namespace PM3D {
 		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance, bonusInstance };
 
 		// Pente
-		float constexpr rayon = 500.0f;
-		float constexpr demiHauteur = 200.0f;
+		float constexpr rayon = 50.0f;
+		float constexpr demiHauteur = 20.0f;
 
-		float const offsetZ = 250 / (cos(XM_PI - anglePente_));
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
 		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
 		float const posY = _y * scaleY_;
 
 		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels, _lm));
-		
+
 	}
 }

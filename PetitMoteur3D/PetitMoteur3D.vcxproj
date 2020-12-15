@@ -197,6 +197,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
     <ClCompile Include="source\PM3D\Bonus.cpp" />
     <ClCompile Include="source\PM3D\ChargeurOBJ.cpp" />
     <ClCompile Include="source\PM3D\ContactModification.cpp" />
@@ -231,6 +232,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\PM3D\Bloc.h" />
+    <ClInclude Include="header\PM3D\BlocEffet1.h" />
     <ClInclude Include="header\PM3D\Bonus.h" />
     <ClInclude Include="header\PM3D\chargeur.h" />
     <ClInclude Include="header\PM3D\ChargeurOBJ.h" />

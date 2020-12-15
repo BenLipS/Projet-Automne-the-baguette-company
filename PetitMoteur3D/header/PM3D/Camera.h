@@ -44,7 +44,10 @@ namespace PM3D {
 		void setUp(const DirectX::XMVECTOR& up_in);
 
 		CAMERA_TYPE getType() noexcept { return type; }
-		XMVECTOR getPosition() noexcept { return position; }
+		XMVECTOR getPosition() noexcept { 
+			XMVECTOR positionTest = position;  
+		return position;
+		}
 
 		void swapCameraModeFree();
 		void swapCameraModeFP();
