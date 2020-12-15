@@ -1,5 +1,5 @@
 ﻿#include "StdAfx.h"
-#include "CSpriteTemp.h"
+#include "AfficheurSprite.h"
 #include "resource.h"
 #include "MoteurWindows.h"
 #include "util.h"
@@ -12,7 +12,7 @@ namespace PM3D
 	};
 
 
-	CSpriteTemp::CSpriteTemp(const std::string& NomTexture, CDispositifD3D11* _pDispositif)
+	CAfficheurSprite::CAfficheurSprite( CDispositifD3D11* _pDispositif)
 			: pDispositif(_pDispositif)
 			, pVertexBuffer(nullptr)
 			, pConstantBuffer(nullptr)
@@ -38,29 +38,9 @@ namespace PM3D
 				DXE_CREATIONVERTEXBUFFER);
 			// Initialisation de l’effet
 			InitEffet();
-			// Initialisation de la texture
-			CGestionnaireDeTextures& TexturesManager =
-				CMoteurWindows::GetInstance().GetTextureManager();
-			if (NomTexture != ""){
-				std::wstring ws(NomTexture.begin(), NomTexture.end());
-				//std::unique_ptr<CSpriteTemp> pSprite = std::make_unique<CSpriteTemp>();
-				//pSprite->pTextureD3D = TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
-				pTextureD3D = TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
-				// Obtenir la dimension de la texture
-				ID3D11Resource* pResource;
-				ID3D11Texture2D* pTextureInterface = 0;
-				pTextureD3D->GetResource(&pResource);
-				pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
-				D3D11_TEXTURE2D_DESC desc;
-				pTextureInterface->GetDesc(&desc);
-				DXRelacher(pResource);
-				DXRelacher(pTextureInterface);
-				dimX = float(desc.Width);
-				dimY = float(desc.Height);
-			}
-			matPosDim = XMMatrixIdentity();
+
 	}
-	CSpriteTemp::~CSpriteTemp()
+	CAfficheurSprite::~CAfficheurSprite()
 	{
 		DXRelacher(pConstantBuffer);
 		DXRelacher(pSampleState);
@@ -69,7 +49,7 @@ namespace PM3D
 		DXRelacher(pVertexBuffer);
 
 	}
-	void CSpriteTemp::InitEffet()
+	void CAfficheurSprite::InitEffet()
 	{
 		// Compilation et chargement du vertex shader
 		ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
@@ -127,43 +107,44 @@ namespace PM3D
 		pD3DDevice->CreateSamplerState(&samplerDesc, &pSampleState);
 	}
 
-	void CSpriteTemp::Draw()
+	void CAfficheurSprite::Draw()
 	{
 		// Obtenir le contexte
-		ID3D11DeviceContext* pImmediateContext = pDispositif->GetImmediateContext();
+		ID3D11DeviceContext* pImmediateContext =
+			pDispositif->GetImmediateContext();
 		// Choisir la topologie des primitives
-		pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		pImmediateContext->IASetPrimitiveTopology(
+			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// Source des sommets
 		UINT stride = sizeof(CSommetSprite);
 		const UINT offset = 0;
 		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
 		// input layout des sommets
 		pImmediateContext->IASetInputLayout(pVertexLayout);
-		// Initialiser et sélectionner les « constantes » de l’effet
-		ShadersParams sp;
-
-		//sp.matWVP = XMMatrixIdentity() ; //retirez cette ligne
-		sp.matWVP = XMMatrixTranspose(matPosDim);
-
-		//sp.matWVP = XMMatrixIdentity();
-		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
-		// Nous n’avons qu’un seul CBuffer
-		ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");
-		pCB->SetConstantBuffer(pConstantBuffer);
-		// Activation de la texture
-		ID3DX11EffectShaderResourceVariable* variableTexture;
-		variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
-		variableTexture->SetResource(pTextureD3D);
 		// Le sampler state
 		ID3DX11EffectSamplerVariable* variableSampler;
 		variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
 		variableSampler->SetSampler(0, pSampleState);
-		pPasse->Apply(0, pImmediateContext);
-		// **** Rendu de l’objet
+		ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");
+		ID3DX11EffectShaderResourceVariable* variableTexture;
+		variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
 		pDispositif->ActiverMelangeAlpha();
-		pImmediateContext->Draw(6, 0);
+		// Faire le rendu de tous nos sprites
+		for (int i = 0; i < tabSprites.size(); ++i)
+		{
+			// Initialiser et sélectionner les « constantes » de l’effet
+			ShadersParams sp;
+			sp.matWVP = XMMatrixTranspose(tabSprites[i]->matPosDim);
+			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
+				&sp, 0, 0);
+			pCB->SetConstantBuffer(pConstantBuffer);
+			// Activation de la texture
+			variableTexture->SetResource(tabSprites[i]->pTextureD3D);
+			pPasse->Apply(0, pImmediateContext);
+			// **** Rendu de l’objet
+			pImmediateContext->Draw(6, 0);
+		}
 		pDispositif->DesactiverMelangeAlpha();
-
 	}
 
 
@@ -175,7 +156,7 @@ namespace PM3D
 	};
 	UINT CSommetSprite::numElements = ARRAYSIZE(layout);
 
-	CSommetSprite CSpriteTemp::sommets[6] = {
+	CSommetSprite CAfficheurSprite::sommets[6] = {
 		CSommetSprite(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)),
 		CSommetSprite(XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f)),
 		CSommetSprite(XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)),
@@ -185,24 +166,69 @@ namespace PM3D
 	};
 
 
-	void CSpriteTemp::SetPosDim(int _x, int _y, int _dx, int _dy)
+	//void CAfficheurSprite::SetPosDim(int _x, int _y, int _dx, int _dy)
+	//{
+	//	float x, y, dx, dy;
+	//	float posX, posY;
+	//	float facteurX, facteurY;
+	//	// Dimensions en pixel
+	//	if (_dx == 0 && _dy == 0)
+	//	{
+	//		// Dimensions par défaut
+	//		dx = dimX;
+	//		dy = dimY;
+	//	}
+	//	else
+	//	{
+	//		dx = float(_dx);
+	//		dy = float(_dy);
+	//	}
+	//	// Dimensions en facteur
+	//	facteurX = dx * 2.0f / pDispositif->GetLargeur();
+	//	facteurY = dy * 2.0f / pDispositif->GetHauteur();
+	//	// Position en coordonnées logiques
+	//	// 0,0 pixel = -1,1
+	//	x = float(_x);
+	//	y = float(_y);
+	//	posX = x * 2.0f / pDispositif->GetLargeur() - 1.0f;
+	//	posY = 1.0f - y * 2.0f / pDispositif->GetHauteur();
+	//	matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
+	//		XMMatrixTranslation(posX, posY, 0.0f);
+	//}
+	void CAfficheurSprite::AjouterSprite(const std::string& NomTexture,
+		int _x, int _y,
+		int _dx, int _dy)
 	{
 		float x, y, dx, dy;
 		float posX, posY;
 		float facteurX, facteurY;
-		// Dimensions en pixel
+		// Initialisation de la texture
+		CGestionnaireDeTextures& TexturesManager =
+			CMoteurWindows::GetInstance().GetTextureManager();
+		std::wstring ws(NomTexture.begin(), NomTexture.end());
+		std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();;
+		pSprite->pTextureD3D =
+			TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+		// Obtenir les dimensions de la texture si _dx et _dy sont à 0;
 		if (_dx == 0 && _dy == 0)
 		{
-			// Dimensions par défaut
-			dx = dimX;
-			dy = dimY;
+			ID3D11Resource* pResource;
+			ID3D11Texture2D* pTextureInterface = 0;
+			pSprite->pTextureD3D->GetResource(&pResource);
+			pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
+			D3D11_TEXTURE2D_DESC desc;
+			pTextureInterface->GetDesc(&desc);
+			DXRelacher(pResource);
+			DXRelacher(pTextureInterface);
+			dx = float(desc.Width);
+			dy = float(desc.Height);
 		}
 		else
 		{
 			dx = float(_dx);
 			dy = float(_dy);
 		}
-		// Dimensions en facteur
+		// Dimension en facteur
 		facteurX = dx * 2.0f / pDispositif->GetLargeur();
 		facteurY = dy * 2.0f / pDispositif->GetHauteur();
 		// Position en coordonnées logiques
@@ -211,8 +237,54 @@ namespace PM3D
 		y = float(_y);
 		posX = x * 2.0f / pDispositif->GetLargeur() - 1.0f;
 		posY = 1.0f - y * 2.0f / pDispositif->GetHauteur();
-		matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
+		pSprite->matPosDim = XMMatrixScaling(facteurX, facteurY, 1.0f) *
 			XMMatrixTranslation(posX, posY, 0.0f);
+		// On l’ajoute à notre vecteur
+		tabSprites.push_back(std::move(pSprite));
 	}
 
+	void CAfficheurSprite::AjouterPanneau(const std::string& NomTexture,
+		const XMFLOAT3& _position,
+		float _dx, float _dy)
+	{
+		// Initialisation de la texture
+		CGestionnaireDeTextures& TexturesManager =
+			CMoteurWindows::GetInstance().GetTextureManager();
+		std::wstring ws(NomTexture.begin(), NomTexture.end());
+		std::unique_ptr<CPanneau> pPanneau = std::make_unique<CPanneau>();
+		pPanneau->pTextureD3D =
+			TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+		// Obtenir la dimension de la texture si _dx et _dy sont à 0;
+		if (_dx == 0.0f && _dy == 0.0f)
+		{
+			ID3D11Resource* pResource;
+			ID3D11Texture2D* pTextureInterface = 0;
+			pPanneau->pTextureD3D->GetResource(&pResource);
+			pResource->QueryInterface<ID3D11Texture2D>(&pTextureInterface);
+			D3D11_TEXTURE2D_DESC desc;
+			pTextureInterface->GetDesc(&desc);
+			DXRelacher(pResource);
+			DXRelacher(pTextureInterface);
+			pPanneau->dimension.x = float(desc.Width);
+			pPanneau->dimension.y = float(desc.Height);
+			// Dimension en facteur
+			pPanneau->dimension.x = pPanneau->dimension.x * 2.0f / pDispositif->GetLargeur();
+			pPanneau->dimension.y = pPanneau->dimension.y * 2.0f / pDispositif->GetHauteur();
+		}
+		else
+		{
+			pPanneau->dimension.x = float(_dx);
+			pPanneau->dimension.y = float(_dy);
+		}
+		// Position en coordonnées du monde
+		const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+		pPanneau->position = _position;
+		pPanneau->matPosDim = XMMatrixScaling(pPanneau->dimension.x,
+			pPanneau->dimension.y, 1.0f) *
+			XMMatrixTranslation(pPanneau->position.x,
+				pPanneau->position.y, pPanneau->position.z) *
+			viewProj;
+		// On l’ajoute à notre vecteur
+		tabSprites.push_back(std::move(pPanneau));
+	}
 }

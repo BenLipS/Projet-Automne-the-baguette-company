@@ -199,7 +199,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\PM3D\CSpriteTemp.cpp" />
+    <ClCompile Include="source\PM3D\AfficheurSprite.cpp" />
     <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
     <ClCompile Include="source\PM3D\Bonus.cpp" />
     <ClCompile Include="source\PM3D\ChargeurOBJ.cpp" />
@@ -235,7 +235,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="header\PM3D\CSpriteTemp.h" />
+    <ClInclude Include="header\PM3D\AfficheurSprite.h" />
     <ClInclude Include="header\PM3D\Bloc.h" />
     <ClInclude Include="header\PM3D\BlocEffet1.h" />
     <ClInclude Include="header\PM3D\Bonus.h" />

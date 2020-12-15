@@ -105,7 +105,7 @@
     <ClCompile Include="source\PM3D\BlocEffet1.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="source\PM3D\CSpriteTemp.cpp">
+    <ClCompile Include="source\PM3D\AfficheurSprite.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -221,7 +221,7 @@
     <ClInclude Include="header\PM3D\Bloc.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="header\PM3D\CSpriteTemp.h">
+    <ClInclude Include="header\PM3D\AfficheurSprite.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
