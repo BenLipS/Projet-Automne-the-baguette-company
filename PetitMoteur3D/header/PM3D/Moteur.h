@@ -242,6 +242,9 @@ namespace PM3D
 				object3D->Draw();
 			}
 
+			SkyBox* skybox = niveau->getSkyBox();
+			//skybox->Draw();
+
 			EndRenderSceneSpecific();
 			return true;
 		}
@@ -332,7 +335,7 @@ namespace PM3D
 		bool InitObjets()
 		{
 			
-			Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
+			niveau = new Level(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
 			return true;
 		}
@@ -391,6 +394,9 @@ namespace PM3D
 
 		// La scene physique
 		Scene* scenePhysic_{};
+
+		// Le niveau
+		Level* niveau;
 
 		//ControllerManager
 		//PxControllerManager * controllerManager_;

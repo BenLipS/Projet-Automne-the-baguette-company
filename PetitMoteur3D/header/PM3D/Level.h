@@ -10,6 +10,7 @@
 #include "Bonus.h"
 #include "ChargeurOBJ.h"
 #include "GestionnaireDeTextures.h"
+#include "SkyBox.h"
 
 #include <d3d11.h>
 #include <PxPhysicsAPI.h>
@@ -25,13 +26,14 @@ namespace PM3D {
 		Level(const Level&) = delete;
 		~Level() = default;
 
+		SkyBox* getSkyBox() { return skyBox_.get(); }
+
 	private:
 		//DELETE THAT
 		CChargeurOBJ jinModel;
 		CChargeurOBJ boxModel;
 		CChargeurOBJ bonusModel;
-
-
+		CChargeurOBJ skyboxModel;
 
 		void initlevel();
 
@@ -41,10 +43,15 @@ namespace PM3D {
 		Scene* scenePhysic_;
 		CDispositifD3D11* pDispositif_;
 		CGestionnaireDeTextures* TexturesManager;
+
+		std::unique_ptr<SkyBox> skyBox_;
+
 		void initJoueur();
 		void initPente(Light_Manager lm);
 		void initBonus(Light_Manager lm, float _x, float _y);
 		void initBloc(Light_Manager lm, float _x, float _y);
 		void initHM(Light_Manager lm, int numPente);
+
+		void initSkyBox();
 	};
 }

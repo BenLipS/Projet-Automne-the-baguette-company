@@ -199,6 +199,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\PM3D\SkyBox.cpp" />
     <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
     <ClCompile Include="source\PM3D\Bonus.cpp" />
     <ClCompile Include="source\PM3D\ChargeurOBJ.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="header\PM3D\Objet3DStatic.h" />
     <ClInclude Include="header\PM3D\Objet3DDynamic.h" />
     <ClInclude Include="header\PM3D\PlanStatic.h" />
+    <ClInclude Include="header\PM3D\SkyBox.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MiniPhong.fx">

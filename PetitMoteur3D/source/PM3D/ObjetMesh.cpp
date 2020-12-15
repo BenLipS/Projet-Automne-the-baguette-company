@@ -29,6 +29,24 @@ namespace PM3D {
 		InitEffet();
 	}
 
+	CObjetMesh::CObjetMesh(IChargeur* chargeur, CDispositifD3D11* _pDispositif)
+		: pDispositif(_pDispositif) // prendre en note le dispositif
+		, chargeurCourant_(chargeur)
+	{
+		typeTag = "mesh";
+		matWorld = XMMatrixIdentity();
+		rotation = 0.0f;
+		pVertexBuffer = nullptr;
+		pIndexBuffer = nullptr;
+		pVertexLayout = nullptr;
+		pConstantBuffer = nullptr;
+		// Placer l'objet sur la carte graphique
+		TransfertObjet(*chargeur);
+
+		// Initialisation de l'effet
+		InitEffet();
+	}
+
 	CObjetMesh::~CObjetMesh()
 	{
 		DXRelacher(pConstantBuffer);
