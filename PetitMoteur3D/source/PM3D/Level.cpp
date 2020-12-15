@@ -50,9 +50,13 @@ namespace PM3D {
 		jinModel.Chargement(paramOBJ);
 
 
-		CParametresChargement paramOBJ1 = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJ1 = CParametresChargement("bonusrocket.obj", ".\\modeles\\jin\\", true, false);
+		bonusModel = CChargeurOBJ();
+		bonusModel.Chargement(paramOBJ1);
+
+		CParametresChargement paramOBJ2 = CParametresChargement("chizbox.obj", ".\\modeles\\jin\\", true, false);
 		boxModel = CChargeurOBJ();
-		boxModel.Chargement(paramOBJ1);
+		boxModel.Chargement(paramOBJ2);
 
 
 
@@ -96,7 +100,8 @@ namespace PM3D {
 
 		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
 		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
-		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance };
+		CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
+		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance, bonusInstance };
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
@@ -152,7 +157,8 @@ namespace PM3D {
 
 		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
 		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
-		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance };
+		CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
+		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance, bonusInstance };
 
 		// Pente
 		float constexpr longueur = 1000.0f;
@@ -173,7 +179,8 @@ namespace PM3D {
 
 		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
 		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
-		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance };
+		CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
+		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance, bonusInstance };
 
 		// Pente
 		float constexpr rayon = 500.0f;

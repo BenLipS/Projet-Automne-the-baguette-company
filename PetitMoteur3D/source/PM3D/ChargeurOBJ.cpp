@@ -381,7 +381,7 @@ namespace PM3D
 		}
 
 		break;
-
+		case 'o':
 		case 'u':	//usemtl - which material to use
 		{
 			std::string str;

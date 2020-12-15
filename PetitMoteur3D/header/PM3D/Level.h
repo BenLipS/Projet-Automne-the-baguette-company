@@ -28,6 +28,7 @@ namespace PM3D {
 		//DELETE THAT
 		CChargeurOBJ jinModel;
 		CChargeurOBJ boxModel;
+		CChargeurOBJ bonusModel;
 
 
 
