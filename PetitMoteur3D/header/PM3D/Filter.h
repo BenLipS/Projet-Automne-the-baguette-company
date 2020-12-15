@@ -1,8 +1,6 @@
 #pragma once
 #include "PxPhysicsAPI.h"
 
-using namespace physx;
-
 namespace PM3D {
 
 	enum FILTER_TYPE {
@@ -13,37 +11,37 @@ namespace PM3D {
 		BONUS = (1 << 4)
 	};
 
-	static PxFilterFlags FilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
-		PxFilterObjectAttributes attributes1, PxFilterData filterData1,
-		PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
+	static physx::PxFilterFlags FilterShader(physx::PxFilterObjectAttributes attributes0, physx::PxFilterData filterData0,
+		physx::PxFilterObjectAttributes attributes1, physx::PxFilterData filterData1,
+		physx::PxPairFlags& pairFlags, const void* constantBlock, physx::PxU32 constantBlockSize) {
 
-		if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1))
+		if (physx::PxFilterObjectIsTrigger(attributes0) || physx::PxFilterObjectIsTrigger(attributes1))
 		{
-			pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-			return PxFilterFlag::eDEFAULT;
+			pairFlags = physx::PxPairFlag::eTRIGGER_DEFAULT;
+			return physx::PxFilterFlag::eDEFAULT;
 		}
 
-		pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+		pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
 
 		if ((filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1))
-			pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eMODIFY_CONTACTS;
+			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND | physx::PxPairFlag::eMODIFY_CONTACTS;
 
-		return PxFilterFlag::eDEFAULT;
+		return physx::PxFilterFlag::eDEFAULT;
 
 	}
 
-	static void setupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask) {
+	static void setupFiltering(physx::PxRigidActor* actor, physx::PxU32 filterGroup, physx::PxU32 filterMask) {
 
-		PxFilterData filterData;
+		physx::PxFilterData filterData;
 		filterData.word0 = filterGroup;
 		filterData.word1 = filterMask;
 
-		const PxU32 nbShapes = actor->getNbShapes();
-		PxShape** shapes = static_cast<PxShape**>(malloc(sizeof(PxShape*) * nbShapes));
+		const physx::PxU32 nbShapes = actor->getNbShapes();
+		physx::PxShape** shapes = static_cast<physx::PxShape**>(malloc(sizeof(physx::PxShape*) * nbShapes));
 		actor->getShapes(shapes, nbShapes);
 
-		for (PxU32 i = 0; i < nbShapes; i++) {
-			PxShape* shape = shapes[i];
+		for (physx::PxU32 i = 0; i < nbShapes; i++) {
+			physx::PxShape* shape = shapes[i];
 			shape->setSimulationFilterData(filterData);
 		}
 		free(shapes);

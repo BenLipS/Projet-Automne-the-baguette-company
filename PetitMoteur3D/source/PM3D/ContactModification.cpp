@@ -3,6 +3,8 @@
 #include "Filter.h"
 #include "MoteurWindows.h"
 
+using namespace physx;
+
 namespace PM3D {
 
 	void ContactModification::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs) {

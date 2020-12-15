@@ -18,7 +18,7 @@ namespace PM3D
 	class BlocDynamic : public Objet3DDynamic
 	{
 	public:
-		BlocDynamic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
+		BlocDynamic(Scene* _scene, physx::PxTransform _position, const float dx, const float dy, const float dz,
 			CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeur);
 
 		// Destructeur
@@ -35,7 +35,7 @@ namespace PM3D
 
 		float dx_, dy_, dz_;
 
-		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position,
+		static physx::PxRigidDynamic* createRigidBody(Scene* _scene, physx::PxTransform _position,
 			const float _dx, const float _dy, const float _dz);
 	};
 

@@ -2,6 +2,8 @@
 #include "Objet3DPhysic.h"
 #include "MoteurWindows.h"
 
+using namespace physx;
+
 namespace PM3D {
 
 	Objet3DPhysic::~Objet3DPhysic() {

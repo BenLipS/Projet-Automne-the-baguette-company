@@ -14,7 +14,7 @@ namespace PM3D {
 		public Objet3DStatic
 	{
 	public:
-		Bonus(Scene* _scene, PxTransform _position, const float _radius, const float _height,
+		Bonus(Scene* _scene, physx::PxTransform _position, const float _radius, const float _height,
 			CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs, Light_Manager LM_ = {
 
 			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f),
@@ -43,7 +43,7 @@ namespace PM3D {
 
 		float radius_, height_;
 
-		static PxRigidStatic* createRigidBody(Scene* _scene, PxTransform _position,
+		static physx::PxRigidStatic* createRigidBody(Scene* _scene, physx::PxTransform _position,
 			const float _radius, const float _Hheight);
 	};
 

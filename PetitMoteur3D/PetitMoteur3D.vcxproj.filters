@@ -225,18 +225,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="ps1.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="vs1.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="PS_MiniPhong.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_MiniPhong.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="MiniPhong.fx">
       <Filter>Shaders</Filter>
     </FxCompile>

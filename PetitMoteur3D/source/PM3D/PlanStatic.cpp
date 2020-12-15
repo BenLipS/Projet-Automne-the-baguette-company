@@ -2,6 +2,8 @@
 #include "PlanStatic.h"
 #include "Filter.h"
 
+using namespace physx;
+
 namespace PM3D {
 
 	PlanStatic::PlanStatic(Scene* _scene, PxVec3 _point, PxVec3 _normale, PxVec3 _direction) :

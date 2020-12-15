@@ -2,23 +2,21 @@
 #include "PxPhysicsAPI.h"
 #include <vector>
 
-using namespace physx;
-
 namespace PM3D {
 
-	class ContactModification : public PxContactModifyCallback, public PxSimulationEventCallback
+	class ContactModification : public physx::PxContactModifyCallback, public physx::PxSimulationEventCallback
 	{
 	public:
 
-		void onContactModify(PxContactModifyPair* const pairs, PxU32 count);
+		void onContactModify(physx::PxContactModifyPair* const pairs, physx::PxU32 count);
 
-		void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs);
+		void onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs);
 
-		void onConstraintBreak(PxConstraintInfo* constraints, PxU32 count) override { PX_UNUSED(constraints); PX_UNUSED(count); }
-		void onWake(PxActor** actors, PxU32 count) override { PX_UNUSED(actors); PX_UNUSED(count); }
-		void onSleep(PxActor** actors, PxU32 count) override { PX_UNUSED(actors); PX_UNUSED(count); }
-		void onTrigger(PxTriggerPair* pairs, PxU32 count);
-		void onAdvance(const PxRigidBody* const* bodyBuffer, const PxTransform* poseBuffer, const PxU32 count) override { PX_UNUSED(count); }
+		void onConstraintBreak(physx::PxConstraintInfo* constraints, physx::PxU32 count) override { PX_UNUSED(constraints); PX_UNUSED(count); }
+		void onWake(physx::PxActor** actors, physx::PxU32 count) override { PX_UNUSED(actors); PX_UNUSED(count); }
+		void onSleep(physx::PxActor** actors, physx::PxU32 count) override { PX_UNUSED(actors); PX_UNUSED(count); }
+		void onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count);
+		void onAdvance(const physx::PxRigidBody* const* bodyBuffer, const physx::PxTransform* poseBuffer, const physx::PxU32 count) override { PX_UNUSED(count); }
 
 	};
 

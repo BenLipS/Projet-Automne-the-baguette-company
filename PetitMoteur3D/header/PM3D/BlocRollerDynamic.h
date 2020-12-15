@@ -22,7 +22,7 @@ namespace PM3D
 	class BlocRollerDynamic : public Objet3DDynamic
 	{
 	public:
-		BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
+		BlocRollerDynamic(Scene* _scene, physx::PxTransform _position, const float _radius,
 			CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs);
 
 		// Destructeur
@@ -30,7 +30,7 @@ namespace PM3D
 
 		virtual void Anime(float tempsEcoule) override;
 
-		PxRigidActor* getBody() { return body_; }
+		physx::PxRigidActor* getBody() { return body_; }
 		float getVitesseMax() { return vitesseMax_; }
 		void setVitesseMax(float _vitesse) { vitesseMax_ = _vitesse; }
 
@@ -57,7 +57,7 @@ namespace PM3D
 		ID3D11PixelShader* pPixelShader;
 
 		//float rotation;
-		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position, const float _radius);
+		static physx::PxRigidDynamic* createRigidBody(Scene* _scene, physx::PxTransform _position, const float _radius);
 
 		float radius_;
 		float vitesseMax_;

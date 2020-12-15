@@ -28,7 +28,7 @@
 #include "chargeur.h"
 
 using namespace std;
-using namespace physx;
+//using namespace physx;
 
 namespace PM3D
 {
@@ -115,7 +115,7 @@ namespace PM3D
 			return true;
 		}
 
-		PxTransform getTerrainNormale() {
+		physx::PxTransform getTerrainNormale() {
 			auto start = scenePhysic_->ListeScene_.begin();
 			auto end = scenePhysic_->ListeScene_.end();
 			while (start != end && start->get()->typeTag != "terrain")
@@ -126,11 +126,11 @@ namespace PM3D
 				return terrain->getTerrainNormale();
 			}
 			else {
-				return PxTransform();
+				return physx::PxTransform();
 			}
 		}
 
-		pair<PxVec3, PxVec3> getTerrainPair() {
+		pair<physx::PxVec3, physx::PxVec3> getTerrainPair() {
 			auto start = scenePhysic_->ListeScene_.begin();
 			auto end = scenePhysic_->ListeScene_.end();
 			while (start != end && start->get()->typeTag != "terrain")
@@ -138,7 +138,7 @@ namespace PM3D
 
 			if (start != end) {
 				PlanStatic* terrain = dynamic_cast<PlanStatic*>(start->get());
-				pair<PxVec3, PxVec3> pair{ terrain->getNormale(), terrain->getDirection() };
+				pair<physx::PxVec3, physx::PxVec3> pair{ terrain->getNormale(), terrain->getDirection() };
 				return pair;
 			}
 			else {
@@ -152,7 +152,7 @@ namespace PM3D
 		const XMMATRIX& GetMatProj() const noexcept { return m_MatProj; }
 		const XMMATRIX& GetMatViewProj() const noexcept { return m_MatViewProj; }
 
-		BlocRollerDynamic* findVehiculeFromBody(PxRigidActor* _body) {
+		BlocRollerDynamic* findVehiculeFromBody(physx::PxRigidActor* _body) {
 			for (int i = 0; i < scenePhysic_->ListeScene_.size(); ++i) {
 				if (scenePhysic_->ListeScene_[i].get()->isPhysic() && static_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[i].get())->getBody() == _body)
 					return static_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[i].get());
@@ -160,7 +160,7 @@ namespace PM3D
 			return nullptr;
 		}
 
-		void eraseBody(PxRigidActor* _body) {
+		void eraseBody(physx::PxRigidActor* _body) {
 			auto it = scenePhysic_->ListeScene_.begin();
 			bool erased = false;
 			while (it != scenePhysic_->ListeScene_.end() && !erased) {
@@ -227,7 +227,7 @@ namespace PM3D
 					std::vector<IChargeur*> chargeurs = objetMesh->getChargeurs();
 					if (object3D.get()->isPhysic()) {
 						Objet3DPhysic* objetPhys = static_cast<Objet3DPhysic*>(object3D.get());
-						PxRigidActor* body = objetPhys->getBody();
+						physx::PxRigidActor* body = objetPhys->getBody();
 						IChargeur* chargeur = objetPhys->getChargeurLODMoteur(chargeurs, body);
 						if (chargeur->GetNomFichier() != objetMesh->getChargeurCourant()->GetNomFichier()) {
 							objetMesh->setChargeurCourant(chargeur);
@@ -266,11 +266,11 @@ namespace PM3D
 			//Partie physique
 			scenePhysic_->foundation_ = PxCreateFoundation(PX_PHYSICS_VERSION, scenePhysic_->allocator_, scenePhysic_->errorCallback_);
 			//scenePhysic_->pvd_ = PxCreatePvd(*(scenePhysic_->foundation_));
-			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), PxTolerancesScale(), true);
+			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), physx::PxTolerancesScale(), true);
 
-			PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
-			sceneDesc.gravity = PxVec3(0.0f, -2000.0f, 0.0f);
-			scenePhysic_->dispatcher_ = PxDefaultCpuDispatcherCreate(2);
+			physx::PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
+			sceneDesc.gravity = physx::PxVec3(0.0f, -2000.0f, 0.0f);
+			scenePhysic_->dispatcher_ = physx::PxDefaultCpuDispatcherCreate(2);
 			sceneDesc.cpuDispatcher = scenePhysic_->dispatcher_;
 			//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 			scenePhysic_->filterShader = FilterShader;

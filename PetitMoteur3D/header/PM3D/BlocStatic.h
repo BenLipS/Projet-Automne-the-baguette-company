@@ -15,7 +15,7 @@ namespace PM3D {
         public Objet3DStatic
     {
 	public:
-		BlocStatic(Scene* _scene, PxTransform _position, const float dx, const float dy, const float dz,
+		BlocStatic(Scene* _scene, physx::PxTransform _position, const float dx, const float dy, const float dz,
 			CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs, Light_Manager LM_ = {
 
 			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f),
@@ -44,7 +44,7 @@ namespace PM3D {
 
 		float dx_, dy_, dz_;
 
-		static PxRigidStatic* createRigidBody(Scene* _scene, PxTransform _position,
+		static physx::PxRigidStatic* createRigidBody(Scene* _scene, physx::PxTransform _position,
 			const float _dx, const float _dy, const float _dz);
     };
 

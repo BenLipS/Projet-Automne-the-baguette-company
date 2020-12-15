@@ -14,8 +14,6 @@
 #include <PxPhysicsAPI.h>
 #include <fstream>
 
-using namespace physx;
-
 namespace PM3D {
 
 	class CDispositifD3D11;

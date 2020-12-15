@@ -4,22 +4,20 @@
 #include "tools.h"
 #include "dispositifD3D11.h"
 
-using namespace physx;
-
 namespace PM3D {
 
     class PlanStatic :
         public Objet3DStatic
     {
     public:
-        PlanStatic(Scene* _scene, PxVec3 _point, PxVec3 _normale, PxVec3 _direction);
+        PlanStatic(Scene* _scene, physx::PxVec3 _point, physx::PxVec3 _normale, physx::PxVec3 _direction);
         void Draw() noexcept override {};
-        PxTransform getTerrainNormale();
-        PxVec3 getDirection();
-        PxVec3 getNormale();
+        physx::PxTransform getTerrainNormale();
+        physx::PxVec3 getDirection();
+        physx::PxVec3 getNormale();
     protected:
-        static PxRigidStatic* createRigidBody(Scene* _scene, PxVec3 _point, PxVec3 _normale);
-        PxVec3 normale_;
-        PxVec3 direction_;
+        static physx::PxRigidStatic* createRigidBody(Scene* _scene, physx::PxVec3 _point, physx::PxVec3 _normale);
+        physx::PxVec3 normale_;
+        physx::PxVec3 direction_;
     };
 }

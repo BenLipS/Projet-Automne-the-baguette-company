@@ -7,9 +7,6 @@
 
 #include "PxPhysicsAPI.h"
 
-using namespace std;
-using namespace physx;
-
 namespace PM3D
 {
 
@@ -46,8 +43,8 @@ namespace PM3D
 		class CMaterial {
 
 		public:
-			string NomFichierTexture;
-			string NomMateriau;
+			std::string NomFichierTexture;
+			std::string NomMateriau;
 			ID3D11ShaderResourceView* pTextureD3D;
 			XMFLOAT4 Ambient;
 			XMFLOAT4 Diffuse;
@@ -91,10 +88,10 @@ namespace PM3D
 		
 		// Les sous-objets 
 		int NombreSubmesh; // Nombre de sous-objets dans le mesh 
-		vector<int> SubmeshMaterialIndex; // Index des matériaux 
-		vector<int> SubmeshIndex; // Index des sous-objets 
+		std::vector<int> SubmeshMaterialIndex; // Index des matériaux 
+		std::vector<int> SubmeshIndex; // Index des sous-objets 
 		
-		vector<CMaterial> Material; // Vecteur des matériaux 
+		std::vector<CMaterial> Material; // Vecteur des matériaux 
 		
 	    // Pour les effets et shaders 
 		ID3D11SamplerState* pSampleState; 
@@ -106,7 +103,7 @@ namespace PM3D
 
 		std::vector<IChargeur*> chargeurs_;
 		IChargeur* chargeurCourant_;
-		PxRigidActor* body_ = nullptr;
+		physx::PxRigidActor* body_ = nullptr;
 
 		void InitEffet();
 		void Draw();
