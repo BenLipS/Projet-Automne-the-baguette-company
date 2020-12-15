@@ -165,7 +165,7 @@ namespace PM3D {
 		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
 		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
 		CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
-		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance, bonusInstance };
+		const std::vector<IChargeur*> listModels{ bonusInstance, boxInstance, jinInstance };
 
 		// Pente
 		float constexpr longueur = 100.0f;

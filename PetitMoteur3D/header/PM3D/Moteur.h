@@ -236,6 +236,7 @@ namespace PM3D
 						if (chargeur->GetNomFichier() != objetMesh->getChargeurCourant()->GetNomFichier()) {
 							objetMesh->setChargeurCourant(chargeur);
 							objetMesh->TransfertObjet(*chargeur);
+							objetMesh->InitEffet();
 						}
 					}
 				}
