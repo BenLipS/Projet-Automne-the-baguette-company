@@ -363,12 +363,12 @@ namespace PM3D {
 								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.z,
 								1.0f
 		};*/
-		sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
+		sp.vLumiere = XMVectorSet(-1000.0f, 50000.0f, -15000.0f, 1.0f);
 		//sp.vLumiere1 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
 		//sp.vLumiere2 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
 		sp.vCamera = view_camera;						//XMVectorSet(0.0f, 194220.0f, 0.0f, 0.0f);
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		sp.vDEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 		sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 		sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);

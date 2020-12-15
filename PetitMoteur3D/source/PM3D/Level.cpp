@@ -133,7 +133,7 @@ namespace PM3D {
 		}
 
 		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente);
-		HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
+		HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Snow.dds", pDispositif_));
 
 		scenePhysic_->ListeScene_.emplace_back(move(HM));
 
