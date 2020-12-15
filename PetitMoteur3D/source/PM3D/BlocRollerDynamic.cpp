@@ -34,132 +34,50 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMax_ = 6000.0f;
-	constexpr float BlocRollerDynamic::vitesseMin_ = 100.0f;
-
+	constexpr float BlocRollerDynamic::vitesseMaxDefault_ = 600.0f;
+	constexpr float BlocRollerDynamic::vitesseMinDefault_ = 10.0f;
+	constexpr float BlocRollerDynamic::vitesseBonusMax_ = 1600.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
-		CDispositifD3D11* _pDispositif) : Objet3DDynamic(_scene->scene_, createRigidBody(_scene, _position, _radius))
-		, pDispositif(_pDispositif) // Prendre en note le dispositif
-		, matWorld(XMMatrixIdentity())
-		, pVertexBuffer(nullptr)
-		, pIndexBuffer(nullptr)
+		CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, _radius), _pDispositif, chargeurs)
 		, pVertexShader(nullptr)
 		, pPixelShader(nullptr)
-		, pVertexLayout(nullptr)
-		, pConstantBuffer(nullptr)
 		, radius_(_radius)
+		, vitesseMax_(vitesseMaxDefault_)
+		, vitesseMin_(vitesseMinDefault_)
+		, pSampleState(nullptr)
+		, pTextureD3D(nullptr)
 
 	{
 		for( unsigned int i = 0; i < 10; i++)
 			speedY_buffer.push(0.0f);
 
 		typeTag = "vehicule";
-		// Les points
-		XMFLOAT3 point[8] =
-		{
-			XMFLOAT3(-_radius, _radius, -_radius),
-			XMFLOAT3(_radius, _radius, -_radius),
-			XMFLOAT3(_radius, -_radius, -_radius),
-			XMFLOAT3(-_radius, -_radius, -_radius),
-			XMFLOAT3(-_radius, _radius, _radius),
-			XMFLOAT3(-_radius, -_radius, _radius),
-			XMFLOAT3(_radius, -_radius, _radius),
-			XMFLOAT3(_radius, _radius, _radius)
-		};
-
-		// Calculer les normales
-		const XMFLOAT3 n0(0.0f, 0.0f, -1.0f); // devant
-		const XMFLOAT3 n1(0.0f, 0.0f, 1.0f); // arri�re
-		const XMFLOAT3 n2(0.0f, -1.0f, 0.0f); // dessous
-		const XMFLOAT3 n3(0.0f, 1.0f, 0.0f); // dessus
-		const XMFLOAT3 n4(-1.0f, 0.0f, 0.0f); // face gauche
-		const XMFLOAT3 n5(1.0f, 0.0f, 0.0f); // face droite
-
-		CSommetBloc sommets[24] =
-		{
-			// Le devant du bloc
-			CSommetBloc(point[0], n0),
-			CSommetBloc(point[1], n0),
-			CSommetBloc(point[2], n0),
-			CSommetBloc(point[3], n0),
-
-			// L'arri�re du bloc
-			CSommetBloc(point[4], n1),
-			CSommetBloc(point[5], n1),
-			CSommetBloc(point[6], n1),
-			CSommetBloc(point[7], n1),
-
-			// Le dessous du bloc
-			CSommetBloc(point[3], n2),
-			CSommetBloc(point[2], n2),
-			CSommetBloc(point[6], n2),
-			CSommetBloc(point[5], n2),
-
-			// Le dessus du bloc
-			CSommetBloc(point[0], n3),
-			CSommetBloc(point[4], n3),
-			CSommetBloc(point[7], n3),
-			CSommetBloc(point[1], n3),
-
-			// La face gauche
-			CSommetBloc(point[0], n4),
-			CSommetBloc(point[3], n4),
-			CSommetBloc(point[5], n4),
-			CSommetBloc(point[4], n4),
-
-			// La face droite
-			CSommetBloc(point[1], n5),
-			CSommetBloc(point[7], n5),
-			CSommetBloc(point[6], n5),
-			CSommetBloc(point[2], n5)
-		};
-
-		// Cr�ation du vertex buffer et copie des sommets
-		ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
-
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory(&bd, sizeof(bd));
-
-		bd.Usage = D3D11_USAGE_IMMUTABLE;
-		bd.ByteWidth = sizeof(sommets);
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-
-		D3D11_SUBRESOURCE_DATA InitData;
-		ZeroMemory(&InitData, sizeof(InitData));
-		InitData.pSysMem = sommets;
-
-		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer), DXE_CREATIONVERTEXBUFFER);
-
-		// Cr�ation de l'index buffer et copie des indices
-		ZeroMemory(&bd, sizeof(bd));
-
-		bd.Usage = D3D11_USAGE_IMMUTABLE;
-		bd.ByteWidth = sizeof(index_bloc);
-		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-
-		ZeroMemory(&InitData, sizeof(InitData));
-		InitData.pSysMem = index_bloc;
-
-		DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer),
-			DXE_CREATIONINDEXBUFFER);
 
 		// Filtre pour les collisions
 		setupFiltering(body_, FILTER_TYPE::VEHICULE, FILTER_TYPE::OBSTACLE | FILTER_TYPE::TERRAIN);
 
 		// Inititalisation des shaders
-		InitShaders();
+		//InitEffet();
 	}
 
 	void BlocRollerDynamic::Anime(float tempsEcoule)
 	{
+		float constexpr vitesseBonus = 200.f;
+		setVitesseMax(nbBonus_ * vitesseBonus + vitesseMaxDefault_);
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
 		auto body = static_cast<PxRigidDynamic*>(body_);
 		auto speed = body->getLinearVelocity();
 
+		if (isContact()) {
+			totalTempsEcoule += tempsEcoule;
+			if (totalTempsEcoule > .75f) {
+				updateContact(false);
+				totalTempsEcoule = 0.f;
+				//body->setLinearVelocity(PxZero);
+			}
+		}
 		
 		//PxTransform terrain = CMoteurWindows::GetInstance().getTerrainNormale();
 		pair<PxVec3, PxVec3> const terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
@@ -173,29 +91,29 @@ namespace PM3D
 		PxVec3 vVitesse = speed;
 
 		// V�rifier l��tat de la touche gauche
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
-			auto const direction = gauche * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
+		float constexpr coeffMoveCote = 70;
+		if (!isContact()) {
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
+				auto const direction = gauche * speed.magnitude();
+				vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
+			}
+			// V�rifier l��tat de la touche droite
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
+				auto const direction = droite * speed.magnitude();
+				vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
+			}
+
+			vVitesse = vVitesse.getNormalized() * speed.magnitude();
+
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
+				//upPressed_ = true;
+				vVitesse = vVitesse * 1.05f;
+			}
+
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
+				vVitesse = vVitesse * 0.99f;
+			}
 		}
-
-		// V�rifier l��tat de la touche droite
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
-			auto const direction = droite * speed.magnitude();
-			vVitesse += (direction.getNormalized() * (speed.magnitude() / 25));
-		}
-
-		vVitesse = vVitesse.getNormalized() * speed.magnitude();
-
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
-			//upPressed_ = true;
-			vVitesse = vVitesse * 1.05f;
-		}
-
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
-			vVitesse = vVitesse * 0.99f;
-		}
-
-		tempsEcoule;
 
 		//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
 
@@ -245,69 +163,41 @@ namespace PM3D
 		PxQuat const orientation = PxQuat(angle, normale).getNormalized();
 
 		float const valProjete = normale.dot(vVitesse);
-		PxVec3 const vitesseFinale{ vVitesse - (valProjete * normale) };
-		if (vitesseFinale.magnitude() > vitesseMax_)
-			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
-		else if (vitesseFinale.magnitude() < vitesseMin_)
-			body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
-		else
-			body->setLinearVelocity(vitesseFinale);
+		PxVec3 vitesseFinale{ vVitesse - (valProjete * normale) };
+		float const ValProjPente = directionPente.dot(vitesseFinale);
+
+		if (ValProjPente >= 0) {
+			if (vitesseFinale.magnitude() > vitesseMax_)
+				body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
+			else if (vitesseFinale.magnitude() < vitesseMin_)
+				body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
+			else
+				body->setLinearVelocity(vitesseFinale);
+		}
+		else {
+			float const coeffRemontePente = 0.9f;
+			if (abs(ValProjPente) > 200.f) {//Pour pas remonter la pente
+				body->setLinearVelocity(vitesseFinale * coeffRemontePente);
+			}
+			else
+				body->setLinearVelocity(vitesseFinale);
+		}
+		//body->addForce({ 10000000000.f,0.f,0.f }, PxForceMode::eIMPULSE);
 
 		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
-		matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
-		matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
+		if (!isContact()) {
+			matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
+			matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
+		}
+		else {
+			matWorld = XMMatrixRotationQuaternion(XMVectorSet(body_->getGlobalPose().q.x, body_->getGlobalPose().q.y, body_->getGlobalPose().q.z, body_->getGlobalPose().q.w)); //Orientation
+			if (abs(totalTempsEcoule - tempsEcoule) < 0.0001f) {
+				body->setLinearVelocity(vitesseFinale * 0.5f);
+				suppBonus();
+			}
+		}
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position
-	}
 
-	void BlocRollerDynamic::Draw()
-	{
-		// Obtenir le contexte
-		ID3D11DeviceContext* pImmediateContext = pDispositif->GetImmediateContext();
-
-		// Choisir la topologie des primitives
-		pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		// Source des sommets
-		constexpr UINT stride = sizeof(CSommetBloc);
-		constexpr UINT offset = 0;
-		pImmediateContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
-
-		// Source des index
-		pImmediateContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
-		// input layout des sommets
-		pImmediateContext->IASetInputLayout(pVertexLayout);
-
-		// Activer le VS
-		pImmediateContext->VSSetShader(pVertexShader, nullptr, 0);
-
-		// Initialiser et s�lectionner les �constantes� du VS
-		ShadersParams sp{};
-		XMMATRIX const viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
-		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
-		sp.matWorld = XMMatrixTranspose(matWorld);
-		sp.vLumiere1 = XMVectorSet(0.0f, 20000.0f, 0.0f, 1.0f);
-		sp.vLumiere2 = XMVectorSet(0.0f, 20000.0f, -10000.0f, 1.0f);
-		sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
-		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vAMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
-		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		sp.vDMat = XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
-	
-
-		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
-
-		pImmediateContext->VSSetConstantBuffers(0, 1, &pConstantBuffer);
-
-		// Pas de Geometry Shader
-		pImmediateContext->GSSetShader(nullptr, nullptr, 0);
-
-		// Activer le PS
-		pImmediateContext->PSSetShader(pPixelShader, nullptr, 0);
-		pImmediateContext->PSSetConstantBuffers(0, 1, &pConstantBuffer);
-
-		// **** Rendu de l'objet
-		pImmediateContext->DrawIndexed(ARRAYSIZE(index_bloc), 0, 0);
 	}
 
 	BlocRollerDynamic::~BlocRollerDynamic()
@@ -386,6 +276,9 @@ namespace PM3D
 		PxRigidDynamic* bodyDynamic = PxCreateDynamic(*(_scene->physic_), _position, PxSphereGeometry(_radius), *(_scene->material_), 10.0f);
 		//dynamic->setAngularDamping(0.5f);
 		//dynamic->setLinearVelocity(velocity);
+		//bodyDynamic->setMass(100);
 		return bodyDynamic;
 	}
+
+	void BlocRollerDynamic::SetTexture(CTexture* pTexture) { pTextureD3D = pTexture->GetD3DTexture(); }
 } // namespace PM3D

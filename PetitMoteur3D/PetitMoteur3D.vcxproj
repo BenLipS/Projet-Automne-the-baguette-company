@@ -94,12 +94,15 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./lib;$(LibraryPath)</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./lib/Release;./lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)DLL\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)DLL\Release\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -171,10 +174,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;PX_PHYSX_CHARACTER_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(ProjectDir)include\include_physX;$(ProjectDir)include\include_physXShared;$(ProjectDir)include\include_glut;%(AdditionalIncludeDirectories);source;source/PhysX;source/PM3D;header;header/PhysX;header/PM3D</AdditionalIncludeDirectories>
@@ -188,11 +191,21 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <AdditionalDependencies>dxguid.lib;d3d11.lib;d3dcompiler.lib;effects11d.lib;effects11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3d11.lib;effects11.lib;dinput8.lib;d3dcompiler.lib;DXGI.lib;$(ProjectDir)lib\Release\PhysX_64.lib;$(ProjectDir)lib\Release\PhysXCommon_64.lib;$(ProjectDir)lib\Release\PhysXCooking_64.lib;$(ProjectDir)lib\Release\PhysXExtensions_static_64.lib;$(ProjectDir)lib\Release\PhysXFoundation_64.lib;$(ProjectDir)lib\Release\PhysXPvdSDK_static_64.lib;$(ProjectDir)lib\win64_glut\glut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
+    <ClCompile Include="source\PM3D\Bonus.cpp" />
+    <ClCompile Include="source\PM3D\ChargeurOBJ.cpp" />
     <ClCompile Include="source\PM3D\ContactModification.cpp" />
+    <ClCompile Include="source\PM3D\DDSTextureLoader.cpp" />
+    <ClCompile Include="source\PM3D\GestionnaireDeTextures.cpp" />
+    <ClCompile Include="source\PM3D\ObjetMesh.cpp" />
     <ClCompile Include="source\PM3D\PlanStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp" />
     <ClCompile Include="source\PM3D\BlocStatic.cpp" />
@@ -212,98 +225,61 @@
     <ClCompile Include="source\PM3D\Level.cpp" />
     <ClCompile Include="source\PM3D\sommetbloc.cpp" />
     <ClCompile Include="source\PM3D\Terrain.cpp" />
+    <ClCompile Include="source\PM3D\Texture.cpp" />
     <ClCompile Include="source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="source\PM3D\TerrainStatic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\PM3D\Bloc.h" />
+    <ClInclude Include="header\PM3D\BlocEffet1.h" />
+    <ClInclude Include="header\PM3D\Bonus.h" />
+    <ClInclude Include="header\PM3D\chargeur.h" />
+    <ClInclude Include="header\PM3D\ChargeurOBJ.h" />
     <ClInclude Include="header\PM3D\ContactModification.h" />
     <ClInclude Include="header\PM3D\BlocRollerDynamic.h" />
     <ClInclude Include="header\PM3D\BlocStatic.h" />
     <ClInclude Include="header\PM3D\BlocDynamic.h" />
     <ClInclude Include="header\PM3D\Camera.h" />
+    <ClInclude Include="header\PM3D\DDSTextureLoader.h" />
     <ClInclude Include="header\PM3D\DIManipulateur.h" />
     <ClInclude Include="header\PM3D\dispositif.h" />
     <ClInclude Include="header\PM3D\dispositifD3D11.h" />
     <ClInclude Include="header\PM3D\Filter.h" />
+    <ClInclude Include="header\PM3D\GestionnaireDeTextures.h" />
     <ClInclude Include="header\PM3D\IndexModel.h" />
     <ClInclude Include="header\PM3D\InfoDispositif.h" />
     <ClInclude Include="header\PM3D\Horloge.h" />
     <ClInclude Include="header\PM3D\Moteur.h" />
     <ClInclude Include="header\PM3D\MoteurWindows.h" />
     <ClInclude Include="header\PM3D\objet3d.h" />
+    <ClInclude Include="header\PM3D\ObjetMesh.h" />
     <ClInclude Include="header\PM3D\PetitMoteur3D.h" />
     <ClInclude Include="header\PM3D\Resource.h" />
     <ClInclude Include="header\PM3D\Level.h" />
     <ClInclude Include="header\PM3D\sommetbloc.h" />
     <ClInclude Include="header\PM3D\sommetTerrain.h" />
     <ClInclude Include="header\PM3D\Terrain.h" />
+    <ClInclude Include="header\PM3D\Texture.h" />
     <ClInclude Include="header\PM3D\tools.h" />
     <ClInclude Include="header\stdafx.h" />
     <ClInclude Include="header\PM3D\util.h" />
     <ClInclude Include="header\PM3D\Objet3Dphysic.h" />
     <ClInclude Include="header\PM3D\Objet3DStatic.h" />
     <ClInclude Include="header\PM3D\Objet3DDynamic.h" />
-    <ClInclude Include="header\PM3D\TerrainStatic.h" />
     <ClInclude Include="header\PM3D\PlanStatic.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MiniPhong.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="PS_MiniPhong.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="VS_MiniPhong.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <CompileD2DCustomEffect Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileD2DCustomEffect>
     </FxCompile>
     <None Include="PetitMoteur3D.ico" />
-    <FxCompile Include="ps1.hlsl">
-      <FileType>Document</FileType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PS1</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PS1</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS1</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PS1</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
     <None Include="small.ico" />
     <None Include="ReadMe.txt" />
-    <FxCompile Include="vs1.hlsl">
-      <FileType>Document</FileType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VS1</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">VS1</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS1</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VS1</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PetitMoteur3D.rc" />

@@ -6,8 +6,8 @@ namespace PM3D {
 	static const uint16_t index_bloc[36] = {
 						0,1,2,			// devant
 						0,2,3,			// devant
-						5,6,7,			// arrière
-						5,7,4,			// arrière
+						5,6,7,			// arriï¿½re
+						5,7,4,			// arriï¿½re
 						8,9,10,			// dessous
 						8,10,11,		// dessous
 						13,14,15,		// dessus

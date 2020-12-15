@@ -7,12 +7,13 @@
 #include "BlocRollerDynamic.h"
 #include "Camera.h"
 #include "Terrain.h"
+#include "Bonus.h"
+#include "ChargeurOBJ.h"
+#include "GestionnaireDeTextures.h"
+
 #include <d3d11.h>
 #include <PxPhysicsAPI.h>
 #include <fstream>
-#include "TerrainStatic.h"
-
-using namespace physx;
 
 namespace PM3D {
 
@@ -20,11 +21,18 @@ namespace PM3D {
 
 	class Level {
 	public:
-		Level(Scene* sPhysique, CDispositifD3D11* pDispositif, float scaleX, float scaleY, float scaleZ);
+		Level(Scene* sPhysique, CDispositifD3D11* pDispositif, float scaleX, float scaleY, float scaleZ, CGestionnaireDeTextures* gTexture);
 		Level(const Level&) = delete;
 		~Level() = default;
 
 	private:
+		//DELETE THAT
+		CChargeurOBJ jinModel;
+		CChargeurOBJ boxModel;
+		CChargeurOBJ bonusModel;
+
+
+
 		void initlevel();
 
 		float scaleX_, scaleY_, scaleZ_;
@@ -32,8 +40,10 @@ namespace PM3D {
 		float anglePente_;
 		Scene* scenePhysic_;
 		CDispositifD3D11* pDispositif_;
+		CGestionnaireDeTextures* TexturesManager;
 		void initJoueur();
 		void initPente(Light_Manager lm);
+		void initBonus(Light_Manager lm, float _x, float _y);
 		void initBloc(Light_Manager lm, float _x, float _y);
 		void initHM(Light_Manager lm, int numPente);
 	};

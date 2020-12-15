@@ -4,8 +4,11 @@
 #include <d3d11.h>
 #include "tools.h"
 #include <queue>
+#include "chargeur.h"
+#include "Texture.h"
 
 #include "PxPhysicsAPI.h"
+
 using namespace DirectX;
 
 namespace PM3D
@@ -20,40 +23,63 @@ namespace PM3D
 	class BlocRollerDynamic : public Objet3DDynamic
 	{
 	public:
-		BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
-			CDispositifD3D11* _pDispositif);
+		BlocRollerDynamic(Scene* _scene, physx::PxTransform _position, const float _radius,
+			CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs);
 
 		// Destructeur
 		virtual ~BlocRollerDynamic();
 
-		virtual void Anime(float tempsEcoule);
-		virtual void Draw();
+		virtual void Anime(float tempsEcoule) override;
 
+		physx::PxRigidActor* getBody() { return body_; }
+		float getVitesseMax() { return vitesseMax_; }
+		void setVitesseMax(float _vitesse) { vitesseMax_ = _vitesse; }
 
-		PxRigidActor* getBody() noexcept { return body_; }
+		int getNbBonus() { return nbBonus_; }
+		void addBonus() {
+			if (nbBonus_ < 5) {
+				nbBonus_++;
+			}
+		}
+		void suppBonus() {
+			if (nbBonus_ > 0) {
+				nbBonus_--;
+			}
+		}
+		float getVitesseBonusMax() { return vitesseBonusMax_; }
+
+		bool isContact() { return contact_; }
+		void updateContact(bool _contact) { contact_ = _contact; }
+
+		void SetTexture(CTexture* pTexture);
 
 	private:
-		CDispositifD3D11* pDispositif;
 		void InitShaders();
-
-		ID3D11Buffer* pVertexBuffer;
-		ID3D11Buffer* pIndexBuffer;
 
 		ID3D11VertexShader* pVertexShader;
 		ID3D11PixelShader* pPixelShader;
-		ID3D11InputLayout* pVertexLayout;
 
-		// D�finitions des valeurs d'animation
-		ID3D11Buffer* pConstantBuffer;
-		XMMATRIX matWorld;
 		//float rotation;
-		static PxRigidDynamic* createRigidBody(Scene* _scene, PxTransform _position, const float _radius);
+		static physx::PxRigidDynamic* createRigidBody(Scene* _scene, physx::PxTransform _position, const float _radius);
 
 		float radius_;
-		static const float vitesseMax_;
-		static const float vitesseMin_;
+		float vitesseMax_;
+		float vitesseMin_;
+		static const float vitesseMaxDefault_;
+		static const float vitesseMinDefault_;
+
+		static const float vitesseBonusMax_;
+
+		int nbBonus_{};
+
 		bool upPressed_ = false;
 		std::queue<float> speedY_buffer;
+		bool contact_ = false;
+
+		float totalTempsEcoule{};
+
+		ID3D11ShaderResourceView* pTextureD3D;
+		ID3D11SamplerState* pSampleState;
 	};
 
 } // namespace PM3D

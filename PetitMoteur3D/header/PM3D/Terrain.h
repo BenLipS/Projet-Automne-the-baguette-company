@@ -3,6 +3,7 @@
 #include <string>
 #include "d3dx11effect.h"
 #include "sommetTerrain.h"
+#include "Texture.h"
 
 namespace PM3D
 {
@@ -16,7 +17,7 @@ namespace PM3D
 		// Destructeur
 		virtual ~Terrain();
 
-		virtual void Anime(float tempsEcoule) noexcept override;
+		virtual void Anime(float) noexcept override {};
 		virtual void Draw() override;
 
 
@@ -25,6 +26,8 @@ namespace PM3D
 		int width;
 
 		XMFLOAT3 scale;
+
+		void SetTexture(CTexture* pTexture);
 
 	private:
 		CSommetTerrain* sommets;
@@ -45,7 +48,7 @@ namespace PM3D
 		int nbSommets;
 		int nbPolygones;
 
-		// Définitions des valeurs d'animation
+		// Dï¿½finitions des valeurs d'animation
 		ID3D11Buffer* pConstantBuffer;
 		XMMATRIX matWorld;
 		float rotation;
@@ -54,6 +57,10 @@ namespace PM3D
 		ID3DX11Effect* pEffet;
 		ID3DX11EffectTechnique* pTechnique;
 		ID3DX11EffectPass* pPasse;
+
+		//Pour les textures
+		ID3D11ShaderResourceView* pTextureD3D;
+		ID3D11SamplerState* pSampleState;
 
 		int numTerrain_;
 		float scaleFixX_, scaleFixZ_, scaleFixY_;

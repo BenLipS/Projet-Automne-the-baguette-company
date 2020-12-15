@@ -17,14 +17,19 @@
 #include "BlocDynamic.h"
 #include "BlocStatic.h"
 #include "BlocRollerDynamic.h"
-#include "TerrainStatic.h"
 #include "PlanStatic.h"
 #include "Level.h"
 #include "Filter.h"
 #include "ContactModification.h"
 
+#include "ChargeurOBJ.h"
+#include "GestionnaireDeTextures.h"
+#include "ObjetMesh.h"
+#include "chargeur.h"
+#include "BlocEffet1.h"
+
 using namespace std;
-using namespace physx;
+//using namespace physx;
 
 namespace PM3D
 {
@@ -111,7 +116,7 @@ namespace PM3D
 			return true;
 		}
 
-		PxTransform getTerrainNormale() {
+		physx::PxTransform getTerrainNormale() {
 			auto start = scenePhysic_->ListeScene_.begin();
 			auto end = scenePhysic_->ListeScene_.end();
 			while (start != end && start->get()->typeTag != "terrain")
@@ -122,11 +127,11 @@ namespace PM3D
 				return terrain->getTerrainNormale();
 			}
 			else {
-				return PxTransform();
+				return physx::PxTransform();
 			}
 		}
 
-		pair<PxVec3, PxVec3> getTerrainPair() {
+		pair<physx::PxVec3, physx::PxVec3> getTerrainPair() {
 			auto start = scenePhysic_->ListeScene_.begin();
 			auto end = scenePhysic_->ListeScene_.end();
 			while (start != end && start->get()->typeTag != "terrain")
@@ -134,7 +139,7 @@ namespace PM3D
 
 			if (start != end) {
 				PlanStatic* terrain = dynamic_cast<PlanStatic*>(start->get());
-				pair<PxVec3, PxVec3> pair{ terrain->getNormale(), terrain->getDirection() };
+				pair<physx::PxVec3, physx::PxVec3> pair{ terrain->getNormale(), terrain->getDirection() };
 				return pair;
 			}
 			else {
@@ -147,6 +152,40 @@ namespace PM3D
 		const XMMATRIX& GetMatView() const noexcept { return m_MatView; }
 		const XMMATRIX& GetMatProj() const noexcept { return m_MatProj; }
 		const XMMATRIX& GetMatViewProj() const noexcept { return m_MatViewProj; }
+		CCamera& getCamera() { return camera; };
+		Scene* getScenePhysic() { return scenePhysic_; }
+
+		BlocRollerDynamic* findVehiculeFromBody(physx::PxRigidActor* _body) {
+			for (int i = 0; i < scenePhysic_->ListeScene_.size(); ++i) {
+				if (scenePhysic_->ListeScene_[i].get()->isPhysic() && static_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[i].get())->getBody() == _body)
+					return static_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[i].get());
+			}
+			return nullptr;
+		}
+
+		void eraseBody(physx::PxRigidActor* _body) {
+			auto it = scenePhysic_->ListeScene_.begin();
+			bool erased = false;
+			while (it != scenePhysic_->ListeScene_.end() && !erased) {
+				if (it->get() != nullptr && it->get()->isPhysic()) {
+					if (static_cast<Objet3DPhysic*>(it->get())->getBody() == _body) {
+						erased = true;
+					}
+					else {
+						it++;
+					}
+				}
+				else {
+					it++;
+				}
+			}
+			if (erased) 
+				scenePhysic_->ListeScene_.erase(it);
+		}
+
+		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
+
+		XMVECTOR getCameraPosition() { return camera.getPosition(); }
 
 	protected:
 
@@ -161,6 +200,7 @@ namespace PM3D
 
 		virtual int64_t GetTimeSpecific() const = 0;
 		virtual double GetTimeIntervalsInSec(int64_t start, int64_t stop) const = 0;
+		
 
 		virtual TClasseDispositif* CreationDispositifSpecific(const CDS_MODE cdsMode) = 0;
 		virtual void BeginRenderSceneSpecific() = 0;
@@ -186,6 +226,19 @@ namespace PM3D
 			// Appeler les fonctions de dessin de chaque objet de la sc�ne
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
+				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur") {
+					CObjetMesh* objetMesh = static_cast<CObjetMesh*>(object3D.get());
+					std::vector<IChargeur*> chargeurs = objetMesh->getChargeurs();
+					if (object3D.get()->isPhysic()) {
+						Objet3DPhysic* objetPhys = static_cast<Objet3DPhysic*>(object3D.get());
+						physx::PxRigidActor* body = objetPhys->getBody();
+						IChargeur* chargeur = objetPhys->getChargeurLODMoteur(chargeurs, body);
+						if (chargeur->GetNomFichier() != objetMesh->getChargeurCourant()->GetNomFichier()) {
+							objetMesh->setChargeurCourant(chargeur);
+							objetMesh->TransfertObjet(*chargeur);
+						}
+					}
+				}
 				object3D->Draw();
 			}
 
@@ -217,11 +270,11 @@ namespace PM3D
 			//Partie physique
 			scenePhysic_->foundation_ = PxCreateFoundation(PX_PHYSICS_VERSION, scenePhysic_->allocator_, scenePhysic_->errorCallback_);
 			//scenePhysic_->pvd_ = PxCreatePvd(*(scenePhysic_->foundation_));
-			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), PxTolerancesScale(), true);
+			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), physx::PxTolerancesScale(), true);
 
-			PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
-			sceneDesc.gravity = PxVec3(0.0f, -2000.0f, 0.0f);
-			scenePhysic_->dispatcher_ = PxDefaultCpuDispatcherCreate(2);
+			physx::PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
+			sceneDesc.gravity = physx::PxVec3(0.0f, -200.0f, 0.0f);
+			scenePhysic_->dispatcher_ = physx::PxDefaultCpuDispatcherCreate(2);
 			sceneDesc.cpuDispatcher = scenePhysic_->dispatcher_;
 			//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 			scenePhysic_->filterShader = FilterShader;
@@ -257,8 +310,9 @@ namespace PM3D
 
 			constexpr float champDeVision = XM_PI / 3; 	// 45 degr�s
 			const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
-			constexpr float planRapproche = 2.0f;
-			constexpr float planEloigne = 100000.0f;
+			const float planRapproche = 2.0f;
+			const float planEloigne = 1000000.0f;
+
 
 			m_MatProj = XMMatrixPerspectiveFovLH(
 				champDeVision,
@@ -270,79 +324,16 @@ namespace PM3D
 
 			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
-			camera.update(static_cast<PxRigidBody*>(character->getBody()));
+			camera.update(character);
 
 			return 0;
 		}
 
 		bool InitObjets()
 		{
-			//
-			Level const niveau(scenePhysic_, pDispositif, 200, 200, 755.0f); // scale en X Y et Z
-			//Light_Manager LMP{
-			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1
-			//XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere2
-			//XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
-			//XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
-			//XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f), // vAMat
-			//XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
-			//XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f) // vDMat
-			//};
+			
+			Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
-			//// Puis, il est ajout� � la sc�ne
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 1450.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 620.0f, 0.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 4760.0f, 0.1f, 20000.0f, pDispositif, LMP));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 2000.0f, 0.0f, PxQuat(XM_PI, PxVec3(1.0f, 0.0f, 0.0f))), 4760.0f, 0.1f, 20000.0f, pDispositif, LMP));
-			//Light_Manager LMB{
-
-			//XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere1
-			//XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere2
-			//XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
-			//XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
-			//XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f), // vAMat
-			//XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
-			//XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f) // vDMat
-			//};
-
-			//Light_Manager LMBOr{
-			//XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere1
-			//XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere2
-			//XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
-			//XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
-			//XMVectorSet(1.0f, 1.0f, 0.0f, 1.0f), // vAMat
-			//XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
-			//XMVectorSet(1.0f, 1.0f, 0.0f, 1.0f) // vDMat
-			//};
-
-			//// Blocs statiques
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 1000.0f, 1000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 1000.0f, 1000.0f, pDispositif, LMB));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(1100.0f, 1200.0f, -5000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 500.0f, 500.0f, 500.0f, pDispositif, LMB));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-1500.0f, 1200.0f, -5000.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 500.0f, 500.0f, 500.0f, pDispositif, LMBOr));
-
-			//// Mur final
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif, LMBOr));
-
-			//// Mur début
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 1000.0f, -10000.0f), 5000.0f, 1300.0f, 10.0f, pDispositif, LMBOr));
-
-			//// Tremplin
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 600.0f, -5000.0f, PxQuat(-0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 1000.0f, 1000.0f, pDispositif, LMP));
-			//
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-100.0f, -2500.0f, 5000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, -3000.0f, 6000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-400.0f, -3500.0f, 7000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(300.0f, -4000.0f, 8000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(200.0f, -4500.0f, 9000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(-100.0f, -5000.0f, 10000.0f, PxQuat(0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 10.0f, 1000.0f, 10.0f, pDispositif));
-
-			/*char* filename = new char[50]("./src/heighmap_Proj52.bmp");
-			scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename,XMFLOAT3(20.0f,5.0f,20.0f),pDispositif));*/
-			//ListeScene.emplace_back(std::make_unique<CBlocEffect1>(2.0f, 2.0f, 2.0f, pDispositif));
-			/*ListeScene.emplace_back(std::make_unique<BlocDynamic>(PxTransform(0.0f, 0.0f, 0.0f),
-				10.0f,
-				10.0f,
-				10.0f,
-				pDispositif, scenePhysic_));*/
 			return true;
 		}
 
@@ -357,22 +348,18 @@ namespace PM3D
 			// Prendre en note l��tat de la souris
 			GestionnaireDeSaisie.SaisirEtatSouris();
 
-			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
-
-				for (auto& object3D : scenePhysic_->ListeScene_)
-				{
-					object3D->Anime(tempsEcoule);
-				}
-				camera.update(tempsEcoule);
-			}
-			else {
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
 				object3D->Anime(tempsEcoule);
 			}
-			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
-			camera.update(static_cast<PxRigidBody*>(character->getBody()),tempsEcoule);
+			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
+				camera.update(tempsEcoule);
+			}
+			else {
+				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
+				camera.update(character, tempsEcoule);
 			}
 			return true;
 		}
@@ -410,5 +397,10 @@ namespace PM3D
 
 		// Gestion des collisions
 		ContactModification contactModif_{};
+
+		// Le gestionnaire de texture
+		CGestionnaireDeTextures TexturesManager;
+
+	
 	};
 } // namespace PM3D

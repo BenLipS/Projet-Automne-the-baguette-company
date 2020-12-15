@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <DirectXMath.h>
+#include "BlocRollerDynamic.h"
 #include "objet3d.h"
 #include "PxPhysicsAPI.h"
 
@@ -21,7 +22,8 @@ namespace PM3D {
 
 		enum class CAMERA_TYPE {
 			FREE,
-			CUBE
+			CUBE,
+			FPCUBE
 		};
 
 	private:
@@ -30,7 +32,8 @@ namespace PM3D {
 		CAMERA_TYPE type;
 
 	public:
-		bool waitForSwap = false;
+		bool waitForSwapFree = false;
+		bool waitForSwapFP = false;
 		CCamera() = default;
 		CCamera(const DirectX::XMVECTOR& position_in, const DirectX::XMVECTOR& direction_in, const DirectX::XMVECTOR& up_in, DirectX::XMMATRIX* pMatView_in, DirectX::XMMATRIX* pMatProj_in, DirectX::XMMATRIX* pMatViewProj_in, CAMERA_TYPE type = CAMERA_TYPE::FREE);
 
@@ -41,12 +44,16 @@ namespace PM3D {
 		void setUp(const DirectX::XMVECTOR& up_in);
 
 		CAMERA_TYPE getType() noexcept { return type; }
-		XMVECTOR getPosition() noexcept { return position; }
+		XMVECTOR getPosition() noexcept { 
+			XMVECTOR positionTest = position;  
+		return position;
+		}
 
-		void swapCameraMode();
+		void swapCameraModeFree();
+		void swapCameraModeFP();
 
 		void update(float tempsEcoule = 0.0f);
 		void update(float y, float tempsEcoule);
-		void update(physx::PxRigidBody*, float tempsEcoule = 0);
+		void update(BlocRollerDynamic*, float tempsEcoule = 0);
 	};
 }
