@@ -59,7 +59,7 @@ namespace PM3D {
 		bonusModel = CChargeurOBJ();
 		bonusModel.Chargement(paramOBJ1);
 
-		CParametresChargement paramOBJ2 = CParametresChargement("chizbox.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJ2 = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
 		boxModel = CChargeurOBJ();
 		boxModel.Chargement(paramOBJ2);
 
@@ -111,10 +111,9 @@ namespace PM3D {
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
 		float constexpr posY = 0.0f; // largeur // au centre de la pente
-		float const posZ = scaleFixZ_ * scaleZ_ + 200; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
+		float const posZ = scaleFixZ_ * scaleZ_ + 20; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
 
 
-		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 12900.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_));
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), 20.0f, pDispositif_,listModels));
 

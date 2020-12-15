@@ -218,14 +218,14 @@ namespace PM3D {
 			if (pourcentageVmax < 0.25f)// pour eviter les tremblement a faible vitesse
 				pourcentageVmax = 0.25f;
 
-			float offsetY = 1000.f + 5000.f * pourcentageVmax;
-			float offsetZ = 500.f + 2000.f * pourcentageVmax;
+			float offsetY = 100.f + 500.f * pourcentageVmax;
+			float offsetZ = 50.f + 200.f * pourcentageVmax;
 
 			setPosition(XMVECTOR{ pose.p.x, pose.p.y + offsetY, pose.p.z - offsetZ });
 			setDirection(XMVECTOR{ 0.0f, -offsetY, offsetZ });
 
 		} else {
-			setPosition(XMVECTOR{ pose.p.x, pose.p.y + 400.0f, pose.p.z });
+			setPosition(XMVECTOR{ pose.p.x, pose.p.y + 40.0f, pose.p.z });
 			setDirection(XMVECTOR{ vecVitesse.getNormalized().x, vecVitesse.getNormalized().y, vecVitesse.getNormalized().z });
 		}
 

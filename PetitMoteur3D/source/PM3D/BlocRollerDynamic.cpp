@@ -34,9 +34,9 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMaxDefault_ = 6000.0f;
-	constexpr float BlocRollerDynamic::vitesseMinDefault_ = 100.0f;
-	constexpr float BlocRollerDynamic::vitesseBonusMax_ = 16000.0f;
+	constexpr float BlocRollerDynamic::vitesseMaxDefault_ = 600.0f;
+	constexpr float BlocRollerDynamic::vitesseMinDefault_ = 10.0f;
+	constexpr float BlocRollerDynamic::vitesseBonusMax_ = 1600.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
 		CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, _radius), _pDispositif, chargeurs)
@@ -63,7 +63,7 @@ namespace PM3D
 
 	void BlocRollerDynamic::Anime(float tempsEcoule)
 	{
-		float constexpr vitesseBonus = 2000.f;
+		float constexpr vitesseBonus = 200.f;
 		setVitesseMax(nbBonus_ * vitesseBonus + vitesseMaxDefault_);
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
@@ -91,7 +91,7 @@ namespace PM3D
 		PxVec3 vVitesse = speed;
 
 		// V�rifier l��tat de la touche gauche
-		float constexpr coeffMoveCote = 25;
+		float constexpr coeffMoveCote = 70;
 		if (!isContact()) {
 			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
 				auto const direction = gauche * speed.magnitude();
@@ -176,7 +176,7 @@ namespace PM3D
 		}
 		else {
 			float const coeffRemontePente = 0.9f;
-			if (abs(ValProjPente) > 2000.f) {//Pour pas remonter la pente
+			if (abs(ValProjPente) > 200.f) {//Pour pas remonter la pente
 				body->setLinearVelocity(vitesseFinale * coeffRemontePente);
 			}
 			else

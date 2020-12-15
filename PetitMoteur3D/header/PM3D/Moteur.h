@@ -273,7 +273,7 @@ namespace PM3D
 			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), physx::PxTolerancesScale(), true);
 
 			physx::PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
-			sceneDesc.gravity = physx::PxVec3(0.0f, -2000.0f, 0.0f);
+			sceneDesc.gravity = physx::PxVec3(0.0f, -200.0f, 0.0f);
 			scenePhysic_->dispatcher_ = physx::PxDefaultCpuDispatcherCreate(2);
 			sceneDesc.cpuDispatcher = scenePhysic_->dispatcher_;
 			//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
