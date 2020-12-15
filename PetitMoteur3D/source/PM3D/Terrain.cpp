@@ -363,7 +363,7 @@ namespace PM3D {
 								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.z,
 								1.0f
 		};*/
-		sp.vLumiere = XMVectorSet(-1000.0f, 50000.0f, -15000.0f, 1.0f);
+		sp.vLumiere = XMVectorSet(-1000.0f, 10000.0f, -1500.0f, 1.0f);
 		//sp.vLumiere1 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
 		//sp.vLumiere2 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
 		sp.vCamera = view_camera;						//XMVectorSet(0.0f, 194220.0f, 0.0f, 0.0f);
@@ -372,8 +372,8 @@ namespace PM3D {
 		sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 		sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		sp.vSMat = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-		sp.puissance = 1;
+		sp.vSMat = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+		sp.puissance = 5;
 		
 
 		pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
@@ -396,7 +396,7 @@ namespace PM3D {
 		*/
 		
 		// Activation de la texture ou non 
-		if (pTextureD3D != nullptr) {
+		//if (pTextureD3D != nullptr) {
 			ID3DX11EffectShaderResourceVariable* variableTexture;
 			variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
 			variableTexture->SetResource(pTextureD3D);
@@ -404,10 +404,10 @@ namespace PM3D {
 			variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
 			variableSampler->SetSampler(0, pSampleState);
 			sp.bTex = 1;
-		}
-		else {
+		//}
+		/*else {
 			sp.bTex = 0;
-		}
+		}*/
 		
 		
 		// **** Rendu de l�objet

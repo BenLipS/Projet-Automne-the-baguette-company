@@ -74,6 +74,7 @@ if (bTex > 0)
 	couleur = couleurTexture * vAEcl.rgb +
 		couleurTexture * vDEcl.rgb * diff +
 		vSEcl.rgb * vSMat.rgb * S;
+	/*couleur = couleurTexture * vAEcl.rgb*/
 }
 else
 {
