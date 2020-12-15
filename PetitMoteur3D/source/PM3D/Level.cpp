@@ -67,8 +67,10 @@ namespace PM3D {
 
 		initJoueur();
 		initPente( LMB);
+		initHM(LMB, -200);
 		initHM(LMB, 0);
 		initHM(LMB, 1);
+		initHM(LMB, 2);
 
 		initBloc(LMBOr, 100, 0); //X Y
 		initBloc(LMBOr , 220, 0);
@@ -133,8 +135,7 @@ namespace PM3D {
 		}
 
 		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente);
-		HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Snow.dds", pDispositif_));
-
+		HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
 		scenePhysic_->ListeScene_.emplace_back(move(HM));
 
 
