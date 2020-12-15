@@ -139,6 +139,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(ProjectDir)include\include_physX;$(ProjectDir)include\include_physXShared;$(ProjectDir)include\include_glut;%(AdditionalIncludeDirectories);source;source/PhysX;source/PM3D;header;header/PhysX;header/PM3D</AdditionalIncludeDirectories>
       <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -180,6 +181,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(ProjectDir)include\include_physX;$(ProjectDir)include\include_physXShared;$(ProjectDir)include\include_glut;%(AdditionalIncludeDirectories);source;source/PhysX;source/PM3D;header;header/PhysX;header/PM3D</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

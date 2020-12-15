@@ -18,7 +18,8 @@ namespace PM3D
 	public:
 		CObjetMesh() = default;
 		CObjetMesh(IChargeur* chargeur, const std::vector<IChargeur*> chargeurs, CDispositifD3D11* pDispositif);
-		virtual ~CObjetMesh(void);
+
+		virtual ~CObjetMesh();
 		void Orientation(XMVECTOR axis, float angle);
 
 		void TransfertObjet(const IChargeur& chargeur);
@@ -87,8 +88,8 @@ namespace PM3D
 
 		// Pour le dessin
 		CDispositifD3D11* pDispositif; // On prend en note le dispositif
-		ID3D11Buffer* pVertexBuffer;
-		ID3D11Buffer* pIndexBuffer;
+		ID3D11Buffer* pVertexBuffer{};
+		ID3D11Buffer* pIndexBuffer{};
 
 		// Les sous-objets
 		int NombreSubmesh; // Nombre de sous-objets dans le mesh
@@ -98,12 +99,12 @@ namespace PM3D
 		std::vector<CMaterial> Material; // Vecteur des matériaux
 
 	    // Pour les effets et shaders
-		ID3D11SamplerState* pSampleState;
-		ID3D11Buffer* pConstantBuffer;
-		ID3DX11Effect* pEffet;
-		ID3DX11EffectTechnique* pTechnique;
-		ID3DX11EffectPass* pPasse;
-		ID3D11InputLayout* pVertexLayout;
+		ID3D11SamplerState* pSampleState{};
+		ID3D11Buffer* pConstantBuffer{};
+		ID3DX11Effect* pEffet{};
+		ID3DX11EffectTechnique* pTechnique{};
+		ID3DX11EffectPass* pPasse{};
+		ID3D11InputLayout* pVertexLayout{};
 
 
 		std::vector<IChargeur*> chargeurs_;

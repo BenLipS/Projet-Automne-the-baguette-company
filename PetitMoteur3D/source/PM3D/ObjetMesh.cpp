@@ -29,7 +29,7 @@ namespace PM3D {
 		InitEffet();
 	}
 
-	CObjetMesh::~CObjetMesh(void)
+	CObjetMesh::~CObjetMesh()
 	{
 		DXRelacher(pConstantBuffer);
 		DXRelacher(pSampleState);
