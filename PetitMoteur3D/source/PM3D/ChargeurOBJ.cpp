@@ -278,6 +278,7 @@ namespace PM3D
 			break;
 
 			// Groupe  (Subset)
+		case 'o':
 		case 'g':	// g - definir un groupe
 			leCar = static_cast<char>(iss.get());
 

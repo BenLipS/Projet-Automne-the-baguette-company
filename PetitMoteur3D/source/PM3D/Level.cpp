@@ -50,7 +50,7 @@ namespace PM3D {
 		};
 		
 		// PROVISOIRE
-		CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJ = CParametresChargement("bonusrocket.obj", ".\\modeles\\jin\\", true, false);
 		jinModel = CChargeurOBJ();
 		jinModel.Chargement(paramOBJ);
 
