@@ -35,7 +35,7 @@ namespace PM3D
 		void setVitesseMax(float _vitesse) { vitesseMax_ = _vitesse; }
 
 		int getNbBonus() { return nbBonus_; }
-		void addBonus() { 
+		void addBonus() {
 			if (nbBonus_ < 5) {
 				nbBonus_++;
 			}
