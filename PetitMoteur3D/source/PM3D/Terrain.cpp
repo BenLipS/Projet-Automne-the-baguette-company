@@ -29,11 +29,26 @@ namespace PM3D {
 		XMVECTOR vDMat; // la valeur diffuse du matériau
 		XMVECTOR vSEcl;	// la valeur spéculaire de l'éclairage
 		XMVECTOR vSMat;	// la valeur spéculaire du matériau
-		XMVECTOR vLumiere1;
-		XMVECTOR vLumiere2;
+		//XMVECTOR vLumiere1;
+		//XMVECTOR vLumiere2;
 		float puissance; // la puissance de spécularité
 		int bTex; // Texture ou matériau
 		XMFLOAT2 remplissage;
+		/*
+		XMMATRIX matWorldViewProj; // la matrice totale
+		XMMATRIX matWorld; // matrice de transformation dans le monde
+		XMVECTOR vLumiere; // la position de la source d’éclairage (Point)
+		XMVECTOR vCamera; // la position de la caméra
+		XMVECTOR vAEcl; // la valeur ambiante de l’éclairage
+		XMVECTOR vAMat; // la valeur ambiante du matériau
+		XMVECTOR vDEcl; // la valeur diffuse de l’éclairage
+		XMVECTOR vDMat; // la valeur diffuse du matériau
+		XMVECTOR vSEcl; // la valeur spéculaire de l’éclairage
+		XMVECTOR vSMat; // la valeur spéculaire du matériau
+		float puissance; // la puissance de spécularité
+		int bTex; // Texture ou materiau
+		XMFLOAT2 remplissage;
+		*/
 	};
 
 
@@ -348,9 +363,9 @@ namespace PM3D {
 								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.z,
 								1.0f
 		};*/
-
-		sp.vLumiere1 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
-		sp.vLumiere2 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
+		sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -15.0f, 1.0f);
+		//sp.vLumiere1 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
+		//sp.vLumiere2 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
 		sp.vCamera = view_camera;						//XMVectorSet(0.0f, 194220.0f, 0.0f, 0.0f);
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);

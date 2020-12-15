@@ -104,9 +104,7 @@ namespace PM3D {
 	void Level::initJoueur() {
 
 		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
-		//CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
-		//CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
-		const std::vector<IChargeur*> listModels{ jinInstance/*, boxInstance, bonusInstance */};
+		const std::vector<IChargeur*> listModels{ jinInstance};
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
@@ -114,18 +112,7 @@ namespace PM3D {
 		float const posZ = scaleFixZ_ * scaleZ_ + 20; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
 
 
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 12900.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_));
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), 20.0f, pDispositif_,listModels));
-
-
-
-		/*
-		CChargeurOBJ jinInstance2 = CChargeurOBJ(jinModel);
-		std::unique_ptr<BlocStatic> bloc = std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))),5000.0f, 5000.0f, 5000.0f, pDispositif_, jinInstance2);
-		bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
-
-		scenePhysic_->ListeScene_.emplace_back(move(bloc));*/
-
 
 		std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif_);
 		bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
@@ -161,25 +148,15 @@ namespace PM3D {
 		float const longueur = sqrt(scaleFixZ_ * scaleZ_ * scaleFixZ_ * scaleZ_ + scaleX_ * scaleFixX_ * scaleX_ * scaleFixX_); // pythagor
 		float constexpr largeur = 8000.0f;
 		float constexpr epaisseur = 0.1f;
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<TerrainStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, longueur, pDispositif_, _lm));
-
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<TerrainStatic>(scenePhysic_, PxTransform(posY, posZ - scaleFixZ_ * scaleZ_ * numPente, posX + scaleFixX_ * scaleX_ * numPente, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, longueur, pDispositif_, _lm));
 
 		//mur invisible
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(largeur / 2, 0.0f, 0.0f), PxVec3(-1.0f, 0.0f,0.0f), PxVec3(0.0f, -1.0f, 0.0f)));
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(-largeur / 2, 0.0f, 0.0f), PxVec3(1.0f, 0.0f, 0.0f), PxVec3(0.0f, -1.0f, 0.0f)));
 
-		/*PxVec3 const ptHautPente{ 0, scaleFixZ_ * scaleZ_,-longueur / 2  };
-		PxVec3 const ptzzz{ 0,0,0 };
-		PxVec3 const vecPente = (ptzzz - ptHautPente).getNormalized();
-		PxVec3 const vecX = { 1, 0, 0 };
-		PxVec3 const normPente = (vecPente.cross(vecX)).getNormalized();*/
-
 		PxQuat quatPente = PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f));
 		PxVec3 const normPente = quatPente.getBasisVector1();
 		PxVec3 const vecPente = quatPente.getBasisVector2();
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3( 0.0f, scaleZ_ * scaleFixZ_ /2, 0.0f), normPente, vecPente));
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, 0.0f, 0.0f), PxVec3(0.0f, 1.0f, 0.0f)));
 	}
 
 	void Level::initBloc(Light_Manager _lm, float _x, float _y) {
