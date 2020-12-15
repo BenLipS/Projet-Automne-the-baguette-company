@@ -317,7 +317,7 @@ namespace PM3D
 		bool InitObjets()
 		{
 			
-			Level const niveau(scenePhysic_, pDispositif, 200, 200, 755.0f, &TexturesManager); // scale en X Y et Z
+			Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
 			
 

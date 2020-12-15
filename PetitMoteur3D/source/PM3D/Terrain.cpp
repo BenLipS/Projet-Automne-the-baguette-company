@@ -343,13 +343,14 @@ namespace PM3D {
 
 		Scene* scenephysic = rMoteur.getScenePhysic();
 
-		XMVECTOR view_camera = { static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.x,
+		XMVECTOR view_camera = {static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.x,
 								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.y,
-								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.z
+								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.z,
+								1.0f
 		};
 
-		sp.vLumiere1 = XMVectorSet(0.0f, 10000.0f, 0.0f, 1.0f);
-		sp.vLumiere2 = XMVectorSet(0.0f, 10000.0f, 0.0f, 1.0f);
+		sp.vLumiere1 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
+		sp.vLumiere2 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
 		sp.vCamera = view_camera;						//XMVectorSet(0.0f, 194220.0f, 0.0f, 0.0f);
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);

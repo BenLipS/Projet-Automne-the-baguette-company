@@ -104,7 +104,7 @@ namespace PM3D {
 		
 		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(0.0f, 12900.0f, -9800.0f, PxQuat(0.064f, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_));
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), 200.0f, pDispositif_,jinInstance));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), 20.0f, pDispositif_,jinInstance));
 		
 		
 		/*
@@ -124,7 +124,7 @@ namespace PM3D {
 	void Level::initHM(Light_Manager _lm, int numPente) {
 		char* filename{};
 		if (numPente == 0) {
-			filename = new char[50]{ "./src/heighmap_Proj52_part1.bmp" };
+			filename = new char[50]{ "./src/heighmap_Proj52_part1_montagne.bmp" };
 		}
 		else if (numPente == 1) {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie_vallee.bmp" };
@@ -147,7 +147,7 @@ namespace PM3D {
 		float const posZ = scaleFixZ_ * scaleZ_ / 2  - 55.f; // hauteur // centre de la pente � la mi hauteur de la pente
 
 		float const longueur = sqrt(scaleFixZ_ * scaleZ_ * scaleFixZ_ * scaleZ_ + scaleX_ * scaleFixX_ * scaleX_ * scaleFixX_); // pythagor
-		float constexpr largeur = 80000.0f;
+		float constexpr largeur = 8000.0f;
 		float constexpr epaisseur = 0.1f;
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<TerrainStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, longueur, pDispositif_, _lm));
 
@@ -174,11 +174,11 @@ namespace PM3D {
 
 		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
 		// Pente
-		float constexpr longueur = 1000.0f;
-		float constexpr largeur = 1000.0f;
-		float constexpr epaisseur = 1000.0f;
+		float constexpr longueur = 100.0f;
+		float constexpr largeur = 100.0f;
+		float constexpr epaisseur = 100.0f;
 
-		float const offsetZ = 250 / (cos(XM_PI - anglePente_));
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_))+300;
 		float const posZ =  tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_ )/ 2;
 		float const posY = _y * scaleY_;
@@ -193,10 +193,10 @@ namespace PM3D {
 
 		CChargeurOBJ jinInstance = CChargeurOBJ(jinModel);
 		// Pente
-		float constexpr rayon = 500.0f;
-		float constexpr demiHauteur = 200.0f;
+		float constexpr rayon = 50.0f;
+		float constexpr demiHauteur = 20.0f;
 
-		float const offsetZ = 250 / (cos(XM_PI - anglePente_));
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
 		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
 		float const posY = _y * scaleY_;
