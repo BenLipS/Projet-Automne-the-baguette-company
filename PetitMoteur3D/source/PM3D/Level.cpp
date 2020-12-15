@@ -114,10 +114,10 @@ namespace PM3D {
 
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), 20.0f, pDispositif_,listModels));
 
-		std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif_);
-		bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
+		//std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif_);
+		//bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
 
-		scenePhysic_->ListeScene_.emplace_back(move(bloc));
+		//scenePhysic_->ListeScene_.emplace_back(move(bloc));
 	}
 
 	void Level::initHM(Light_Manager _lm, int numPente) {
