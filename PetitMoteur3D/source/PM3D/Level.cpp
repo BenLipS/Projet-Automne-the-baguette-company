@@ -50,7 +50,7 @@ namespace PM3D {
 		};
 
 		// PROVISOIRE
-		CParametresChargement paramOBJ = CParametresChargement("bonusrocket.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
 		jinModel = CChargeurOBJ();
 		jinModel.Chargement(paramOBJ);
 
@@ -59,7 +59,7 @@ namespace PM3D {
 		bonusModel = CChargeurOBJ();
 		bonusModel.Chargement(paramOBJ1);
 
-		CParametresChargement paramOBJ2 = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJ2 = CParametresChargement("chizbox.obj", ".\\modeles\\jin\\", true, false);
 		boxModel = CChargeurOBJ();
 		boxModel.Chargement(paramOBJ2);
 
@@ -104,9 +104,9 @@ namespace PM3D {
 	void Level::initJoueur() {
 
 		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
-		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
-		CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
-		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance, bonusInstance };
+		//CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
+		//CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
+		const std::vector<IChargeur*> listModels{ jinInstance/*, boxInstance, bonusInstance */};
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
