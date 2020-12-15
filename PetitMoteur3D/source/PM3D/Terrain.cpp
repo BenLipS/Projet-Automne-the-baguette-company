@@ -326,7 +326,7 @@ namespace PM3D {
 		ShadersParams sp;
 		XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 
-		//XMVECTOR view_camera = XMVectorSet(XMVectorGetY(rMoteur.getCamera().getPosition()), XMVectorGetX(rMoteur.getCamera().getPosition()), XMVectorGetZ(rMoteur.getCamera().getPosition()), 1.0f);
+		XMVECTOR view_camera = rMoteur.getCameraPosition();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 		/*
@@ -343,11 +343,11 @@ namespace PM3D {
 
 		Scene* scenephysic = rMoteur.getScenePhysic();
 
-		XMVECTOR view_camera = {static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.x,
+		/*XMVECTOR view_camera = {static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.x,
 								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.y,
 								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.z,
 								1.0f
-		};
+		};*/
 
 		sp.vLumiere1 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
 		sp.vLumiere2 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
