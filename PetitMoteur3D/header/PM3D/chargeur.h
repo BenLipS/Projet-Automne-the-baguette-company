@@ -1,5 +1,10 @@
 #pragma once
 #include "stdafx.h"
+#include <vector>
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 using namespace DirectX;
 
@@ -24,6 +29,7 @@ public:
 	std::string NomChemin;
 	bool bInverserCulling;
 	bool bMainGauche;
+	
 };
 
 class IChargeur
@@ -35,6 +41,7 @@ public:
 
 	virtual void Chargement(const CParametresChargement& param) = 0;
 
+	virtual std::string GetNomFichier() = 0;
 	virtual size_t GetNombreSommets() const = 0;
 	virtual size_t GetNombreIndex() const = 0;
 	virtual const void* GetIndexData()  const = 0;

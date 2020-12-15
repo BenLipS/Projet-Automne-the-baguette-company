@@ -14,24 +14,22 @@
 #include "PxPhysicsAPI.h"
 #include "stdafx.h"
 #include "tools.h"
-#include "BlocEffet1.h"
 #include "BlocDynamic.h"
 #include "BlocStatic.h"
 #include "BlocRollerDynamic.h"
-#include "ChargeurOBJ.h"
-#include "GestionnaireDeTextures.h"
-#include "ObjetMesh.h"
-#include "AfficheurSprite.h"
-#include "PanneauPE.h"
-#include "chargeur.h"
-#include "TerrainStatic.h"
 #include "PlanStatic.h"
 #include "Level.h"
 #include "Filter.h"
 #include "ContactModification.h"
 
+#include "ChargeurOBJ.h"
+#include "GestionnaireDeTextures.h"
+#include "ObjetMesh.h"
+#include "chargeur.h"
+#include "BlocEffet1.h"
+
 using namespace std;
-using namespace physx;
+//using namespace physx;
 
 namespace PM3D
 {
@@ -117,11 +115,8 @@ namespace PM3D
 
 			return true;
 		}
-		// 06/12/2020
-		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
-		//
 
-		PxTransform getTerrainNormale() {
+		physx::PxTransform getTerrainNormale() {
 			auto start = scenePhysic_->ListeScene_.begin();
 			auto end = scenePhysic_->ListeScene_.end();
 			while (start != end && start->get()->typeTag != "terrain")
@@ -132,11 +127,11 @@ namespace PM3D
 				return terrain->getTerrainNormale();
 			}
 			else {
-				return PxTransform();
+				return physx::PxTransform();
 			}
 		}
 
-		pair<PxVec3, PxVec3> getTerrainPair() {
+		pair<physx::PxVec3, physx::PxVec3> getTerrainPair() {
 			auto start = scenePhysic_->ListeScene_.begin();
 			auto end = scenePhysic_->ListeScene_.end();
 			while (start != end && start->get()->typeTag != "terrain")
@@ -144,7 +139,7 @@ namespace PM3D
 
 			if (start != end) {
 				PlanStatic* terrain = dynamic_cast<PlanStatic*>(start->get());
-				pair<PxVec3, PxVec3> pair{ terrain->getNormale(), terrain->getDirection() };
+				pair<physx::PxVec3, physx::PxVec3> pair{ terrain->getNormale(), terrain->getDirection() };
 				return pair;
 			}
 			else {
@@ -157,6 +152,40 @@ namespace PM3D
 		const XMMATRIX& GetMatView() const noexcept { return m_MatView; }
 		const XMMATRIX& GetMatProj() const noexcept { return m_MatProj; }
 		const XMMATRIX& GetMatViewProj() const noexcept { return m_MatViewProj; }
+		CCamera& getCamera() { return camera; };
+		Scene* getScenePhysic() { return scenePhysic_; }
+
+		BlocRollerDynamic* findVehiculeFromBody(physx::PxRigidActor* _body) {
+			for (int i = 0; i < scenePhysic_->ListeScene_.size(); ++i) {
+				if (scenePhysic_->ListeScene_[i].get()->isPhysic() && static_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[i].get())->getBody() == _body)
+					return static_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[i].get());
+			}
+			return nullptr;
+		}
+
+		void eraseBody(physx::PxRigidActor* _body) {
+			auto it = scenePhysic_->ListeScene_.begin();
+			bool erased = false;
+			while (it != scenePhysic_->ListeScene_.end() && !erased) {
+				if (it->get() != nullptr && it->get()->isPhysic()) {
+					if (static_cast<Objet3DPhysic*>(it->get())->getBody() == _body) {
+						erased = true;
+					}
+					else {
+						it++;
+					}
+				}
+				else {
+					it++;
+				}
+			}
+			if (erased) 
+				scenePhysic_->ListeScene_.erase(it);
+		}
+
+		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
+
+		XMVECTOR getCameraPosition() { return camera.getPosition(); }
 
 	protected:
 
@@ -171,6 +200,7 @@ namespace PM3D
 
 		virtual int64_t GetTimeSpecific() const = 0;
 		virtual double GetTimeIntervalsInSec(int64_t start, int64_t stop) const = 0;
+		
 
 		virtual TClasseDispositif* CreationDispositifSpecific(const CDS_MODE cdsMode) = 0;
 		virtual void BeginRenderSceneSpecific() = 0;
@@ -196,6 +226,19 @@ namespace PM3D
 			// Appeler les fonctions de dessin de chaque objet de la sc�ne
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
+				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur") {
+					CObjetMesh* objetMesh = static_cast<CObjetMesh*>(object3D.get());
+					std::vector<IChargeur*> chargeurs = objetMesh->getChargeurs();
+					if (object3D.get()->isPhysic()) {
+						Objet3DPhysic* objetPhys = static_cast<Objet3DPhysic*>(object3D.get());
+						physx::PxRigidActor* body = objetPhys->getBody();
+						IChargeur* chargeur = objetPhys->getChargeurLODMoteur(chargeurs, body);
+						if (chargeur->GetNomFichier() != objetMesh->getChargeurCourant()->GetNomFichier()) {
+							objetMesh->setChargeurCourant(chargeur);
+							objetMesh->TransfertObjet(*chargeur);
+						}
+					}
+				}
 				object3D->Draw();
 			}
 
@@ -227,11 +270,11 @@ namespace PM3D
 			//Partie physique
 			scenePhysic_->foundation_ = PxCreateFoundation(PX_PHYSICS_VERSION, scenePhysic_->allocator_, scenePhysic_->errorCallback_);
 			//scenePhysic_->pvd_ = PxCreatePvd(*(scenePhysic_->foundation_));
-			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), PxTolerancesScale(), true);
+			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), physx::PxTolerancesScale(), true);
 
-			PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
-			sceneDesc.gravity = PxVec3(0.0f, -2000.0f, 0.0f);
-			scenePhysic_->dispatcher_ = PxDefaultCpuDispatcherCreate(2);
+			physx::PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
+			sceneDesc.gravity = physx::PxVec3(0.0f, -200.0f, 0.0f);
+			scenePhysic_->dispatcher_ = physx::PxDefaultCpuDispatcherCreate(2);
 			sceneDesc.cpuDispatcher = scenePhysic_->dispatcher_;
 			//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 			scenePhysic_->filterShader = FilterShader;
@@ -252,6 +295,7 @@ namespace PM3D
 			{
 				return 1;
 			}
+
 			/*
 			// Initialisation des matrices View et Proj
 			// Dans notre cas, ces matrices sont fixes
@@ -278,8 +322,7 @@ namespace PM3D
 
 			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj,CCamera::CAMERA_TYPE::CUBE);
 
-			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
-			//BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
 			camera.update(character);
 
@@ -288,41 +331,8 @@ namespace PM3D
 
 		bool InitObjets()
 		{
-			//Affichage du tunnel (10/12/2020)
-
-
-			// Constructeur abec format bianaire
 			
-			//std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>("C:\\Users\\reymi\\OneDrive\\Documents\\GitHub\\projet-automne-the-baguette-company\\PetitMoteur3D\\src\\Jin\\jin.OMB", pDispositif);
-
-			//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif, LMBOr));
-
-			// Création de l'afficheur de sprites et ajout des sprites
-			//std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-
-			//pAfficheurSprite->AjouterSprite("tree02s.dds", 0,0);
-			//pAfficheurSprite->AjouterSprite("tree02s.dds", 500,500, 100, 100);
-			//pAfficheurSprite->AjouterSprite("tree02s.dds", 800,200, 100, 100);
-
-			// Lighe suivante lève EXCEPTION
-			//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
-
-
-
-			//bloc avec texture
-			//std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif);
-			//bloc->SetTexture(TexturesManager.GetNewTexture(L".\\src\\dirt.dds", pDispositif));			
-			//scenePhysic_->ListeScene_.emplace_back(move(bloc));
-
-			Level const niveau(scenePhysic_, pDispositif, 200, 200, 755.0f); // scale en X Y et Z
-
-			//charger un obj
-			/*CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
-			CChargeurOBJ chargeur = CChargeurOBJ();
-			chargeur.Chargement(paramOBJ);
-			std::unique_ptr<CObjetMesh> pMesh = std::make_unique<CObjetMesh>(chargeur, pDispositif);
-			// Puis il est ajouté à la scène
-			scenePhysic_->ListeScene_.push_back(std::move(pMesh));*/
+			Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
 			return true;
 		}
@@ -338,24 +348,18 @@ namespace PM3D
 			// Prendre en note l��tat de la souris
 			GestionnaireDeSaisie.SaisirEtatSouris();
 
-			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
-
-				for (auto& object3D : scenePhysic_->ListeScene_)
-				{
-					object3D->Anime(tempsEcoule);
-				}
-				camera.update(tempsEcoule);
-			}
-			else {
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
 				object3D->Anime(tempsEcoule);
 			}
-			BlocRollerDynamic* character = reinterpret_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
-			//BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
-			//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
-			camera.update(character, tempsEcoule);
+			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
+				camera.update(tempsEcoule);
+			}
+			else {
+				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
+				camera.update(character, tempsEcoule);
 			}
 			return true;
 		}
@@ -376,9 +380,6 @@ namespace PM3D
 		XMMATRIX m_MatProj{};
 		XMMATRIX m_MatViewProj{};
 
-		// Le gestionnaire de texture
-		CGestionnaireDeTextures TexturesManager;
-
 		// Les saisies
 		CDIManipulateur GestionnaireDeSaisie{};
 
@@ -396,5 +397,10 @@ namespace PM3D
 
 		// Gestion des collisions
 		ContactModification contactModif_{};
+
+		// Le gestionnaire de texture
+		CGestionnaireDeTextures TexturesManager;
+
+	
 	};
 } // namespace PM3D

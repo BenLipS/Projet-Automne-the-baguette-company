@@ -15,17 +15,17 @@ struct ShadersParams
 {
 	XMMATRIX matWorldViewProj;	// la matrice totale 
 	XMMATRIX matWorld;			// matrice de transformation dans le monde 
-	XMVECTOR vLumiere; 			// la position de la source d'ï¿½clairage (Point)
-	XMVECTOR vCamera; 			// la position de la camï¿½ra
-	XMVECTOR vAEcl; 			// la valeur ambiante de l'ï¿½clairage
-	XMVECTOR vAMat; 			// la valeur ambiante du matï¿½riau
-	XMVECTOR vDEcl; 			// la valeur diffuse de l'ï¿½clairage 
-	XMVECTOR vDMat; 			// la valeur diffuse du matï¿½riau 
+	XMVECTOR vLumiere; 			// la position de la source d'éclairage (Point)
+	XMVECTOR vCamera; 			// la position de la caméra
+	XMVECTOR vAEcl; 			// la valeur ambiante de l'éclairage
+	XMVECTOR vAMat; 			// la valeur ambiante du matériau
+	XMVECTOR vDEcl; 			// la valeur diffuse de l'éclairage 
+	XMVECTOR vDMat; 			// la valeur diffuse du matériau 
 };
 
-//  FONCTION : CBlocEffet1, constructeur paramï¿½trï¿½ 
+//  FONCTION : CBlocEffet1, constructeur paramètré 
 //  BUT :	Constructeur d'une classe de bloc avec effet voir 6.5
-//  PARAMï¿½TRES:		
+//  PARAMÈTRES:		
 //		dx, dy, dz:	dimension en x, y, et z
 //		pDispositif: pointeur sur notre objet dispositif
 CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
@@ -57,7 +57,7 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 
 	// Calculer les normales
 	const XMFLOAT3 n0(0.0f, 0.0f, -1.0f); // devant
-	const XMFLOAT3 n1(0.0f, 0.0f, 1.0f); // arriï¿½re
+	const XMFLOAT3 n1(0.0f, 0.0f, 1.0f); // arrière
 	const XMFLOAT3 n2(0.0f, -1.0f, 0.0f); // dessous
 	const XMFLOAT3 n3(0.0f, 1.0f, 0.0f); // dessus
 	const XMFLOAT3 n4(-1.0f, 0.0f, 0.0f); // face gauche
@@ -71,7 +71,7 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 		CSommetBloc(point[2], n0, XMFLOAT2(1.0f, 1.0f)),
 		CSommetBloc(point[3], n0, XMFLOAT2(0.0f, 1.0f)),
 
-		// L'arriï¿½re du bloc
+		// L'arrière du bloc
 		CSommetBloc(point[4], n1, XMFLOAT2(0.0f, 1.0f)),
 		CSommetBloc(point[5], n1, XMFLOAT2(0.0f, 0.0f)),
 		CSommetBloc(point[6], n1, XMFLOAT2(1.0f, 0.0f)),
@@ -102,7 +102,7 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 		CSommetBloc(point[2], n5, XMFLOAT2(0.0f, 1.0f))
 	};
 
-	// Crï¿½ation du vertex buffer et copie des sommets
+	// Création du vertex buffer et copie des sommets
 	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
 	D3D11_BUFFER_DESC bd;
@@ -119,7 +119,7 @@ CBlocEffet1::CBlocEffet1(const float dx, const float dy, const float dz,
 
 	DXEssayer(pD3DDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer), DXE_CREATIONVERTEXBUFFER);
 
-	// Crï¿½ation de l'index buffer et copie des indices
+	// Création de l'index buffer et copie des indices
 	ZeroMemory(&bd, sizeof(bd));
 
 	bd.Usage = D3D11_USAGE_IMMUTABLE;
@@ -164,7 +164,7 @@ void CBlocEffet1::Draw()
 	// input layout des sommets
 	pImmediateContext->IASetInputLayout(pVertexLayout);
 
-	// Initialiser et sï¿½lectionner les ï¿½constantesï¿½ de l'effet
+	// Initialiser et sélectionner les «constantes» de l'effet
 	ShadersParams sp;
 	XMMATRIX viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 
@@ -173,10 +173,10 @@ void CBlocEffet1::Draw()
 
 	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -10.0f, 1.0f);
 	sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
-	sp.vAEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
-	sp.vAMat = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
-	sp.vDEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
-	sp.vDMat = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
+	sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+	sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+	sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+	sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 
 	ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");  // Nous n'avons qu'un seul CBuffer
@@ -213,7 +213,7 @@ void CBlocEffet1::InitEffet()
 	// Compilation et chargement du vertex shader
 	ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
 
-	// Crï¿½ation d'un tampon pour les constantes du VS
+	// Création d'un tampon pour les constantes du VS
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
@@ -237,7 +237,7 @@ void CBlocEffet1::InitEffet()
 	pTechnique = pEffet->GetTechniqueByIndex(0);
 	pPasse = pTechnique->GetPassByIndex(0);
 
-	// Crï¿½er l'organisation des sommets pour le VS de notre effet
+	// Créer l'organisation des sommets pour le VS de notre effet
 	D3DX11_PASS_SHADER_DESC effectVSDesc;
 	pPasse->GetVertexShaderDesc(&effectVSDesc);
 
@@ -255,7 +255,7 @@ void CBlocEffet1::InitEffet()
 		&pVertexLayout),
 		DXE_CREATIONLAYOUT);
 
-	// Initialisation des paramï¿½tres de sampling de la texture
+	// Initialisation des paramètres de sampling de la texture
 	D3D11_SAMPLER_DESC samplerDesc;
 
 	samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
@@ -272,7 +272,7 @@ void CBlocEffet1::InitEffet()
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	// Crï¿½ation de l'ï¿½tat de sampling
+	// Création de l'état de sampling
 	pD3DDevice->CreateSamplerState(&samplerDesc, &pSampleState);
 }
 

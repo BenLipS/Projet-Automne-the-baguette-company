@@ -75,13 +75,25 @@
     <ClCompile Include="source\PM3D\Terrain.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="source\PM3D\Level.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PM3D\PlanStatic.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PM3D\ContactModification.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PM3D\Bonus.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
     <ClCompile Include="source\PM3D\ChargeurOBJ.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="source\PM3D\ObjetMesh.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="source\PM3D\AfficheurSprite.cpp">
+    <ClCompile Include="source\PM3D\DDSTextureLoader.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="source\PM3D\GestionnaireDeTextures.cpp">
@@ -90,28 +102,7 @@
     <ClCompile Include="source\PM3D\Texture.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="source\PM3D\DDSTextureLoader.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="source\PM3D\PanneauPE.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="source\PM3D\BlocEffet1.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="source\PM3D\Bloc.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="source\PM3D\TerrainStatic.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="source\PM3D\Level.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="source\PM3D\PlanStatic.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="source\PM3D\ContactModification.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -188,39 +179,6 @@
     <ClInclude Include="header\PM3D\Terrain.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="header\PM3D\ChargeurOBJ.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\chargeur.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\ObjetMesh.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\AfficheurSprite.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\GestionnaireDeTextures.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\Texture.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\DDSTextureLoader.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\PanneauPE.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\BlocEffet1.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\Bloc.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\TerrainStatic.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="header\PM3D\Level.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -233,6 +191,33 @@
     <ClInclude Include="header\PM3D\ContactModification.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="header\PM3D\Bonus.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\chargeur.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\ChargeurOBJ.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\ObjetMesh.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\DDSTextureLoader.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\GestionnaireDeTextures.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\Texture.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\BlocEffet1.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PM3D\Bloc.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PetitMoteur3D.ico">
@@ -242,7 +227,6 @@
       <Filter>Fichiers de ressources</Filter>
     </None>
     <None Include="ReadMe.txt" />
-    <None Include="src\jin.OMB" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PetitMoteur3D.rc">
@@ -250,23 +234,9 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="ps1.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="vs1.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="PS_MiniPhong.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_MiniPhong.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="MiniPhong.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="sprite1.fx" />
-    <FxCompile Include="PostEffect.fx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Heightmap.bmp">

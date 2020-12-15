@@ -40,4 +40,6 @@ CTexture* const CGestionnaireDeTextures::GetTexture(const std::wstring& filename
 	return pTexture;
 }
 
-} // namespace PM3D
+} // namespace PM3D*
+
+

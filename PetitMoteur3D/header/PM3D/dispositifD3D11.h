@@ -30,18 +30,15 @@ public:
 
 	ID3D11DepthStencilView* GetDepthStencilView() noexcept { return pDepthStencilView; }
 
-
 	void ActiverMelangeAlpha();
 	void DesactiverMelangeAlpha();
 
-	// NOUVEAUTES (06/12/2020)
 	void SetViewPortDimension(float largeur_in, float hauteur_in);
 	void ResetViewPortDimension();
 	void SetNormalRSState();
 
 	void SetRenderTargetView(ID3D11RenderTargetView* pRenderTargetView_in, ID3D11DepthStencilView* pDepthStencilView_in);
 
-	//
 private:
 	ID3D11Device * pD3DDevice;
 	ID3D11DeviceContext*    pImmediateContext;

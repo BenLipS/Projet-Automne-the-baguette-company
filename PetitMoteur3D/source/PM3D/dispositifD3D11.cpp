@@ -216,7 +216,6 @@ void CDispositifD3D11::SetViewPortDimension(float largeur_in, float hauteur_in) 
 	vp.TopLeftY = 0;
 	pImmediateContext->RSSetViewports(1, &vp);
 }
-
 void CDispositifD3D11::ResetViewPortDimension() {
 
 	D3D11_VIEWPORT vp;
@@ -234,13 +233,13 @@ void CDispositifD3D11::SetNormalRSState() {
 	pImmediateContext->RSSetState(mSolidCullBackRS);
 }
 
-void CDispositifD3D11::SetRenderTargetView(ID3D11RenderTargetView* pRenderTargetView_in, ID3D11DepthStencilView* pDepthStencilView_in) { 
-	
-	pRenderTargetView = pRenderTargetView_in; 
+void CDispositifD3D11::SetRenderTargetView(ID3D11RenderTargetView* pRenderTargetView_in, ID3D11DepthStencilView* pDepthStencilView_in) {
+
+	pRenderTargetView = pRenderTargetView_in;
 	pDepthStencilView = pDepthStencilView_in;
 	ID3D11RenderTargetView* tabRTV[1];
-	tabRTV[0] = pRenderTargetView; 
-	pImmediateContext->OMSetRenderTargets(1, tabRTV, pDepthStencilView); 
+	tabRTV[0] = pRenderTargetView;
+	pImmediateContext->OMSetRenderTargets(1, tabRTV, pDepthStencilView);
 }
 
 } // namespace PM3D

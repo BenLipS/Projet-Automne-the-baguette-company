@@ -69,15 +69,34 @@ namespace PM3D
 
 		// On suppose que tout est au m�me endroit 
 		cheminModele = param.NomChemin;
+		nomFichier = param.NomFichier;
 
 		LireFichier(cheminModele + param.NomFichier);
 
-		std::for_each(Position.begin(), Position.end(), [](XMFLOAT3& n) { n.x *= 100; n.y *= 100; n.z *= 100; });
+		float sumX = 0.0f, sumY = 0.0f, sumZ = 0.0f;
+
+		std::for_each(Position.begin(), Position.end(), [&sumX, &sumY, &sumZ](XMFLOAT3& n) { sumX += n.x; sumY += n.y; sumZ += n.z; });
+
+		sumX /= Position.size();
+		sumY /= Position.size();
+		sumZ /= Position.size();
+
+		std::for_each(Position.begin(), Position.end(), [&sumX, &sumY, &sumZ](XMFLOAT3& n) { n.x -= sumX; n.y -= sumY; n.z -= sumZ; n.x *= 100; n.y *= 100; n.z *= 100; });
 
 		if (OBJMaterialLib.length() > 0)
 		{
 			LireFichierMateriel();
 		}
+	}
+
+	void CChargeurOBJ::Placement(const XMFLOAT3& position)
+	{
+		std::for_each(Position.begin(), Position.end(), [position](XMFLOAT3& n) 
+			{
+				n.x += position.x;
+				n.y += position.y;
+				n.z += position.z;
+			});
 	}
 
 	void CChargeurOBJ::GetMaterial(
@@ -260,6 +279,7 @@ namespace PM3D
 			break;
 
 			// Groupe  (Subset)
+		case 'o':
 		case 'g':	// g - definir un groupe
 			leCar = static_cast<char>(iss.get());
 
@@ -362,7 +382,6 @@ namespace PM3D
 		}
 
 		break;
-
 		case 'u':	//usemtl - which material to use
 		{
 			std::string str;

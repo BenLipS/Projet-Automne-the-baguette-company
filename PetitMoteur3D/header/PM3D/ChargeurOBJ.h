@@ -49,6 +49,9 @@ namespace PM3D
 	public:
 
 		void Chargement(const CParametresChargement& param) override;
+		void Placement(const XMFLOAT3& position);
+
+		std::string GetNomFichier() { return nomFichier; }
 
 		size_t GetNombreSommets() const override { return tabVertexInfo.size(); }
 		size_t GetNombreIndex() const override { return tabIndex.size(); }
@@ -80,10 +83,11 @@ namespace PM3D
 		int TrouverVertex(const OBJVertexInfo& vertex);
 
 		std::string cheminModele;
+		std::string nomFichier;
 
 		// *** Les sommets 
 		std::vector<XMFLOAT3> Position;				// Tableau des positions ( v )
-		std::vector<XMFLOAT2> CoordTex;				// Tableau des coordonnées de texture ( vt )
+		std::vector<XMFLOAT2> CoordTex;				// Tableau des coordonnï¿½es de texture ( vt )
 		std::vector<XMFLOAT3> Normale;				// Tableau des normales ( vn )
 
 		std::vector<OBJVertexInfo> tabVertexInfo;	// Sommets par index  no/no/no
@@ -94,7 +98,7 @@ namespace PM3D
 		int NombreSubset;					// nombre de sous objets
 
 		// *** Indicateurs
-		bool bCoordTex;   // Il y a des coordonnées de texture
+		bool bCoordTex;   // Il y a des coordonnï¿½es de texture
 		bool bNormales;	  // Il y a des normales
 		bool bInverserCulling;
 		bool bMainGauche;

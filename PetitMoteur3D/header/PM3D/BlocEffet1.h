@@ -34,7 +34,7 @@ private:
 	ID3D11Buffer* pVertexBuffer;
 	ID3D11Buffer* pIndexBuffer;
 
-	// Dï¿½finitions des valeurs d'animation
+	// Définitions des valeurs d'animation
 	ID3D11Buffer* pConstantBuffer;
 	XMMATRIX matWorld;
 	float rotation;

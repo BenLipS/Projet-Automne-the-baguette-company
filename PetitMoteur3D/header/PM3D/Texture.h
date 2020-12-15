@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <vector>
 
 namespace PM3D
 {
