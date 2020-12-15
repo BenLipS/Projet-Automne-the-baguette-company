@@ -27,6 +27,7 @@
 #include "ObjetMesh.h"
 #include "chargeur.h"
 #include "BlocEffet1.h"
+#include "CSpriteTemp.h"
 
 using namespace std;
 //using namespace physx;
@@ -226,7 +227,7 @@ namespace PM3D
 			// Appeler les fonctions de dessin de chaque objet de la sc�ne
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
-				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur") {
+				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur" && object3D->typeTag != "sprite") {
 					CObjetMesh* objetMesh = static_cast<CObjetMesh*>(object3D.get());
 					std::vector<IChargeur*> chargeurs = objetMesh->getChargeurs();
 					if (object3D.get()->isPhysic()) {
@@ -334,6 +335,14 @@ namespace PM3D
 		{
 			
 			Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
+
+			// Création d’un objet sprite
+			auto pSprite = std::make_unique<CSpriteTemp>(".\\src\\Elcomptero.dds"s, pDispositif);
+			// Puis, il est ajouté à la scène
+			pSprite->SetPosDim(80, 1000);
+			scenePhysic_->ListeScene_.push_back(std::move(pSprite));
+			
+
 
 			return true;
 		}

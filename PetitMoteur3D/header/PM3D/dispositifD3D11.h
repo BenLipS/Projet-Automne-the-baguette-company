@@ -39,6 +39,8 @@ public:
 
 	void SetRenderTargetView(ID3D11RenderTargetView* pRenderTargetView_in, ID3D11DepthStencilView* pDepthStencilView_in);
 
+
+
 private:
 	ID3D11Device * pD3DDevice;
 	ID3D11DeviceContext*    pImmediateContext;
@@ -51,6 +53,13 @@ private:
 
 	void InitDepthBuffer();
 
+	void InitBlendStates();
+
+	// Pour le mélange alpha (transparence)
+	ID3D11BlendState* alphaBlendEnable;
+	ID3D11BlendState* alphaBlendDisable;
+
+
 protected:
 	uint32_t largeurEcran;
 	uint32_t hauteurEcran;
@@ -58,9 +67,6 @@ protected:
 	// Variables d’état
 	ID3D11RasterizerState* mSolidCullBackRS; 
 
-	// Pour le mélange alpha (transparence)
-	ID3D11BlendState* alphaBlendEnable;
-	ID3D11BlendState* alphaBlendDisable;
 };
 
 } // namespace PM3D
