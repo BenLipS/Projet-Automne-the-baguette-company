@@ -16,10 +16,10 @@ namespace PM3D {
 		PxVec3 objPose = body->getGlobalPose().p;
 		float distance = (objPose - camPose).magnitude();
 		if (chargeurs.size() == 3) {
-			if (distance < 500.f) {
+			if (distance < 300.f) {
 				return chargeurs.front();
 			}
-			else if (distance < 300.f) {
+			else if (distance < 5000.f) {
 				return chargeurs[1];
 			}
 			else {
@@ -35,10 +35,10 @@ namespace PM3D {
 		PxVec3 objPose = body->getGlobalPose().p;
 		float distance = (objPose - camPose).magnitude();
 		if (chargeurs.size() == 3) {
-			if (distance < 500.f) {
+			if (distance < 300.f) {
 				return chargeurs.front();
 			}
-			else if (distance < 300.f) {
+			else if (distance < 5000.f) {
 				return chargeurs[1];
 			}
 			else {
