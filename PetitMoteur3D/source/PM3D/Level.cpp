@@ -67,7 +67,7 @@ namespace PM3D {
 		skyboxModel = CChargeurOBJ();
 		skyboxModel.Chargement(paramOBJSky);*/
 
-		CParametresChargement paramOBJ3 = CParametresChargement("tunnel.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJ3 = CParametresChargement("tunnelExtraSimple.obj", ".\\modeles\\jin\\", true, false);
 		tunnelModel = CChargeurOBJ();
 		tunnelModel.Chargement(paramOBJ3);
 

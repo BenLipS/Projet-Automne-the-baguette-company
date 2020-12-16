@@ -2,7 +2,8 @@ cbuffer param
 {
 	float4x4 matWorldViewProj;   // la matrice totale 
 	float4x4 matWorld;		// matrice de transformation dans le monde 
-	float4 vLumiere; 		// la position de la source d'éclairage 1 (Point)
+	float4 vLumiere1; 		// la position de la source d'éclairage 1 (Point)
+	float4 vLumiere2; 		// la position de la source d'éclairage 2 (Point)
 	float4 vCamera; 			// la position de la caméra
 	float4 vAEcl; 			// la valeur ambiante de l'éclairage
 	float4 vAMat; 			// la valeur ambiante du matériau
@@ -13,6 +14,7 @@ cbuffer param
 	float puissance;
 	int bTex;		    // Booléen pour la présence de texture
 	float2 remplissage;
+	float4 vTEcl; 			// la valeur de l'éclairage Tunnel
 }
 
 struct VS_Sortie
@@ -22,6 +24,7 @@ struct VS_Sortie
 	float3 vDirLum : TEXCOORD1;
 	float3 vDirCam : TEXCOORD2;
 	float2 coordTex : TEXCOORD3;
+	int bTun : TEXCOORD4;
 };
 
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
@@ -33,11 +36,20 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 
 	float3 PosWorld = mul(Pos, matWorld).xyz;
 
-	sortie.vDirLum = vLumiere.xyz - PosWorld;
+	sortie.vDirLum = vLumiere1.xyz - PosWorld;
 	sortie.vDirCam = vCamera.xyz - PosWorld;
 
 	// Coordonnées d'application de texture
 	sortie.coordTex = coordTex;
+
+	float3 diffPosET = vLumiere2.xyz - PosWorld;
+
+	float dist = pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2);
+
+	if (dist < 500000)
+		sortie.bTun = 1;
+	else
+		sortie.bTun = 0;
 
 	return sortie;
 }
@@ -74,12 +86,20 @@ if (bTex > 0)
 	couleur = couleurTexture * vAEcl.rgb +
 		couleurTexture * vDEcl.rgb * diff +
 		vSEcl.rgb * vSMat.rgb * S;
+	if (vs.bTun > 0)
+	{
+		couleur = couleurTexture * vTEcl.rgb;
+	}
 	/*couleur = couleurTexture * vAEcl.rgb*/
 }
 else
 {
 	couleur = vAEcl.rgb * vAMat.rgb + vDEcl.rgb * vDMat.rgb * diff +
 		vSEcl.rgb * vSMat.rgb * S;
+	if (vs.bTun > 0)
+	{
+		couleur = vDMat * vTEcl.rgb;
+	}
 }
 return float4(couleur, 1.0f);
 }

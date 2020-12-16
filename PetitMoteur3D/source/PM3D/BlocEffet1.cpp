@@ -15,7 +15,8 @@ struct ShadersParams
 {
 	XMMATRIX matWorldViewProj;	// la matrice totale 
 	XMMATRIX matWorld;			// matrice de transformation dans le monde 
-	XMVECTOR vLumiere; 			// la position de la source d'�clairage (Point)
+	XMVECTOR vLumiere1; 			// la position de la source d'�clairage 1 (Point)
+	XMVECTOR vLumiere2; 			// la position de la source d'�clairage 2 (Point)
 	XMVECTOR vCamera; 			// la position de la cam�ra
 	XMVECTOR vAEcl; 			// la valeur ambiante de l'�clairage
 	XMVECTOR vAMat; 			// la valeur ambiante du mat�riau
@@ -171,7 +172,8 @@ void CBlocEffet1::Draw()
 	sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 	sp.matWorld = XMMatrixTranspose(matWorld);
 
-	sp.vLumiere = XMVectorSet(-10.0f, 10.0f, -10.0f, 1.0f);
+	sp.vLumiere1 = XMVectorSet(-10.0f, 10.0f, -10.0f, 1.0f);
+	sp.vLumiere2 = XMVectorSet(-10.0f, 10.0f, -10.0f, 1.0f);
 	sp.vCamera = XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f);
 	sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 	sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);

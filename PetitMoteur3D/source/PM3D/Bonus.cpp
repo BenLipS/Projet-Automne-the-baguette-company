@@ -27,7 +27,8 @@ namespace PM3D
 	struct ShadersParams {
 		XMMATRIX matWorldViewProj; // la matrice totale
 		XMMATRIX matWorld;    // matrice de transformation dans le monde
-		XMVECTOR vLumiere;    // la position de la source d��clairage (Point)
+		XMVECTOR vLumiere1;    // la position de la source d��clairage 1 (Point)
+		XMVECTOR vLumiere2;    // la position de la source d��clairage 2 (Point)
 		XMVECTOR vCamera;    // la position de la cam�ra
 		XMVECTOR vAEcl;        // la valeur ambiante de l��clairage
 		XMVECTOR vAMat;     // la valeur ambiante du mat�riau

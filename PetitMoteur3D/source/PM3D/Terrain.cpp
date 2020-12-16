@@ -21,7 +21,8 @@ namespace PM3D {
 	struct ShadersParams {
 		XMMATRIX matWorldViewProj; // la matrice totale 
 		XMMATRIX matWorld; // matrice de transformation dans le monde
-		XMVECTOR vLumiere; // la position de la source d’éclairage (Point)
+		XMVECTOR vLumiere1; // la position de la source d’éclairage (Point)
+		XMVECTOR vLumiere2; // la position de la source d’éclairage (Point)
 		XMVECTOR vCamera; // la position de la caméra
 		XMVECTOR vAEcl; // la valeur ambiante de l’éclairage
 		XMVECTOR vAMat; // la valeur ambiante du matériau
@@ -34,6 +35,7 @@ namespace PM3D {
 		float puissance; // la puissance de spécularité
 		int bTex; // Texture ou matériau
 		XMFLOAT2 remplissage;
+		XMVECTOR vTEcl; 			// la valeur de l'éclairage Tunnel
 		/*
 		XMMATRIX matWorldViewProj; // la matrice totale
 		XMMATRIX matWorld; // matrice de transformation dans le monde
@@ -363,7 +365,8 @@ namespace PM3D {
 								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.z,
 								1.0f
 		};*/
-		sp.vLumiere = XMVectorSet(0.0f, 300000.0f, 200000.0f, 1.0f);
+		sp.vLumiere1 = XMVectorSet(0.0f, 300000.0f, 200000.0f, 1.0f);
+		sp.vLumiere2 = XMVectorSet(0.0f, -6900, 17000.0f, 1.0f);
 		//sp.vLumiere1 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
 		//sp.vLumiere2 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
 		sp.vCamera = view_camera;						//XMVectorSet(0.0f, 194220.0f, 0.0f, 0.0f);
@@ -373,6 +376,7 @@ namespace PM3D {
 		sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vSMat = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+		sp.vTEcl = XMVectorSet(1.0f, 1.0f, 0.2f, 1.0f);
 		sp.puissance = 5;
 		
 
