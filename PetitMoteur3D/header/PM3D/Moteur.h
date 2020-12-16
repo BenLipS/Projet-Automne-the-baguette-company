@@ -27,6 +27,7 @@
 #include "ObjetMesh.h"
 #include "chargeur.h"
 #include "BlocEffet1.h"
+#include "AfficheurSprite.h"
 
 using namespace std;
 //using namespace physx;
@@ -226,7 +227,7 @@ namespace PM3D
 			// Appeler les fonctions de dessin de chaque objet de la sc�ne
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
-				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur") {
+				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur" && object3D->typeTag != "sprite") {
 					CObjetMesh* objetMesh = static_cast<CObjetMesh*>(object3D.get());
 					std::vector<IChargeur*> chargeurs = objetMesh->getChargeurs();
 					if (object3D.get()->isPhysic()) {
@@ -236,6 +237,7 @@ namespace PM3D
 						if (chargeur->GetNomFichier() != objetMesh->getChargeurCourant()->GetNomFichier()) {
 							objetMesh->setChargeurCourant(chargeur);
 							objetMesh->TransfertObjet(*chargeur);
+							objetMesh->InitEffet();
 						}
 					}
 				}
@@ -291,10 +293,7 @@ namespace PM3D
 			//PxCreateControllerManager(*(scenePhysic_->scene_));
 
 			// Initialisation des objets 3D - cr�ation et/ou chargement
-			if (!InitObjets())
-			{
-				return 1;
-			}
+			
 
 			/*
 			// Initialisation des matrices View et Proj
@@ -322,18 +321,42 @@ namespace PM3D
 
 			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj,CCamera::CAMERA_TYPE::CUBE);
 
+			if (!InitObjets())
+			{
+				return 1;
+			}
+
 			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 
 			camera.update(character);
-
+			
 			return 0;
 		}
 
 		bool InitObjets()
 		{
-			
+			float largeur = static_cast<float>(pDispositif->GetLargeur());
+			float hauteur = static_cast<float>(pDispositif->GetHauteur());
+
 			Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
+			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+			// ajout de panneaux
+			pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f),2000,2000);
+			pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(0.0f, 0.0f, -1.0f));
+			pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-1.0f, 0.0f, 0.5f));
+			pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-0.5f, 0.0f, 1.0f));
+			pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
+
+			// Création de l’afficheur de sprites et ajout des sprites
+			
+			/*pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
+			pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
+			pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);*/
+
+
+			scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+			
 			return true;
 		}
 

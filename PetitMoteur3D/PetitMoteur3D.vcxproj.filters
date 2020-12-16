@@ -105,6 +105,9 @@
     <ClCompile Include="source\PM3D\BlocEffet1.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="source\PM3D\AfficheurSprite.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\stdafx.h">
@@ -218,6 +221,9 @@
     <ClInclude Include="header\PM3D\Bloc.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="header\PM3D\AfficheurSprite.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PetitMoteur3D.ico">
@@ -237,6 +243,7 @@
     <FxCompile Include="MiniPhong.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Sprite1.fx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Heightmap.bmp">

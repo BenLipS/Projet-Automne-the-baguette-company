@@ -199,6 +199,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\PM3D\AfficheurSprite.cpp" />
     <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
     <ClCompile Include="source\PM3D\Bonus.cpp" />
     <ClCompile Include="source\PM3D\ChargeurOBJ.cpp" />
@@ -234,6 +235,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\PM3D\AfficheurSprite.h" />
     <ClInclude Include="header\PM3D\Bloc.h" />
     <ClInclude Include="header\PM3D\BlocEffet1.h" />
     <ClInclude Include="header\PM3D\Bonus.h" />
@@ -276,6 +278,9 @@
     <FxCompile Include="MiniPhong.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <CompileD2DCustomEffect Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileD2DCustomEffect>
+    </FxCompile>
+    <FxCompile Include="Sprite1.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <None Include="PetitMoteur3D.ico" />
     <None Include="small.ico" />
