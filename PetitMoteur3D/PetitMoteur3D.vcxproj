@@ -206,6 +206,7 @@
     <ClCompile Include="source\PM3D\ContactModification.cpp" />
     <ClCompile Include="source\PM3D\DDSTextureLoader.cpp" />
     <ClCompile Include="source\PM3D\GestionnaireDeTextures.cpp" />
+    <ClCompile Include="source\PM3D\Objet3Dvisuel.cpp" />
     <ClCompile Include="source\PM3D\ObjetMesh.cpp" />
     <ClCompile Include="source\PM3D\PlanStatic.cpp" />
     <ClCompile Include="source\PM3D\BlocRollerDynamic.cpp" />
@@ -258,6 +259,7 @@
     <ClInclude Include="header\PM3D\Moteur.h" />
     <ClInclude Include="header\PM3D\MoteurWindows.h" />
     <ClInclude Include="header\PM3D\objet3d.h" />
+    <ClInclude Include="header\PM3D\Objet3Dvisuel.h" />
     <ClInclude Include="header\PM3D\ObjetMesh.h" />
     <ClInclude Include="header\PM3D\PetitMoteur3D.h" />
     <ClInclude Include="header\PM3D\Resource.h" />

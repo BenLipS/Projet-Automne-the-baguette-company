@@ -67,7 +67,7 @@ namespace PM3D {
 		skyboxModel = CChargeurOBJ();
 		skyboxModel.Chargement(paramOBJSky);*/
 
-		CParametresChargement paramOBJ3 = CParametresChargement("tunnelExtraSimple.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJ3 = CParametresChargement("tunnel.obj", ".\\modeles\\jin\\", true, false);
 		tunnelModel = CChargeurOBJ();
 		tunnelModel.Chargement(paramOBJ3);
 
@@ -96,6 +96,8 @@ namespace PM3D {
 		initBonus(LMB, 600, 0);
 		initBonus(LMB, 700, 0);
 		initBonus(LMB, 800, 0);
+
+		initTunnel(1000,0);
 
 		initSkyBox();
 		// Mur final
@@ -207,6 +209,21 @@ namespace PM3D {
 		float const posY = _y * scaleY_;
 
 		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels, _lm));
+
+	}
+
+	void Level::initTunnel(float _x, float _y) {
+
+		CChargeurOBJ* TunnelInstance = new CChargeurOBJ(tunnelModel);
+
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
+		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
+		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
+		float const posY = _y * scaleY_;
+
+		TunnelInstance->Placement(XMFLOAT3(posY, posZ, posX));
+
+		scenePhysic_->ListeScene_.push_back(std::make_unique<Objet3Dvisuel>(TunnelInstance, pDispositif_, anglePente_, posY, posZ, posX));
 
 	}
 

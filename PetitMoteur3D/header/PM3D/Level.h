@@ -11,6 +11,7 @@
 #include "ChargeurOBJ.h"
 #include "GestionnaireDeTextures.h"
 #include "SkyBox.h"
+#include "Objet3Dvisuel.h"
 
 #include <d3d11.h>
 #include <PxPhysicsAPI.h>
@@ -54,5 +55,6 @@ namespace PM3D {
 		void initHM(Light_Manager lm, int numPente);
 
 		void initSkyBox();
+		void initTunnel(float _x, float _y);
 	};
 }
