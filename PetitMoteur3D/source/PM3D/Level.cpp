@@ -63,6 +63,11 @@ namespace PM3D {
 		boxModel = CChargeurOBJ();
 		boxModel.Chargement(paramOBJ2);
 
+		CParametresChargement paramOBJ3 = CParametresChargement("tunnelExtraSimple.obj", ".\\modeles\\jin\\", true, false);
+		tunnelModel = CChargeurOBJ();
+		tunnelModel.Chargement(paramOBJ3);
+		
+
 
 
 		initJoueur();
@@ -90,6 +95,8 @@ namespace PM3D {
 		initBonus(LMB, 600, 0);
 		initBonus(LMB, 700, 0);
 		initBonus(LMB, 800, 0);
+
+
 		// Mur final
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif_, LMBOr));
 
@@ -201,4 +208,6 @@ namespace PM3D {
 		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels, _lm));
 
 	}
+
+
 }

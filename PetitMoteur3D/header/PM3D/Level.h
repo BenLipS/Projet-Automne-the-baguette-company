@@ -30,6 +30,7 @@ namespace PM3D {
 		CChargeurOBJ jinModel;
 		CChargeurOBJ boxModel;
 		CChargeurOBJ bonusModel;
+		CChargeurOBJ tunnelModel;
 
 
 
