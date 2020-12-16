@@ -54,9 +54,25 @@ namespace PM3D
 	template <class T, class TClasseDispositif> class CMoteur :public CSingleton<T>
 	{
 	public:
+		virtual void RunEcrantitre()
+		{
+			bool bBoucle = true;
+			
+			int itEcranTitre = 0;
+		
+			// Propre � la plateforme - (Conditions d'arr�t, interface, messages)
+				
+			bBoucle = Animation();
+			initEcranTitre_ = false;
+			bBoucle = false;
+
+			
+		}
+
 		virtual void Run()
 		{
 			bool bBoucle = true;
+			InitScene();
 
 			while (bBoucle)
 			{
@@ -80,9 +96,10 @@ namespace PM3D
 			pDispositif = CreationDispositifSpecific(CDS_FENETRE);
 			//pDispositif = CreationDispositifSpecific(CDS_PLEIN_ECRAN);
 
+
 			// * Initialisation de la sc�ne
 			InitScene();
-
+			
 			// * Initialisation des param�tres de l'animation et
 			//   pr�paration de la premi�re image
 			InitAnimation();
@@ -98,7 +115,7 @@ namespace PM3D
 			const double TempsEcoule = GetTimeIntervalsInSec(TempsCompteurPrecedent, TempsCompteurCourant);
 
 			// Est-il temps de rendre l'image?
-			if (TempsEcoule > EcartTemps)
+			if (TempsEcoule > EcartTemps || initEcranTitre_)
 			{
 				// Affichage optimis�
 				pDispositif->Present(); // On enlevera �//� plus tard
@@ -264,48 +281,32 @@ namespace PM3D
 				delete scenePhysic_;
 			}
 		}
+		public: 
+			virtual int InitScene()
+			{
+				if (initEcranTitre_) {
+				// Scene physX
+				scenePhysic_ = new Scene();
+				//Partie physique
+				scenePhysic_->foundation_ = PxCreateFoundation(PX_PHYSICS_VERSION, scenePhysic_->allocator_, scenePhysic_->errorCallback_);
+				//scenePhysic_->pvd_ = PxCreatePvd(*(scenePhysic_->foundation_));
+				scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), physx::PxTolerancesScale(), true);
 
-		virtual int InitScene()
-		{
-			// Scene physX
-			scenePhysic_ = new Scene();
-			//Partie physique
-			scenePhysic_->foundation_ = PxCreateFoundation(PX_PHYSICS_VERSION, scenePhysic_->allocator_, scenePhysic_->errorCallback_);
-			//scenePhysic_->pvd_ = PxCreatePvd(*(scenePhysic_->foundation_));
-			scenePhysic_->physic_ = PxCreatePhysics(PX_PHYSICS_VERSION, *(scenePhysic_->foundation_), physx::PxTolerancesScale(), true);
+				physx::PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
+				sceneDesc.gravity = physx::PxVec3(0.0f, -200.0f, 0.0f);
+				scenePhysic_->dispatcher_ = physx::PxDefaultCpuDispatcherCreate(2);
+				sceneDesc.cpuDispatcher = scenePhysic_->dispatcher_;
+				//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+				scenePhysic_->filterShader = FilterShader;
+				sceneDesc.filterShader = scenePhysic_->filterShader;
+				scenePhysic_->eventCallback = &contactModif_;
+				sceneDesc.simulationEventCallback = scenePhysic_->eventCallback;
+				scenePhysic_->modifyCallback = &contactModif_;
+				sceneDesc.contactModifyCallback = scenePhysic_->modifyCallback;
+				scenePhysic_->scene_ = scenePhysic_->physic_->createScene(sceneDesc);
 
-			physx::PxSceneDesc sceneDesc(scenePhysic_->physic_->getTolerancesScale());
-			sceneDesc.gravity = physx::PxVec3(0.0f, -200.0f, 0.0f);
-			scenePhysic_->dispatcher_ = physx::PxDefaultCpuDispatcherCreate(2);
-			sceneDesc.cpuDispatcher = scenePhysic_->dispatcher_;
-			//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
-			scenePhysic_->filterShader = FilterShader;
-			sceneDesc.filterShader = scenePhysic_->filterShader;
-			scenePhysic_->eventCallback = &contactModif_;
-			sceneDesc.simulationEventCallback = scenePhysic_->eventCallback;
-			scenePhysic_->modifyCallback = &contactModif_;
-			sceneDesc.contactModifyCallback = scenePhysic_->modifyCallback;
-			scenePhysic_->scene_ = scenePhysic_->physic_->createScene(sceneDesc);
-
-			scenePhysic_->material_ = scenePhysic_->physic_->createMaterial(0.5f, 0.5f, 0.6f);
-
-			//managerController
-			//PxCreateControllerManager(*(scenePhysic_->scene_));
-
-			// Initialisation des objets 3D - cr�ation et/ou chargement
-			
-
-			/*
-			// Initialisation des matrices View et Proj
-			// Dans notre cas, ces matrices sont fixes
-			m_MatView = XMMatrixLookAtLH(XMVectorSet(-2000.0f, 2000.0f, 2000.0f, 1.0f),
-			//m_MatView = XMMatrixLookAtLH(XMVectorSet(5.0f, 2.0f, 5.0f, 1.0f),
-				XMVectorSet(2.0f, 2.0f, 2.0f, 1.0f),
-				XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
-
-			// Calcul de VP � l'avance
-			m_MatViewProj = m_MatView * m_MatProj;
-			*/
+				scenePhysic_->material_ = scenePhysic_->physic_->createMaterial(0.5f, 0.5f, 0.6f);
+			}
 
 			constexpr float champDeVision = XM_PI / 3; 	// 45 degr�s
 			const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
@@ -319,49 +320,58 @@ namespace PM3D
 				planRapproche,
 				planEloigne);
 
-			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj,CCamera::CAMERA_TYPE::CUBE);
+			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj, CCamera::CAMERA_TYPE::CUBE);
 
 			if (!InitObjets())
 			{
 				return 1;
 			}
-
+			if (!initEcranTitre_) {
 			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
-
 			camera.update(character);
+			}
 			
 			return 0;
 		}
-
+		
 		bool InitObjets()
 		{
 			float largeur = static_cast<float>(pDispositif->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif->GetHauteur());
 
-			Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
+			if (!initEcranTitre_) {
+				scenePhysic_->ListeScene_.clear();
+				Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
+				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+				// ajout de panneaux
+				pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f), 2000, 2000);
+				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(0.0f, 0.0f, -1.0f));
+				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-1.0f, 0.0f, 0.5f));
+				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-0.5f, 0.0f, 1.0f));
+				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
 
-			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-			// ajout de panneaux
-			pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f),2000,2000);
-			pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(0.0f, 0.0f, -1.0f));
-			pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-1.0f, 0.0f, 0.5f));
-			pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-0.5f, 0.0f, 1.0f));
-			pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
+				// Création de l’afficheur de sprites et ajout des sprites
 
-			// Création de l’afficheur de sprites et ajout des sprites
-			
-			pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
-			pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
-			pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
+				pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
+				pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
+				pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
 
 
-			scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+			}
+			else {
+				float largeur = static_cast<float>(pDispositif->GetLargeur());
+				float hauteur = static_cast<float>(pDispositif->GetHauteur());
+				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+				pAfficheurSprite->AjouterSprite(".\\src\\EcranChargement.dds"s, static_cast<int>(0), static_cast<int>(hauteur), static_cast<int>(largeur), static_cast<int>(hauteur));
+				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+			}
 			
 			return true;
 		}
 
 
-
+protected:
 		bool AnimeScene(float tempsEcoule)
 		{
 			scenePhysic_->scene_->simulate(1.0f / 60.0f);
@@ -379,7 +389,7 @@ namespace PM3D
 			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
 				camera.update(tempsEcoule);
 			}
-			else {
+			if (!initEcranTitre_){
 				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 				camera.update(character, tempsEcoule);
@@ -424,6 +434,8 @@ namespace PM3D
 		// Le gestionnaire de texture
 		CGestionnaireDeTextures TexturesManager;
 
+
+		bool initEcranTitre_ = true;
 	
 	};
 } // namespace PM3D
