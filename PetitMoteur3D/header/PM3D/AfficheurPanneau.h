@@ -18,8 +18,6 @@ namespace PM3D
 		void AjouterPanneau(const std::string& NomTexture, const XMFLOAT3& _position, float _dx = 0.0f, float _dy = 0.0f);
 
 	private:
-		// Tous nos sprites
-		std::vector<std::unique_ptr<CSprite>> tabSprites;
 
 		class CPanneau : public CSprite
 		{
@@ -31,5 +29,8 @@ namespace PM3D
 				bPanneau = true;
 			}
 		};
+
+		// Tous nos sprites
+		std::vector<std::unique_ptr<CPanneau>> tabPanneaux;
 	};
 } // namespace PM3D

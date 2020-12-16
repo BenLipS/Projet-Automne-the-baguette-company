@@ -34,16 +34,18 @@ namespace PM3D
 		variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
 		pDispositif->ActiverMelangeAlpha();
 		// Faire le rendu de tous nos sprites
-		for (int i = 0; i < tabSprites.size(); ++i)
+		for (int i = 0; i < tabPanneaux.size(); ++i)
 		{
 			// Initialiser et sélectionner les « constantes » de l’effet
 			ShadersParams sp;
-			sp.matWVP = XMMatrixTranspose(tabSprites[i]->matPosDim);
+			//const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+			//tabPanneaux[i]->matPosDim = XMMatrixScaling(tabPanneaux[i]->dimension.x, tabPanneaux[i]->dimension.y, 1.0f) * XMMatrixTranslation(tabPanneaux[i]->position.x, tabPanneaux[i]->position.y, tabPanneaux[i]->position.z) * viewProj;
+			sp.matWVP = XMMatrixTranspose(tabPanneaux[i]->matPosDim);
 			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
 				&sp, 0, 0);
 			pCB->SetConstantBuffer(pConstantBuffer);
 			// Activation de la texture
-			variableTexture->SetResource(tabSprites[i]->pTextureD3D);
+			variableTexture->SetResource(tabPanneaux[i]->pTextureD3D);
 			pPasse->Apply(0, pImmediateContext);
 			// **** Rendu de l’objet
 			pImmediateContext->Draw(6, 0);
@@ -92,6 +94,6 @@ namespace PM3D
 		pPanneau->position = _position;
 		pPanneau->matPosDim = XMMatrixScaling(pPanneau->dimension.x, pPanneau->dimension.y, 1.0f) * XMMatrixTranslation(pPanneau->position.x, pPanneau->position.y, pPanneau->position.z) * viewProj;
 		// On l’ajoute à notre vecteur
-		tabSprites.push_back(std::move(pPanneau));
+		tabPanneaux.push_back(std::move(pPanneau));
 	}
 }
