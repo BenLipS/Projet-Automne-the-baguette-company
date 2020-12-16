@@ -100,22 +100,22 @@ namespace PM3D {
 		// ******** POUR LA SOURIS ************  
 		//Vérifier si déplacement vers la gauche
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(-XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationY(-XM_PI / (1000.0f * tempsEcoule)));
 		}
 
 		// Vérifier si déplacement vers la droite
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationY(XM_PI / (1000.0f * tempsEcoule)));
 		}
 
 		//Vérifier si déplacement vers le haut
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, XM_PI / (1000.0f * tempsEcoule)));
 		}
 
 		// Vérifier si déplacement vers le bas
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, -XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, -XM_PI / (1000.0f * tempsEcoule)));
 		}
 
 		// Matrice de la vision
@@ -169,22 +169,22 @@ namespace PM3D {
 		// ******** POUR LA SOURIS ************  
 		//Vérifier si déplacement vers la gauche
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(-XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationY(-XM_PI / (1000.0f * tempsEcoule)));
 		}
 
 		// Vérifier si déplacement vers la droite
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationY(XM_PI / (1000.0f * tempsEcoule)));
 		}
 
 		//Vérifier si déplacement vers le haut
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, XM_PI / (1000.0f * tempsEcoule)));
 		}
 
 		// Vérifier si déplacement vers le bas
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, -XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, -XM_PI / (1000.0f * tempsEcoule)));
 		}
 
 		position.vector4_f32[1] = y;

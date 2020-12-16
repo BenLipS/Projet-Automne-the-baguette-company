@@ -90,6 +90,9 @@ namespace PM3D {
 		initBonus(LMB, 600, 0);
 		initBonus(LMB, 700, 0);
 		initBonus(LMB, 800, 0);
+
+		CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 0.0f), 100.0f, 100.0f, 100.0f, pDispositif_, std::vector<IChargeur*>{ bonusInstance }, LMBOr));
 		// Mur final
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif_, LMBOr));
 

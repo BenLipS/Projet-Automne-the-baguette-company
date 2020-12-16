@@ -91,7 +91,7 @@ namespace PM3D
 		PxVec3 vVitesse = speed;
 
 		// V�rifier l��tat de la touche gauche
-		float constexpr coeffMoveCote = 70;
+		float constexpr coeffMoveCote = 50;
 		if (!isContact()) {
 			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
 				auto const direction = gauche * speed.magnitude();

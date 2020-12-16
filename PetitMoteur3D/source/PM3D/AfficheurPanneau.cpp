@@ -38,11 +38,13 @@ namespace PM3D
 		{
 			// Initialiser et sélectionner les « constantes » de l’effet
 			ShadersParams sp;
-			//const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
-			//tabPanneaux[i]->matPosDim = XMMatrixScaling(tabPanneaux[i]->dimension.x, tabPanneaux[i]->dimension.y, 1.0f) * XMMatrixTranslation(tabPanneaux[i]->position.x, tabPanneaux[i]->position.y, tabPanneaux[i]->position.z) * viewProj;
+			const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+			tabPanneaux[i]->matPosDim = XMMatrixIdentity() * XMMatrixScaling(tabPanneaux[i]->dimension.x, tabPanneaux[i]->dimension.y, 1.0f);
+			//tabPanneaux[i]->matPosDim *= XMMatrixTranslation(tabPanneaux[i]->position.x, tabPanneaux[i]->position.y, tabPanneaux[i]->position.z);
+			tabPanneaux[i]->matPosDim *= XMMatrixTranslation(-1500.0f, 3500.0f, 6000.0f);
+			tabPanneaux[i]->matPosDim *= viewProj;
 			sp.matWVP = XMMatrixTranspose(tabPanneaux[i]->matPosDim);
-			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
-				&sp, 0, 0);
+			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 			pCB->SetConstantBuffer(pConstantBuffer);
 			// Activation de la texture
 			variableTexture->SetResource(tabPanneaux[i]->pTextureD3D);
@@ -62,8 +64,8 @@ namespace PM3D
 			CMoteurWindows::GetInstance().GetTextureManager();
 		std::wstring ws(NomTexture.begin(), NomTexture.end());
 		std::unique_ptr<CPanneau> pPanneau = std::make_unique<CPanneau>();
-		pPanneau->pTextureD3D =
-			TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+		pPanneau->pTextureD3D = TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+
 		// Obtenir la dimension de la texture si _dx et _dy sont à 0;
 		if (_dx == 0.0f && _dy == 0.0f)
 		{
@@ -81,14 +83,15 @@ namespace PM3D
 			pPanneau->dimension.y = float(desc.Height);
 
 			// Dimension en facteur
-			pPanneau->dimension.x = pPanneau->dimension.x * 2.0f / pDispositif->GetLargeur();
-			pPanneau->dimension.y = pPanneau->dimension.y * 2.0f / pDispositif->GetHauteur();
+			pPanneau->dimension.x = pPanneau->dimension.x * 6000.0f / pDispositif->GetLargeur();
+			pPanneau->dimension.y = pPanneau->dimension.y * 6000.0f / pDispositif->GetHauteur();
 		}
 		else
 		{
 			pPanneau->dimension.x = float(_dx);
 			pPanneau->dimension.y = float(_dy);
 		}
+
 		// Position en coordonnées du monde
 		const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		pPanneau->position = _position;
