@@ -20,6 +20,7 @@ namespace PM3D
 		CObjetMesh(IChargeur* chargeur, const std::vector<IChargeur*> chargeurs, CDispositifD3D11* pDispositif);
 		CObjetMesh(IChargeur* chargeur, CDispositifD3D11* pDispositif);
 
+		void InitEffet();
 		virtual ~CObjetMesh();
 		void Orientation(XMVECTOR axis, float angle);
 
@@ -114,7 +115,6 @@ namespace PM3D
 		physx::PxRigidActor* body_ = nullptr;
 
 		ID3D11ShaderResourceView* pTextureD3D;
-		void InitEffet();
 		virtual void Anime(float) = 0;
 
 	};

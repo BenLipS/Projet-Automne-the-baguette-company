@@ -32,6 +32,7 @@
 #define DXE_FICHIERTEXTUREINTROUVABLE   123
 #define IDR_MAINFRAME                   128
 #define IDC_STATIC                      -1
+#define DXE_ERREURCREATION_BLENDSTATE   667
 
 // Next default values for new objects
 // 
