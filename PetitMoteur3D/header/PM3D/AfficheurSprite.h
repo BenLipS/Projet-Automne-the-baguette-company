@@ -18,6 +18,7 @@ namespace PM3D
 		}
 		virtual void Draw();
 		void AjouterSprite(const std::string& NomTexture, int _x, int _y, int _dx = 0, int _dy = 0);
+		void AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y);
 
 	private:
 		
