@@ -342,22 +342,41 @@ namespace PM3D
 			if (!initEcranTitre_) {
 				scenePhysic_->ListeScene_.clear();
 				Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
+
 				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+				std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
 				// ajout de panneaux
-				pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f), 2000, 2000);
-				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(0.0f, 0.0f, -1.0f));
-				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-1.0f, 0.0f, 0.5f));
-				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-0.5f, 0.0f, 1.0f));
-				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
+				//pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f),2000,2000);
+				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 1.0f, -2.0f));
+				pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 0.0f, -2.0f));
+				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-1.0f, 0.0f, 0.5f));
+				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-0.5f, 0.0f, 1.0f));
+				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
 
 				// Création de l’afficheur de sprites et ajout des sprites
-
+			
 				pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
 				pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
 				pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
 
 
+<<<<<<< HEAD
+=======
+				CAfficheurTexte::Init();
+				const Gdiplus::FontFamily oFamily(L"Comic Sans MS", nullptr);
+				pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 24.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+				pTexteChrono = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
+				pTexteChrono->Ecrire(L"00'00'000");
+				chronoNow = std::chrono::high_resolution_clock::now();
+				pAfficheurSprite->AjouterSpriteTexte(pTexteChrono->GetTextureView(), 900, 257);
+
+				pTexteVitesse = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
+				pTexteVitesse->Ecrire(L"0 km/h");
+				pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
+
+>>>>>>> Release
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
 			}
 			else {
 				float largeur = static_cast<float>(pDispositif->GetLargeur());
@@ -393,7 +412,16 @@ protected:
 				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 				camera.update(character, tempsEcoule);
+<<<<<<< HEAD
 			}
+=======
+
+				updateChrono();
+
+				updateSpeed();
+			}
+
+>>>>>>> Release
 			return true;
 		}
 
@@ -434,8 +462,23 @@ protected:
 		// Le gestionnaire de texture
 		CGestionnaireDeTextures TexturesManager;
 
+<<<<<<< HEAD
 
 		bool initEcranTitre_ = true;
+=======
+		bool initEcranTitre_ = true;
+
+		// Le Texte
+		std::unique_ptr<CAfficheurTexte> pTexteChrono;
+		std::unique_ptr<CAfficheurTexte> pTexteVitesse;
+
+		std::chrono::steady_clock::time_point chronoNow;
+		int tempsMin = 0;
+		int tempsSec = 0;
+		int tempsMs = 0;
+
+		std::unique_ptr<Gdiplus::Font> pPolice;
+>>>>>>> Release
 	
 	};
 } // namespace PM3D
