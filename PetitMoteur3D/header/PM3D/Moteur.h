@@ -353,13 +353,6 @@ namespace PM3D
 			if (!initEcranTitre_) {
 				scenePhysic_->ListeScene_.clear();
 				Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
-				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-				// ajout de panneaux
-				pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f), 2000, 2000);
-				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(0.0f, 0.0f, -1.0f));
-				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-1.0f, 0.0f, 0.5f));
-				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-0.5f, 0.0f, 1.0f));
-				pAfficheurSprite->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
 
 				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
 				std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
@@ -427,11 +420,11 @@ protected:
 				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 				camera.update(character, tempsEcoule);
+
+				updateChrono();
+
+				updateSpeed();
 			}
-
-			updateChrono();
-
-			updateSpeed();
 
 			return true;
 		}
