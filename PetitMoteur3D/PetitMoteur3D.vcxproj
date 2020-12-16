@@ -199,6 +199,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\PM3D\Afficheur2D.cpp" />
+    <ClCompile Include="source\PM3D\AfficheurPanneau.cpp" />
     <ClCompile Include="source\PM3D\AfficheurSprite.cpp" />
     <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
     <ClCompile Include="source\PM3D\Bonus.cpp" />
@@ -235,6 +237,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\PM3D\Afficheur2D.h" />
+    <ClInclude Include="header\PM3D\AfficheurPanneau.h" />
     <ClInclude Include="header\PM3D\AfficheurSprite.h" />
     <ClInclude Include="header\PM3D\Bloc.h" />
     <ClInclude Include="header\PM3D\BlocEffet1.h" />
