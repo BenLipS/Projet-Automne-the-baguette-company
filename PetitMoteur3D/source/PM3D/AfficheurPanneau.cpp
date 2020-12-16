@@ -34,16 +34,20 @@ namespace PM3D
 		variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
 		pDispositif->ActiverMelangeAlpha();
 		// Faire le rendu de tous nos sprites
-		for (int i = 0; i < tabSprites.size(); ++i)
+		for (int i = 0; i < tabPanneaux.size(); ++i)
 		{
 			// Initialiser et sélectionner les « constantes » de l’effet
 			ShadersParams sp;
-			sp.matWVP = XMMatrixTranspose(tabSprites[i]->matPosDim);
-			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr,
-				&sp, 0, 0);
+			const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
+			tabPanneaux[i]->matPosDim = XMMatrixIdentity() * XMMatrixScaling(tabPanneaux[i]->dimension.x, tabPanneaux[i]->dimension.y, 1.0f);
+			//tabPanneaux[i]->matPosDim *= XMMatrixTranslation(tabPanneaux[i]->position.x, tabPanneaux[i]->position.y, tabPanneaux[i]->position.z);
+			tabPanneaux[i]->matPosDim *= XMMatrixTranslation(-1500.0f, 3500.0f, 6000.0f);
+			tabPanneaux[i]->matPosDim *= viewProj;
+			sp.matWVP = XMMatrixTranspose(tabPanneaux[i]->matPosDim);
+			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
 			pCB->SetConstantBuffer(pConstantBuffer);
 			// Activation de la texture
-			variableTexture->SetResource(tabSprites[i]->pTextureD3D);
+			variableTexture->SetResource(tabPanneaux[i]->pTextureD3D);
 			pPasse->Apply(0, pImmediateContext);
 			// **** Rendu de l’objet
 			pImmediateContext->Draw(6, 0);
@@ -60,8 +64,8 @@ namespace PM3D
 			CMoteurWindows::GetInstance().GetTextureManager();
 		std::wstring ws(NomTexture.begin(), NomTexture.end());
 		std::unique_ptr<CPanneau> pPanneau = std::make_unique<CPanneau>();
-		pPanneau->pTextureD3D =
-			TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+		pPanneau->pTextureD3D = TexturesManager.GetNewTexture(ws.c_str(), pDispositif)->GetD3DTexture();
+
 		// Obtenir la dimension de la texture si _dx et _dy sont à 0;
 		if (_dx == 0.0f && _dy == 0.0f)
 		{
@@ -79,19 +83,20 @@ namespace PM3D
 			pPanneau->dimension.y = float(desc.Height);
 
 			// Dimension en facteur
-			pPanneau->dimension.x = pPanneau->dimension.x * 2.0f / pDispositif->GetLargeur();
-			pPanneau->dimension.y = pPanneau->dimension.y * 2.0f / pDispositif->GetHauteur();
+			pPanneau->dimension.x = pPanneau->dimension.x * 6000.0f / pDispositif->GetLargeur();
+			pPanneau->dimension.y = pPanneau->dimension.y * 6000.0f / pDispositif->GetHauteur();
 		}
 		else
 		{
 			pPanneau->dimension.x = float(_dx);
 			pPanneau->dimension.y = float(_dy);
 		}
+
 		// Position en coordonnées du monde
 		const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 		pPanneau->position = _position;
 		pPanneau->matPosDim = XMMatrixScaling(pPanneau->dimension.x, pPanneau->dimension.y, 1.0f) * XMMatrixTranslation(pPanneau->position.x, pPanneau->position.y, pPanneau->position.z) * viewProj;
 		// On l’ajoute à notre vecteur
-		tabSprites.push_back(std::move(pPanneau));
+		tabPanneaux.push_back(std::move(pPanneau));
 	}
 }
