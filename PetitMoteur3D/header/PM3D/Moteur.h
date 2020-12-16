@@ -117,10 +117,28 @@ namespace PM3D
 			return true;
 		}
 
+		PlanStatic* getTerrain(physx::PxVec3 _position) {
+			std::pair< PlanStatic*, float> meilleurTerrain(nullptr, 0.0f);
+			auto start = scenePhysic_->ListeScene_.begin();
+			auto end = scenePhysic_->ListeScene_.end();
+
+			std::for_each(scenePhysic_->ListeScene_.begin(), scenePhysic_->ListeScene_.end(), [&](std::unique_ptr<CObjet3D>& objet) {
+				if (objet->typeTag == "pente") {
+					auto temp = objet.get();
+					PlanStatic* objetPlan = static_cast<PlanStatic*>(temp);
+					float hauteur = objetPlan->getPointPlan(_position).y;
+					if (meilleurTerrain.first == nullptr || meilleurTerrain.second < hauteur) {
+						meilleurTerrain = { objetPlan, hauteur };
+					}
+				}
+			});
+			return meilleurTerrain.first;
+		}
+
 		physx::PxTransform getTerrainNormale() {
 			auto start = scenePhysic_->ListeScene_.begin();
 			auto end = scenePhysic_->ListeScene_.end();
-			while (start != end && start->get()->typeTag != "terrain")
+			while (start != end && start->get()->typeTag != "pente")
 				start++;
 
 			if (start != end) {
@@ -227,7 +245,7 @@ namespace PM3D
 			// Appeler les fonctions de dessin de chaque objet de la sc�ne
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
-				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur" && object3D->typeTag != "sprite") {
+				if (object3D->typeTag != "pente" && object3D->typeTag != "terrain" && object3D->typeTag != "mur" && object3D->typeTag != "sprite") {
 					CObjetMesh* objetMesh = static_cast<CObjetMesh*>(object3D.get());
 					std::vector<IChargeur*> chargeurs = objetMesh->getChargeurs();
 					if (object3D.get()->isPhysic()) {

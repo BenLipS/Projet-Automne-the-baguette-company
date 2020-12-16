@@ -6,14 +6,12 @@ using namespace physx;
 
 namespace PM3D {
 
-	PlanStatic::PlanStatic(Scene* _scene, PxVec3 _point, PxVec3 _normale, PxVec3 _direction) :
+	PlanStatic::PlanStatic(Scene* _scene, PxVec3 _point, PxVec3 _normale) :
 		Objet3DStatic(_scene, createRigidBody(_scene, _point, _normale))
-		, normale_(_normale)
-		, direction_(_direction)
 	{
 
 		if (_normale.x == 0) {
-			typeTag = "terrain";
+			typeTag = "pente";
 			setupFiltering(body_, FILTER_TYPE::TERRAIN, FILTER_TYPE::VEHICULE);
 
 		}
@@ -26,17 +24,46 @@ namespace PM3D {
 	PxRigidStatic* PlanStatic::createRigidBody(Scene* _scene, PxVec3 _point, PxVec3 _normale)
 	{
 		PxRigidStatic* bodyStatic = PxCreatePlane(*(_scene->physic_), PxPlane(_point, _normale), *(_scene->material_));
-		//dynamic->setAngularDamping(0.5f);
-		//dynamic->setLinearVelocity(velocity);
+
 		return bodyStatic;
 	}
 
 	PxVec3 PlanStatic::getDirection() {
-		return direction_;
+		PxVec3 vector1 = body_->getGlobalPose().q.getBasisVector1();
+		if (vector1.x < 0.0001 && vector1.x > -0.0001)
+			vector1.x = 0;
+		if (vector1.y < 0.0001 && vector1.y > -0.0001)
+			vector1.y = 0;
+		if (vector1.z < 0.0001 && vector1.z > -0.0001)
+			vector1.z = 0;
+
+		PxVec3 vector2 = body_->getGlobalPose().q.getBasisVector2();
+		if (vector2.x < 0.0001 && vector2.x > -0.0001)
+			vector2.x = 0;
+		if (vector2.y < 0.0001 && vector2.y > -0.0001)
+			vector2.y = 0;
+		if (vector2.z < 0.0001 && vector2.z > -0.0001)
+			vector2.z = 0;
+
+		PxVec3 directionX = PxVec3(0.0f, -1.0f, 0.0f).dot(vector1) * vector1;
+		PxVec3 directionY = PxVec3(0.0f, -1.0f, 0.0f).dot(vector2) * vector2;
+		PxVec3 direction = (directionX + directionY);
+		PxVec3 directionN = direction.getNormalized();
+		return directionN;
 	}
 
 	PxVec3 PlanStatic::getNormale() {
-		return normale_;
+		return body_->getGlobalPose().q.getBasisVector0();
+	}
+
+	PxVec3 PlanStatic::getPointPlan(physx::PxVec3 _point)
+	{
+		_point.y = 0.0f;
+		PxVec3 projeteX = _point.dot(body_->getGlobalPose().q.getBasisVector1()) * body_->getGlobalPose().q.getBasisVector1();
+		PxVec3 projeteY = _point.dot(body_->getGlobalPose().q.getBasisVector2()) * body_->getGlobalPose().q.getBasisVector2();
+		PxVec3 projete = (projeteX + projeteY);
+		projete = (projete / projete.x) * _point.x;
+		return projete;
 	}
 
 
