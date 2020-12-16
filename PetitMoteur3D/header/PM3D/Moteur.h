@@ -244,6 +244,9 @@ namespace PM3D
 				object3D->Draw();
 			}
 
+			SkyBox* skybox = niveau->getSkyBox();
+			//skybox->Draw();
+
 			EndRenderSceneSpecific();
 			return true;
 		}
@@ -335,10 +338,10 @@ namespace PM3D
 
 		bool InitObjets()
 		{
+
+			niveau = new Level(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 			float largeur = static_cast<float>(pDispositif->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif->GetHauteur());
-
-			Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
 			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
 			// ajout de panneaux
@@ -414,6 +417,9 @@ namespace PM3D
 
 		// La scene physique
 		Scene* scenePhysic_{};
+
+		// Le niveau
+		Level* niveau;
 
 		//ControllerManager
 		//PxControllerManager * controllerManager_;

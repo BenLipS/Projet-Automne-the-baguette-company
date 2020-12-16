@@ -18,6 +18,7 @@ namespace PM3D
 	public:
 		CObjetMesh() = default;
 		CObjetMesh(IChargeur* chargeur, const std::vector<IChargeur*> chargeurs, CDispositifD3D11* pDispositif);
+		CObjetMesh(IChargeur* chargeur, CDispositifD3D11* pDispositif);
 
 		void InitEffet();
 		virtual ~CObjetMesh();
@@ -28,6 +29,7 @@ namespace PM3D
 		IChargeur* getChargeurCourant() { return chargeurCourant_; }
 		void setChargeurCourant(IChargeur* chargeur) { chargeurCourant_ = chargeur; }
 		void SetTexture(CTexture* pTexture);
+		void Draw();
 	protected:
 
 		struct ShadersParams {
@@ -113,7 +115,6 @@ namespace PM3D
 		physx::PxRigidActor* body_ = nullptr;
 
 		ID3D11ShaderResourceView* pTextureD3D;
-		void Draw();
 		virtual void Anime(float) = 0;
 
 	};

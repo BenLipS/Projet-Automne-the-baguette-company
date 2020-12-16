@@ -63,12 +63,13 @@ namespace PM3D {
 		boxModel = CChargeurOBJ();
 		boxModel.Chargement(paramOBJ2);
 
+		/*CParametresChargement paramOBJSky = CParametresChargement("skybox.obj", ".\\modeles\\jin\\", true, false);
+		skyboxModel = CChargeurOBJ();
+		skyboxModel.Chargement(paramOBJSky);*/
+
 		CParametresChargement paramOBJ3 = CParametresChargement("tunnelExtraSimple.obj", ".\\modeles\\jin\\", true, false);
 		tunnelModel = CChargeurOBJ();
 		tunnelModel.Chargement(paramOBJ3);
-		
-
-
 
 		initJoueur();
 		initPente( LMB);
@@ -96,7 +97,7 @@ namespace PM3D {
 		initBonus(LMB, 700, 0);
 		initBonus(LMB, 800, 0);
 
-
+		initSkyBox();
 		// Mur final
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif_, LMBOr));
 
@@ -194,7 +195,7 @@ namespace PM3D {
 		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
 		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
 		CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
-		const std::vector<IChargeur*> listModels{ jinInstance, boxInstance, bonusInstance };
+		const std::vector<IChargeur*> listModels{ bonusInstance, bonusInstance, bonusInstance  };
 
 		// Pente
 		float constexpr rayon = 50.0f;
@@ -209,5 +210,11 @@ namespace PM3D {
 
 	}
 
+	void Level::initSkyBox() {
 
+		//CChargeurOBJ* skyboxInstance = new CChargeurOBJ(skyboxModel);
+
+		//skyBox_ = std::make_unique<SkyBox>(pDispositif_, &skyboxModel);
+
+	}
 }
