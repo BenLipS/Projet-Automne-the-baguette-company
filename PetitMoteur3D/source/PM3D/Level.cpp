@@ -128,10 +128,10 @@ namespace PM3D {
 			filename = new char[50]{ "./src/heighmap_Proj52_part1_montagne.bmp" };
 		}
 		else if (numPente == 1) {
-			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie_vallee.bmp" };
+			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie.bmp" };
 		}
 		else {
-			filename = new char[50]{ "./src/heighmap_Proj52_part2.bmp" };
+			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie.bmp" };
 		}
 
 		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente);
