@@ -420,9 +420,8 @@ namespace PM3D
 				pTexteVitesse->Ecrire(L"0 km/h");
 				pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
 
-				pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 256, pPolice.get());
-				pTextePosition->Ecrire(L"pos : 0.0 0.0 0.0");
-				pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 700, 900);
+				pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
+				pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);
 
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 
@@ -470,7 +469,23 @@ protected:
 
 				updateBonus();
 
-				updatePose();
+				/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
+					swapPose = true;	
+				}
+				else if (swapPose) {
+					swapPose = false;
+				}
+
+				if (swapPose) {
+					updatePose();
+				}*/
+				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3)) {
+					swapPose = true;
+				}
+
+				if (swapPose) {
+					updatePose();
+				}
 			}
 
 			return true;
@@ -615,12 +630,16 @@ protected:
 				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
 				BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
 				physx::PxVec3 pose = static_cast<physx::PxRigidDynamic*>(body)->getGlobalPose().p;
-				int x = static_cast<int>(pose.x);
-				int y = static_cast<int>(pose.y);
-				int z = static_cast<int>(pose.z);
+				int Px = static_cast<int>(pose.x);
+				int Py = static_cast<int>(pose.y);
+				int Pz = static_cast<int>(pose.z);
+
+				int Cx = static_cast<int>(XMVectorGetX(camera.getPosition()));
+				int Cy = static_cast<int>(XMVectorGetY(camera.getPosition()));
+				int Cz = static_cast<int>(XMVectorGetZ(camera.getPosition()));
 
 				std::stringstream sstr;
-				sstr << "pose : " << x << " " << y << " " << z;
+				sstr << "pose Camera : " << Cx << " " << Cy << " " << Cz << "\n" << "pose Personnage :" << Px << " " << Py << " " << Pz;
 				std::wstring strPosition = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(sstr.str());
 				pTextePosition->Ecrire(strPosition);
 			}
@@ -679,6 +698,7 @@ protected:
 		int tempsSec = 0;
 		int tempsMs = 0;
 		bool stopChrono_ = false;
+		bool swapPose = false;
 
 		std::unique_ptr<Gdiplus::Font> pPolice;
 
