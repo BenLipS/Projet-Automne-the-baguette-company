@@ -72,11 +72,20 @@ namespace PM3D
 		{
 			bool bBoucle = true;
 
+			
 
 			while (bBoucle)
 			{
 				// Propre � la plateforme - (Conditions d'arr�t, interface, messages)
 				bBoucle = RunSpecific();
+				
+				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_R)){
+					niveau->restart();
+					resetChrono = true;
+				}
+					
+					
+
 
 				// appeler la fonction d'animation
 				if (bBoucle)
@@ -238,6 +247,26 @@ namespace PM3D
 			if (erased)
 				scenePhysic_->ListeScene_.erase(it);
 		}
+		bool eraseBonus() {
+			auto it = scenePhysic_->ListeScene_.begin();
+			bool erased = false;
+			while (it != scenePhysic_->ListeScene_.end() && !erased) {
+				if (it->get() != nullptr) {
+					if (it->get()->typeTag == "bonus") {
+						erased = true;
+					}
+					else {
+						it++;
+					}
+				}
+				else {
+					it++;
+				}
+			}
+			if (erased)
+				scenePhysic_->ListeScene_.erase(it);
+			return erased;
+		}
 
 		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
 
@@ -299,7 +328,7 @@ namespace PM3D
 				object3D->Draw();
 			}
 
-			SkyBox* skybox = niveau->getSkyBox();
+			//SkyBox* skybox = niveau->getSkyBox();
 			//skybox->Draw();
 
 			EndRenderSceneSpecific();
@@ -488,6 +517,12 @@ protected:
 					tempsSec += dureeSec;
 					tempsMs += dureeMs;
 				}
+				if (resetChrono) {
+					tempsMin = 0;
+					tempsSec = 0;
+					tempsMs = 0;
+					resetChrono = false;
+				}
 			}
 			if (tempsMs > 999) {
 				tempsSec += 1;
@@ -649,6 +684,7 @@ protected:
 		int tempsSec = 0;
 		int tempsMs = 0;
 		bool stopChrono_ = false;
+		bool resetChrono = false;
 
 		std::unique_ptr<Gdiplus::Font> pPolice;
 

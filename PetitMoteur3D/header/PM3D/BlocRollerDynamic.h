@@ -46,6 +46,9 @@ namespace PM3D
 				nbBonus_--;
 			}
 		}
+		void resetBonus() {
+			nbBonus_=0;
+		}
 		float getVitesseBonusMax() { return vitesseBonusMax_; }
 
 		bool isContact() { return contact_; }
