@@ -28,6 +28,13 @@
 #include "chargeur.h"
 #include "BlocEffet1.h"
 #include "AfficheurSprite.h"
+#include "AfficheurPanneau.h"
+#include "AfficheurTexte.h"
+
+#include <chrono>
+#include <sstream>
+#include <codecvt>
+#include <locale>
 
 using namespace std;
 //using namespace physx;
@@ -54,25 +61,17 @@ namespace PM3D
 	template <class T, class TClasseDispositif> class CMoteur :public CSingleton<T>
 	{
 	public:
-		virtual void RunEcrantitre()
+		virtual void RunEcranChargement()
 		{
-			bool bBoucle = true;
-			
-			int itEcranTitre = 0;
-		
-			// Propre � la plateforme - (Conditions d'arr�t, interface, messages)
-				
-			bBoucle = Animation();
-			initEcranTitre_ = false;
-			bBoucle = false;
-
-			
+			Animation();
+			initEcranChargement_ = false;
+			InitScene();
 		}
 
 		virtual void Run()
 		{
 			bool bBoucle = true;
-			InitScene();
+
 
 			while (bBoucle)
 			{
@@ -99,7 +98,7 @@ namespace PM3D
 
 			// * Initialisation de la sc�ne
 			InitScene();
-			
+
 			// * Initialisation des param�tres de l'animation et
 			//   pr�paration de la premi�re image
 			InitAnimation();
@@ -115,7 +114,7 @@ namespace PM3D
 			const double TempsEcoule = GetTimeIntervalsInSec(TempsCompteurPrecedent, TempsCompteurCourant);
 
 			// Est-il temps de rendre l'image?
-			if (TempsEcoule > EcartTemps || initEcranTitre_)
+			if (TempsEcoule > EcartTemps || initEcranChargement_)
 			{
 				// Affichage optimis�
 				pDispositif->Present(); // On enlevera �//� plus tard
@@ -181,7 +180,7 @@ namespace PM3D
 			return nullptr;
 		}
 
-		void eraseBody(physx::PxRigidActor* _body) {
+		bool eraseBody(physx::PxRigidActor* _body) {
 			auto it = scenePhysic_->ListeScene_.begin();
 			bool erased = false;
 			while (it != scenePhysic_->ListeScene_.end() && !erased) {
@@ -197,7 +196,28 @@ namespace PM3D
 					it++;
 				}
 			}
-			if (erased) 
+			if (erased)
+				scenePhysic_->ListeScene_.erase(it);
+			return erased;
+		}
+
+		void eraseSprite(std::string _typeSprite) {
+			auto it = scenePhysic_->ListeScene_.begin();
+			bool erased = false;
+			while (it != scenePhysic_->ListeScene_.end() && !erased) {
+				if (it->get() != nullptr && it->get()->is2D()) {
+					if (static_cast<CAfficheur2D*>(it->get())->typeSprite == _typeSprite) {
+						erased = true;
+					}
+					else {
+						it++;
+					}
+				}
+				else {
+					it++;
+				}
+			}
+			if (erased)
 				scenePhysic_->ListeScene_.erase(it);
 		}
 
@@ -218,7 +238,7 @@ namespace PM3D
 
 		virtual int64_t GetTimeSpecific() const = 0;
 		virtual double GetTimeIntervalsInSec(int64_t start, int64_t stop) const = 0;
-		
+
 
 		virtual TClasseDispositif* CreationDispositifSpecific(const CDS_MODE cdsMode) = 0;
 		virtual void BeginRenderSceneSpecific() = 0;
@@ -244,7 +264,7 @@ namespace PM3D
 			// Appeler les fonctions de dessin de chaque objet de la sc�ne
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
-				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur" && object3D->typeTag != "sprite") {
+				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur" && object3D->typeTag != "sprite" && object3D->typeTag != "panneau") {
 					CObjetMesh* objetMesh = static_cast<CObjetMesh*>(object3D.get());
 					std::vector<IChargeur*> chargeurs = objetMesh->getChargeurs();
 					if (object3D.get()->isPhysic()) {
@@ -281,10 +301,10 @@ namespace PM3D
 				delete scenePhysic_;
 			}
 		}
-		public: 
+		public:
 			virtual int InitScene()
 			{
-				if (initEcranTitre_) {
+				if (initEcranChargement_) {
 				// Scene physX
 				scenePhysic_ = new Scene();
 				//Partie physique
@@ -310,7 +330,7 @@ namespace PM3D
 
 			constexpr float champDeVision = XM_PI / 3; 	// 45 degr�s
 			const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
-			const float planRapproche = 2.0f;
+			const float planRapproche = 1.0f;
 			const float planEloigne = 1000000.0f;
 
 
@@ -322,46 +342,48 @@ namespace PM3D
 
 			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj, CCamera::CAMERA_TYPE::CUBE);
 
+			m_MatView = XMMatrixLookAtLH(XMVectorSet(0.0f, 3.0f, -5.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
+
+			m_MatViewProj = m_MatView * m_MatProj;
+
 			if (!InitObjets())
 			{
 				return 1;
 			}
-			if (!initEcranTitre_) {
+			if (!initEcranChargement_) {
 			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 			camera.update(character);
 			}
-			
+
 			return 0;
 		}
-		
+
 		bool InitObjets()
 		{
 			float largeur = static_cast<float>(pDispositif->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif->GetHauteur());
 
-			if (!initEcranTitre_) {
+			if (!initEcranChargement_) {
 				scenePhysic_->ListeScene_.clear();
 				Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
 				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-				std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
+				//std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
 				// ajout de panneaux
 				//pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f),2000,2000);
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 1.0f, -2.0f));
-				pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 0.0f, -2.0f));
+				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 0.0f, -2.0f));
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-1.0f, 0.0f, 0.5f));
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-0.5f, 0.0f, 1.0f));
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
 
 				// Création de l’afficheur de sprites et ajout des sprites
-			
+
 				pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
-				pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
-				pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
+				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
+				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
 
 
-<<<<<<< HEAD
-=======
 				CAfficheurTexte::Init();
 				const Gdiplus::FontFamily oFamily(L"Comic Sans MS", nullptr);
 				pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 24.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
@@ -374,9 +396,10 @@ namespace PM3D
 				pTexteVitesse->Ecrire(L"0 km/h");
 				pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
 
->>>>>>> Release
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
-				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
+
+				updateBonus();
+				//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
 			}
 			else {
 				float largeur = static_cast<float>(pDispositif->GetLargeur());
@@ -385,7 +408,7 @@ namespace PM3D
 				pAfficheurSprite->AjouterSprite(".\\src\\EcranChargement.dds"s, static_cast<int>(0), static_cast<int>(hauteur), static_cast<int>(largeur), static_cast<int>(hauteur));
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 			}
-			
+
 			return true;
 		}
 
@@ -408,21 +431,137 @@ protected:
 			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
 				camera.update(tempsEcoule);
 			}
-			if (!initEcranTitre_){
+			if (!initEcranChargement_){
 				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 				camera.update(character, tempsEcoule);
-<<<<<<< HEAD
-			}
-=======
 
 				updateChrono();
 
 				updateSpeed();
+
+				updateBonus();
 			}
 
->>>>>>> Release
 			return true;
+		}
+
+		void updateChrono() {
+			auto chronoAp = std::chrono::high_resolution_clock::now();
+			int dureeMin = static_cast<int>(std::chrono::duration_cast<std::chrono::minutes>(chronoAp - chronoNow).count());
+			int dureeSec = abs(dureeMin * 60 - static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(chronoAp - chronoNow).count()));
+			int dureeMs = abs(dureeMin * 60'000 - dureeSec * 1000 - static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(chronoAp - chronoNow).count()));
+			tempsMin += dureeMin;
+			tempsSec += dureeSec;
+			tempsMs += dureeMs;
+
+			if (tempsMs > 999) {
+				tempsSec += 1;
+				tempsMs -= 1000;
+			}
+
+			if (tempsSec > 59) {
+				tempsMin += 1;
+				tempsSec -= 60;
+			}
+			std::stringstream str;
+			if (tempsMin <= 9 && tempsSec <= 9 && tempsMs <= 9) {
+				str << "0" << tempsMin << "'" << "0" << tempsSec << "'" << "00" << tempsMs;
+			}
+			else if (tempsMin <= 9 && tempsSec <= 9 && tempsMs <= 99) {
+				str << "0" << tempsMin << "'" << "0" << tempsSec << "'" << "0" << tempsMs;
+			}
+			else if (tempsMin <= 9 && tempsSec <= 9 && tempsMs <= 999) {
+				str << "0" << tempsMin << "'" << "0" << tempsSec << "'" << tempsMs;
+			}
+			else if (tempsMin <= 9 && tempsSec > 9 && tempsMs <= 9) {
+				str << "0" << tempsMin << "'" << tempsSec << "'" << "00" << tempsMs;
+			}
+			else if (tempsMin <= 9 && tempsSec > 9 && tempsMs <= 99) {
+				str << "0" << tempsMin << "'" << tempsSec << "'" << "0" << tempsMs;
+			}
+			else if (tempsMin <= 9 && tempsSec > 9 && tempsMs <= 999) {
+				str << "0" << tempsMin << "'" << tempsSec << "'" << tempsMs;
+			}
+			else if (tempsMin > 9 && tempsSec <= 9 && tempsMs <= 9) {
+				str << tempsMin << "'" << "0" << tempsSec << "'" << "00" << tempsMs;
+			}
+			else if (tempsMin > 9 && tempsSec <= 9 && tempsMs <= 99) {
+				str << tempsMin << "'" << "0" << tempsSec << "'" << "0" << tempsMs;
+			}
+			else if (tempsMin > 9 && tempsSec <= 9 && tempsMs <= 999) {
+				str << tempsMin << "'" << "0" << tempsSec << "'" << tempsMs;
+			}
+			else {
+				str << tempsMin << "'" << tempsSec << "'" << tempsMs;
+			}
+
+			std::wstring strChrono = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(str.str());
+			pTexteChrono->Ecrire(strChrono);
+			chronoNow = std::chrono::high_resolution_clock::now();
+		}
+
+		void updateSpeed() {
+			auto it = scenePhysic_->ListeScene_.begin();
+			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+				it++;
+			}
+			if (it != scenePhysic_->ListeScene_.end()) {
+				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+				BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
+				float speed = static_cast<physx::PxRigidDynamic*>(body)->getLinearVelocity().magnitude();
+				float vitesseMax = vehicule->getVitesseBonusMax();
+				int pourcentageVmax = static_cast<int>(speed / vitesseMax * 250);
+				if (pourcentageVmax == 249)
+					pourcentageVmax = 250;
+
+				std::stringstream sstr;
+				sstr << pourcentageVmax << " km/h";
+				std::wstring strVitesse = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(sstr.str());
+				pTexteVitesse->Ecrire(strVitesse);
+			}
+		}
+
+		void updateBonus() {
+			auto it = scenePhysic_->ListeScene_.begin();
+			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+				it++;
+			}
+			if (it != scenePhysic_->ListeScene_.end()) {
+				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+				BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
+				int nbBonus = vehicule->getNbBonus();
+
+				eraseSprite("spritebonus");
+
+				float largeur = static_cast<float>(pDispositif->GetLargeur());
+				float hauteur = static_cast<float>(pDispositif->GetHauteur());
+				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif,"spritebonus");
+				switch (nbBonus) {
+				case 0:
+					pAfficheurSprite->AjouterSprite(".\\src\\0Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 1:
+					pAfficheurSprite->AjouterSprite(".\\src\\1Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 2:
+					pAfficheurSprite->AjouterSprite(".\\src\\2Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 3:
+					pAfficheurSprite->AjouterSprite(".\\src\\3Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 4:
+					pAfficheurSprite->AjouterSprite(".\\src\\4Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 5:
+					pAfficheurSprite->AjouterSprite(".\\src\\5Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				default:
+					break;
+				}
+
+				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+			}
 		}
 
 	protected:
@@ -462,11 +601,7 @@ protected:
 		// Le gestionnaire de texture
 		CGestionnaireDeTextures TexturesManager;
 
-<<<<<<< HEAD
-
-		bool initEcranTitre_ = true;
-=======
-		bool initEcranTitre_ = true;
+		bool initEcranChargement_ = true;
 
 		// Le Texte
 		std::unique_ptr<CAfficheurTexte> pTexteChrono;
@@ -478,7 +613,6 @@ protected:
 		int tempsMs = 0;
 
 		std::unique_ptr<Gdiplus::Font> pPolice;
->>>>>>> Release
-	
+
 	};
 } // namespace PM3D

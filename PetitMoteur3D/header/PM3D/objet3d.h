@@ -18,6 +18,7 @@ public:
 	virtual void Anime(float) = 0;
 	virtual void Draw() = 0;
 	virtual bool isPhysic() { return false; }
+	virtual bool is2D() { return false; }
 
 	std::string typeTag;
 };

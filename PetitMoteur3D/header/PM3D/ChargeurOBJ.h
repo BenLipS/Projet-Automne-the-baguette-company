@@ -46,6 +46,10 @@ namespace PM3D
 			}
 		};
 
+		float distanceX{};
+		float distanceY{};
+		float distanceZ{};
+
 	public:
 
 		void Chargement(const CParametresChargement& param) override;
@@ -73,6 +77,10 @@ namespace PM3D
 		const XMFLOAT3& GetPosition(int NoSommet) const override { return Position[tabVertexInfo[NoSommet].PositionIndex]; }
 		const XMFLOAT2& GetCoordTex(int NoSommet) const override { return CoordTex[tabVertexInfo[NoSommet].TextCoordIndex]; }
 		const XMFLOAT3& GetNormale(int NoSommet) const override { return Normale[tabVertexInfo[NoSommet].NormalIndex]; }
+
+		float GetDistanceX() { return distanceX; }
+		float GetDistanceY() { return distanceY; }
+		float GetDistanceZ() { return distanceZ; }
 
 	private:
 		// FONCTIONS
