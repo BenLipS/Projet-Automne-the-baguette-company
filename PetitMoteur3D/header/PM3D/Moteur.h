@@ -368,7 +368,6 @@ namespace PM3D
 			float largeur = static_cast<float>(pDispositif->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif->GetHauteur());
 
-
 			if (!initEcranChargement_) {
 				scenePhysic_->ListeScene_.clear();
 				Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z

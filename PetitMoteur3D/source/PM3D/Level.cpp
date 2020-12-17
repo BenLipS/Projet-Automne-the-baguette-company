@@ -62,7 +62,13 @@ namespace PM3D {
 		bonusLowModel = CChargeurOBJ();
 		bonusLowModel.Chargement(paramOBJBonus2);
 
+		/*CParametresChargement paramOBJSky = CParametresChargement("skybox.obj", ".\\modeles\\jin\\", true, false);
+		skyboxModel = CChargeurOBJ();
+		skyboxModel.Chargement(paramOBJSky);*/
 
+		CParametresChargement paramOBJ3 = CParametresChargement("tunnelMoinsSimple.obj", ".\\modeles\\jin\\", true, false);
+		tunnelModel = CChargeurOBJ();
+		tunnelModel.Chargement(paramOBJ3);
 
 		CParametresChargement paramOBJChiz0 = CParametresChargement("chizbox_LOD0.obj", ".\\modeles\\jin\\", true, false);
 		chizHDModel = CChargeurOBJ();
@@ -88,15 +94,6 @@ namespace PM3D {
 		CParametresChargement paramOBJSnow2 = CParametresChargement("snowbox_LOD2.obj", ".\\modeles\\jin\\", true, false);
 		snowLowModel = CChargeurOBJ();
 		snowLowModel.Chargement(paramOBJSnow2);
-
-		/*CParametresChargement paramOBJSky = CParametresChargement("skybox.obj", ".\\modeles\\jin\\", true, false);
-		skyboxModel = CChargeurOBJ();
-		skyboxModel.Chargement(paramOBJSky);*/
-
-		CParametresChargement paramOBJ3 = CParametresChargement("tunnelExtraSimple.obj", ".\\modeles\\jin\\", true, false);
-		tunnelModel = CChargeurOBJ();
-		tunnelModel.Chargement(paramOBJ3);
-
 
 		initJoueur();
 		initPente( LMB);
@@ -127,6 +124,7 @@ namespace PM3D {
 		initTunnel(1000,0);
 
 		initSkyBox();
+
 
 		// Mur final
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif_, LMBOr));
@@ -227,7 +225,6 @@ namespace PM3D {
 	}
 
 	void Level::initBonus(Light_Manager _lm, float _x, float _y) {
-
 
 		CChargeurOBJ* bonus0Instance = new CChargeurOBJ(bonusHDModel);
 		CChargeurOBJ* bonus1Instance = new CChargeurOBJ(bonusMidModel);
