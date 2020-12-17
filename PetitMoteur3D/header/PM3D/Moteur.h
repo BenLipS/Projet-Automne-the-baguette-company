@@ -61,25 +61,17 @@ namespace PM3D
 	template <class T, class TClasseDispositif> class CMoteur :public CSingleton<T>
 	{
 	public:
-		virtual void RunEcrantitre()
+		virtual void RunEcranChargement()
 		{
-			bool bBoucle = true;
-			
-			int itEcranTitre = 0;
-		
-			// Propre � la plateforme - (Conditions d'arr�t, interface, messages)
-				
-			bBoucle = Animation();
-			initEcranTitre_ = false;
-			bBoucle = false;
-
-			
+			Animation();
+			initEcranChargement_ = false;
+			InitScene();
 		}
 
 		virtual void Run()
 		{
 			bool bBoucle = true;
-			InitScene();
+
 
 			while (bBoucle)
 			{
@@ -106,7 +98,7 @@ namespace PM3D
 
 			// * Initialisation de la sc�ne
 			InitScene();
-			
+
 			// * Initialisation des param�tres de l'animation et
 			//   pr�paration de la premi�re image
 			InitAnimation();
@@ -122,7 +114,7 @@ namespace PM3D
 			const double TempsEcoule = GetTimeIntervalsInSec(TempsCompteurPrecedent, TempsCompteurCourant);
 
 			// Est-il temps de rendre l'image?
-			if (TempsEcoule > EcartTemps || initEcranTitre_)
+			if (TempsEcoule > EcartTemps || initEcranChargement_)
 			{
 				// Affichage optimis�
 				pDispositif->Present(); // On enlevera �//� plus tard
@@ -204,7 +196,7 @@ namespace PM3D
 					it++;
 				}
 			}
-			if (erased) 
+			if (erased)
 				scenePhysic_->ListeScene_.erase(it);
 			return erased;
 		}
@@ -246,7 +238,7 @@ namespace PM3D
 
 		virtual int64_t GetTimeSpecific() const = 0;
 		virtual double GetTimeIntervalsInSec(int64_t start, int64_t stop) const = 0;
-		
+
 
 		virtual TClasseDispositif* CreationDispositifSpecific(const CDS_MODE cdsMode) = 0;
 		virtual void BeginRenderSceneSpecific() = 0;
@@ -309,10 +301,10 @@ namespace PM3D
 				delete scenePhysic_;
 			}
 		}
-		public: 
+		public:
 			virtual int InitScene()
 			{
-				if (initEcranTitre_) {
+				if (initEcranChargement_) {
 				// Scene physX
 				scenePhysic_ = new Scene();
 				//Partie physique
@@ -358,20 +350,20 @@ namespace PM3D
 			{
 				return 1;
 			}
-			if (!initEcranTitre_) {
+			if (!initEcranChargement_) {
 			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 			camera.update(character);
 			}
-			
+
 			return 0;
 		}
-		
+
 		bool InitObjets()
 		{
 			float largeur = static_cast<float>(pDispositif->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif->GetHauteur());
 
-			if (!initEcranTitre_) {
+			if (!initEcranChargement_) {
 				scenePhysic_->ListeScene_.clear();
 				Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
@@ -386,7 +378,7 @@ namespace PM3D
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
 
 				// Création de l’afficheur de sprites et ajout des sprites
-			
+
 				pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
 				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
 				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
@@ -416,7 +408,7 @@ namespace PM3D
 				pAfficheurSprite->AjouterSprite(".\\src\\EcranChargement.dds"s, static_cast<int>(0), static_cast<int>(hauteur), static_cast<int>(largeur), static_cast<int>(hauteur));
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 			}
-			
+
 			return true;
 		}
 
@@ -439,7 +431,7 @@ protected:
 			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
 				camera.update(tempsEcoule);
 			}
-			if (!initEcranTitre_){
+			if (!initEcranChargement_){
 				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 				camera.update(character, tempsEcoule);
@@ -609,7 +601,7 @@ protected:
 		// Le gestionnaire de texture
 		CGestionnaireDeTextures TexturesManager;
 
-		bool initEcranTitre_ = true;
+		bool initEcranChargement_ = true;
 
 		// Le Texte
 		std::unique_ptr<CAfficheurTexte> pTexteChrono;
@@ -621,6 +613,6 @@ protected:
 		int tempsMs = 0;
 
 		std::unique_ptr<Gdiplus::Font> pPolice;
-	
+
 	};
 } // namespace PM3D
