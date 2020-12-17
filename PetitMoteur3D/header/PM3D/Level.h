@@ -29,11 +29,17 @@ namespace PM3D {
 		SkyBox* getSkyBox() { return skyBox_.get(); }
 
 	private:
-		//DELETE THAT
-		CChargeurOBJ jinModel;
-		CChargeurOBJ boxModel;
-		CChargeurOBJ bonusModel;
-		CChargeurOBJ skyboxModel;
+		CChargeurOBJ chizHDModel;
+		CChargeurOBJ chizMidModel;
+		CChargeurOBJ chizLowModel;
+
+		CChargeurOBJ snowHDModel;
+		CChargeurOBJ snowMidModel;
+		CChargeurOBJ snowLowModel;
+
+		CChargeurOBJ bonusHDModel;
+		CChargeurOBJ bonusMidModel;
+		CChargeurOBJ bonusLowModel;
 
 		void initlevel();
 

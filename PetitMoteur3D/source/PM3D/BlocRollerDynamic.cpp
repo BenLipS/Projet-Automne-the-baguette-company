@@ -34,9 +34,9 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMaxDefault_ = 600.0f;
+	constexpr float BlocRollerDynamic::vitesseMaxDefault_ = 800.0f;
 	constexpr float BlocRollerDynamic::vitesseMinDefault_ = 10.0f;
-	constexpr float BlocRollerDynamic::vitesseBonusMax_ = 1600.0f;
+	constexpr float BlocRollerDynamic::vitesseBonusMax_ = 1800.0f;
 
 	BlocRollerDynamic::BlocRollerDynamic(Scene* _scene, PxTransform _position, const float _radius,
 		CDispositifD3D11* _pDispositif, const std::vector<IChargeur*> chargeurs) : Objet3DDynamic(_scene, createRigidBody(_scene, _position, _radius), _pDispositif, chargeurs)
@@ -55,7 +55,7 @@ namespace PM3D
 		typeTag = "vehicule";
 
 		// Filtre pour les collisions
-		setupFiltering(body_, FILTER_TYPE::VEHICULE, FILTER_TYPE::OBSTACLE | FILTER_TYPE::TERRAIN);
+		setupFiltering(body_, FILTER_TYPE::VEHICULE, FILTER_TYPE::OBSTACLE | FILTER_TYPE::MUR);
 
 		// Inititalisation des shaders
 		//InitEffet();
@@ -91,7 +91,7 @@ namespace PM3D
 		PxVec3 vVitesse = speed;
 
 		// V�rifier l��tat de la touche gauche
-		float constexpr coeffMoveCote = 70;
+		float constexpr coeffMoveCote = 50;
 		if (!isContact()) {
 			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
 				auto const direction = gauche * speed.magnitude();
@@ -107,7 +107,7 @@ namespace PM3D
 
 			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
 				//upPressed_ = true;
-				vVitesse = vVitesse * 1.05f;
+				vVitesse = vVitesse * 1.02f;
 			}
 
 			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {

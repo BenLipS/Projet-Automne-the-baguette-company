@@ -24,10 +24,10 @@ namespace PM3D {
 			if (pair.triggerActor != NULL && pair.otherActor != NULL) {
 
 				auto bodyTrigger = pair.triggerActor;
-				CMoteurWindows::GetInstance().eraseBody(bodyTrigger);
+				bool erased = CMoteurWindows::GetInstance().eraseBody(bodyTrigger);
 				auto bodyVehicule = static_cast<PxRigidDynamic*>(pair.otherActor);
 				BlocRollerDynamic* vehicule = CMoteurWindows::GetInstance().findVehiculeFromBody(bodyVehicule);
-				if (vehicule != nullptr) {
+				if (vehicule != nullptr && erased) {
 					vehicule->addBonus();
 				}
 
@@ -81,7 +81,8 @@ namespace PM3D {
 					body0->setLinearVelocity(vitesseFinale);*/
 					break;
 				case FILTER_TYPE::VEHICULE | FILTER_TYPE::MUR:
-					body0->setLinearDamping(1000);
+					vehicule = CMoteurWindows::GetInstance().findVehiculeFromBody(body0);
+					vehicule->updateContact(true);
 					break;
 				default:
 					/*for (PxU32 j = 0; j < pair.contacts.size(); j++) {
