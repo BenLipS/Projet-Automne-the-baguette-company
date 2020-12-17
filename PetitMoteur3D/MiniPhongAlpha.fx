@@ -24,6 +24,7 @@ struct VS_Sortie
 	float3 vDirLum : TEXCOORD1;
 	float3 vDirCam : TEXCOORD2;
 	float2 coordTex : TEXCOORD3;
+	int bTun : TEXCOORD4;
 };
 
 VS_Sortie MiniPhongAlphaVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
@@ -40,6 +41,15 @@ VS_Sortie MiniPhongAlphaVS(float4 Pos : POSITION, float3 Normale : NORMAL, float
 
 	// Coordonn�es d'application de texture
 	sortie.coordTex = coordTex;
+
+	float3 diffPosET = vLumiere2.xyz - PosWorld;
+
+	float dist = pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2);
+
+	if (dist < 500000)
+		sortie.bTun = 1;
+	else
+		sortie.bTun = 0;
 
 	return sortie;
 }
@@ -85,12 +95,20 @@ if (bTex > 0)
 	couleur = couleurTexture * vAEcl.rgb +
 		couleurTexture * vDEcl.rgb * diff +
 		vSEcl.rgb * vSMat.rgb * S;
+	if (vs.bTun > 0)
+	{
+		couleur = couleurTexture * vTEcl.rgb + couleurTexture * vAEcl.rgb;
+	}
 	/*couleur = couleurTexture * vAEcl.rgb*/
 }
 else
 {
 	couleur = vAEcl.rgb * vAMat.rgb + vDEcl.rgb * vDMat.rgb * diff +
 		vSEcl.rgb * vSMat.rgb * S;
+	if (vs.bTun > 0)
+	{
+		couleur = vDMat * vTEcl.rgb + vAEcl.rgb * vAMat.rgb;
+	}
 }
 return float4(couleur, 1.0f);
 }
