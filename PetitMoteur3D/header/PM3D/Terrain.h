@@ -12,7 +12,7 @@ namespace PM3D
 	class Terrain : public CObjet3D {
 	public:
 
-		Terrain(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif, float scaleFixX, float scaleFixY, float scaleFixZ, int numTerrain = 0);
+		Terrain(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif, float scaleFixX, float scaleFixY, float scaleFixZ, int numTerrain = 0, bool alpha = false);
 
 		// Destructeur
 		virtual ~Terrain();
@@ -36,7 +36,7 @@ namespace PM3D
 
 		char* filename;
 		CDispositifD3D11* pDispositif;
-		void InitShaders();
+		void InitShaders() {};
 		void InitEffect();
 
 		ID3D11Buffer* pVertexBuffer;
@@ -71,5 +71,7 @@ namespace PM3D
 
 		int numTerrain_;
 		float scaleFixX_, scaleFixZ_, scaleFixY_;
+
+		bool alpha = false;
 	};
 }
