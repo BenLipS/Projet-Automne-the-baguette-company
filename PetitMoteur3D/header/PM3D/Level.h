@@ -56,8 +56,9 @@ namespace PM3D {
 		void initPente(Light_Manager lm);
 		void initBonus(Light_Manager lm, float _x, float _y);
 		void initBloc(Light_Manager lm, float _x, float _y);
-		void initHM(Light_Manager lm, int numPente);
-
 		void initSkyBox();
+
+		void initHM(Light_Manager lm, int numPente, bool alpha = false);
+
 	};
 }

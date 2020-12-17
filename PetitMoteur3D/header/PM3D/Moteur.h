@@ -475,10 +475,21 @@ protected:
 			int dureeMin = static_cast<int>(std::chrono::duration_cast<std::chrono::minutes>(chronoAp - chronoNow).count());
 			int dureeSec = abs(dureeMin * 60 - static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(chronoAp - chronoNow).count()));
 			int dureeMs = abs(dureeMin * 60'000 - dureeSec * 1000 - static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(chronoAp - chronoNow).count()));
-			tempsMin += dureeMin;
-			tempsSec += dureeSec;
-			tempsMs += dureeMs;
-
+			
+			auto it = scenePhysic_->ListeScene_.begin();
+			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+				it++;
+			}if (it != scenePhysic_->ListeScene_.end()) {
+				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+				int posZ = static_cast<int>(body->getGlobalPose().p.z);
+				if (posZ > 30000)
+					stopChrono_ = true;
+				else {
+					tempsMin += dureeMin;
+					tempsSec += dureeSec;
+					tempsMs += dureeMs;
+				}
+			}
 			if (tempsMs > 999) {
 				tempsSec += 1;
 				tempsMs -= 1000;
@@ -638,6 +649,7 @@ protected:
 		int tempsMin = 0;
 		int tempsSec = 0;
 		int tempsMs = 0;
+		bool stopChrono_ = false;
 
 		std::unique_ptr<Gdiplus::Font> pPolice;
 

@@ -262,6 +262,7 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Sprite1.fx" />
+    <FxCompile Include="MiniPhongAlpha.fx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\Heightmap.bmp">
