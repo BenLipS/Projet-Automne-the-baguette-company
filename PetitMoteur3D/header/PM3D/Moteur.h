@@ -420,6 +420,10 @@ namespace PM3D
 				pTexteVitesse->Ecrire(L"0 km/h");
 				pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
 
+				pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 256, pPolice.get());
+				pTextePosition->Ecrire(L"pos : 0.0 0.0 0.0");
+				pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 700, 900);
+
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 
 				updateBonus();
@@ -465,6 +469,8 @@ protected:
 				updateSpeed();
 
 				updateBonus();
+
+				updatePose();
 			}
 
 			return true;
@@ -599,6 +605,28 @@ protected:
 			}
 		}
 
+		void updatePose() {
+
+			auto it = scenePhysic_->ListeScene_.begin();
+			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+				it++;
+			}
+			if (it != scenePhysic_->ListeScene_.end()) {
+				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+				BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
+				physx::PxVec3 pose = static_cast<physx::PxRigidDynamic*>(body)->getGlobalPose().p;
+				int x = static_cast<int>(pose.x);
+				int y = static_cast<int>(pose.y);
+				int z = static_cast<int>(pose.z);
+
+				std::stringstream sstr;
+				sstr << "pose : " << x << " " << y << " " << z;
+				std::wstring strPosition = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(sstr.str());
+				pTextePosition->Ecrire(strPosition);
+			}
+
+		}
+
 	protected:
 		// Variables pour le temps de l'animation
 		int64_t TempsSuivant{};
@@ -644,6 +672,7 @@ protected:
 		// Le Texte
 		std::unique_ptr<CAfficheurTexte> pTexteChrono;
 		std::unique_ptr<CAfficheurTexte> pTexteVitesse;
+		std::unique_ptr<CAfficheurTexte> pTextePosition;
 
 		std::chrono::steady_clock::time_point chronoNow;
 		int tempsMin = 0;
