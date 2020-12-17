@@ -29,6 +29,8 @@ namespace PM3D {
 		SkyBox* getSkyBox() { return skyBox_.get(); }
 
 	private:
+		CChargeurOBJ skyboxModel;
+
 		CChargeurOBJ chizHDModel;
 		CChargeurOBJ chizMidModel;
 		CChargeurOBJ chizLowModel;
