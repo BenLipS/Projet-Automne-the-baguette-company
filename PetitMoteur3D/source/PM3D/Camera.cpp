@@ -100,22 +100,22 @@ namespace PM3D {
 		// ******** POUR LA SOURIS ************  
 		//V�rifier si d�placement vers la gauche
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(-XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationY(-XM_PI / (3000.0f * tempsEcoule)));
 		}
 
 		// V�rifier si d�placement vers la droite
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationY(XM_PI / (3000.0f * tempsEcoule)));
 		}
 
 		//V�rifier si d�placement vers le haut
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, XM_PI / (3000.0f * tempsEcoule)));
 		}
 
 		// V�rifier si d�placement vers le bas
 		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, -XM_PI / (5000.0f * tempsEcoule)));
+			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, -XM_PI / (3000.0f * tempsEcoule)));
 		}
 
 		// Matrice de la vision

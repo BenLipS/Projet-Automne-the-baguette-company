@@ -278,8 +278,8 @@ namespace PM3D {
 			sp.vAEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 			sp.vDEcl = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			sp.vSEcl = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-			sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-			sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+			sp.vAMat = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			sp.vDMat = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			sp.vSMat = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			sp.vTEcl = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			sp.puissance = 5;
