@@ -29,6 +29,24 @@ namespace PM3D {
 		InitEffet();
 	}
 
+	CObjetMesh::CObjetMesh(IChargeur* chargeur, CDispositifD3D11* _pDispositif)
+		: pDispositif(_pDispositif) // prendre en note le dispositif
+		, chargeurCourant_(chargeur)
+	{
+		typeTag = "mesh";
+		matWorld = XMMatrixIdentity();
+		rotation = 0.0f;
+		pVertexBuffer = nullptr;
+		pIndexBuffer = nullptr;
+		pVertexLayout = nullptr;
+		pConstantBuffer = nullptr;
+		// Placer l'objet sur la carte graphique
+		TransfertObjet(*chargeur);
+
+		// Initialisation de l'effet
+		InitEffet();
+	}
+
 	CObjetMesh::~CObjetMesh()
 	{
 		DXRelacher(pConstantBuffer);
@@ -237,7 +255,8 @@ namespace PM3D {
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 
-		sp.vLumiere = XMVectorSet(-1000.0f, 50000.0f, -15000.0f, 1.0f);
+		sp.vLumiere1 = XMVectorSet(-1000.0f, 50000.0f, -15000.0f, 1.0f);
+		sp.vLumiere2 = XMVectorSet(-1000.0f, 50000.0f, -15000.0f, 1.0f);
 		sp.vCamera = rMoteur.getCamera().getPosition();
 		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);

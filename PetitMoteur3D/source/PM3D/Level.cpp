@@ -63,6 +63,7 @@ namespace PM3D {
 		bonusLowModel.Chargement(paramOBJBonus2);
 
 
+
 		CParametresChargement paramOBJChiz0 = CParametresChargement("chizbox_LOD0.obj", ".\\modeles\\jin\\", true, false);
 		chizHDModel = CChargeurOBJ();
 		chizHDModel.Chargement(paramOBJChiz0);
@@ -87,6 +88,15 @@ namespace PM3D {
 		CParametresChargement paramOBJSnow2 = CParametresChargement("snowbox_LOD2.obj", ".\\modeles\\jin\\", true, false);
 		snowLowModel = CChargeurOBJ();
 		snowLowModel.Chargement(paramOBJSnow2);
+
+		/*CParametresChargement paramOBJSky = CParametresChargement("skybox.obj", ".\\modeles\\jin\\", true, false);
+		skyboxModel = CChargeurOBJ();
+		skyboxModel.Chargement(paramOBJSky);*/
+
+		CParametresChargement paramOBJ3 = CParametresChargement("tunnelExtraSimple.obj", ".\\modeles\\jin\\", true, false);
+		tunnelModel = CChargeurOBJ();
+		tunnelModel.Chargement(paramOBJ3);
+
 
 		initJoueur();
 		initPente( LMB);
@@ -113,6 +123,10 @@ namespace PM3D {
 		initBonus(LMB, 600, 0);
 		initBonus(LMB, 700, 0);
 		initBonus(LMB, 800, 0);
+
+		initTunnel(1000,0);
+
+		initSkyBox();
 
 		// Mur final
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif_, LMBOr));
@@ -214,10 +228,12 @@ namespace PM3D {
 
 	void Level::initBonus(Light_Manager _lm, float _x, float _y) {
 
+
 		CChargeurOBJ* bonus0Instance = new CChargeurOBJ(bonusHDModel);
 		CChargeurOBJ* bonus1Instance = new CChargeurOBJ(bonusMidModel);
 		CChargeurOBJ* bonus2Instance = new CChargeurOBJ(bonusLowModel);
 		const std::vector<IChargeur*> listModels{ bonus0Instance, bonus1Instance, bonus2Instance };
+
 
 		// Pente
 		float rayon = bonus0Instance->GetDistanceY() / 2;
@@ -229,6 +245,29 @@ namespace PM3D {
 		float const posY = _y * scaleY_;
 
 		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels, _lm));
+
+	}
+
+	void Level::initTunnel(float _x, float _y) {
+
+		CChargeurOBJ* TunnelInstance = new CChargeurOBJ(tunnelModel);
+
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
+		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
+		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
+		float const posY = _y * scaleY_;
+
+		TunnelInstance->Placement(XMFLOAT3(posY, posZ, posX));
+
+		scenePhysic_->ListeScene_.push_back(std::make_unique<Objet3Dvisuel>(TunnelInstance, pDispositif_, anglePente_, posY, posZ, posX));
+
+	}
+
+	void Level::initSkyBox() {
+
+		//CChargeurOBJ* skyboxInstance = new CChargeurOBJ(skyboxModel);
+
+		//skyBox_ = std::make_unique<SkyBox>(pDispositif_, &skyboxModel);
 
 	}
 }
