@@ -246,8 +246,7 @@ namespace PM3D {
 
 		CChargeurOBJ* skyboxInstance = new CChargeurOBJ(skyboxModel);
 
-		skyBox_ = std::make_unique<SkyBox>(pDispositif_, &skyboxModel);
-
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<SkyBox>(pDispositif_, &skyboxModel));
 	}
 
 }
