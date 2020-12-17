@@ -47,6 +47,7 @@ namespace PM3D
 			float puissance; // la puissance de spécularité
 			int bTex; // Texture ou matériau
 			XMFLOAT2 remplissage;
+			XMVECTOR vTEcl;
 		};
 
 		class CMaterial {

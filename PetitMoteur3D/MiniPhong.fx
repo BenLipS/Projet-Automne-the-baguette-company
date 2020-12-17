@@ -88,7 +88,7 @@ if (bTex > 0)
 		vSEcl.rgb * vSMat.rgb * S;
 	if (vs.bTun > 0)
 	{
-		couleur = couleurTexture * vTEcl.rgb;
+		couleur = couleurTexture * vTEcl.rgb + couleurTexture * vAEcl.rgb;
 	}
 	/*couleur = couleurTexture * vAEcl.rgb*/
 }
@@ -98,7 +98,7 @@ else
 		vSEcl.rgb * vSMat.rgb * S;
 	if (vs.bTun > 0)
 	{
-		couleur = vDMat * vTEcl.rgb;
+		couleur = vDMat * vTEcl.rgb + vAEcl.rgb * vAMat.rgb;
 	}
 }
 return float4(couleur, 1.0f);

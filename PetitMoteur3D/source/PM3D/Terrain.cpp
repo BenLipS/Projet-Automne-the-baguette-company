@@ -356,15 +356,15 @@ namespace PM3D {
 		Scene* scenephysic = rMoteur.getScenePhysic();
 
 		sp.vLumiere1 = XMVectorSet(0.0f, 300000.0f, 200000.0f, 1.0f);
-		sp.vLumiere2 = XMVectorSet(0.0f, -6900, 17000.0f, 1.0f);
-		sp.vCamera = view_camera;						//XMVectorSet(0.0f, 194220.0f, 0.0f, 0.0f);
+		sp.vLumiere2 = XMVectorSet(0.0f, -6500, 16500.0f, 1.0f);
+		sp.vCamera = view_camera;
 		sp.vAEcl = XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
 		sp.vDEcl = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
 		sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 		sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vSMat = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vTEcl = XMVectorSet(1.0f, 1.0f, 0.2f, 1.0f);
+		sp.vTEcl = XMVectorSet(0.8f, 0.8f, 0.2f, 1.0f);
 		sp.puissance = 5;
 		
 
