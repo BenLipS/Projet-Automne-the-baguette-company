@@ -99,8 +99,8 @@ namespace PM3D {
 		initPente( LMB);
 		initHM(LMB, -200);
 		initHM(LMB, 0, true);
-		initHM(LMB, 1);
-		initHM(LMB, 2);
+		initHM(LMB, 1, true);
+		initHM(LMB, 2, true);
 
 		initBloc(LMBOr, 100, 0); //X Y
 		initBloc(LMBOr , 220, 0);
@@ -175,7 +175,7 @@ namespace PM3D {
 			HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
 		}
 		else {
-			HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\masqueDeluxe.dds", pDispositif_));
+			HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\snow10.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\neige2.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
 		}
 
 		scenePhysic_->ListeScene_.emplace_back(move(HM));
