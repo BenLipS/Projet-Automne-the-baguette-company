@@ -157,23 +157,45 @@ namespace PM3D {
 		char* filename{};
 		if (numPente == 0) {
 			filename = new char[50]{ "./src/heighmap_Proj52_part1_montagne.bmp" };
+
+
+			std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
+			if (!alpha) {
+				HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
+			}
+			else {
+				HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\snow10.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\neige2.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
+			}
+
+			scenePhysic_->ListeScene_.emplace_back(move(HM));
+
 		}
 		else if (numPente == 1) {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie_vallee.bmp" };
+
+			std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
+			if (!alpha) {
+				HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
+			}
+			else {
+				HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\snow10.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
+			}
+
+			scenePhysic_->ListeScene_.emplace_back(move(HM));
 		}
 		else {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie.bmp" };
-		}
 
-		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
-		if (!alpha) {
-			HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
-		}
-		else {
-			HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\grass.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\neige2.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
-		}
+			std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
+			if (!alpha) {
+				HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
+			}
+			else {
+				HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\snow.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\herbe.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
+			}
 
-		scenePhysic_->ListeScene_.emplace_back(move(HM));
+			scenePhysic_->ListeScene_.emplace_back(move(HM));
+		}
 
 	};
 	void Level::initPente(Light_Manager _lm) {
