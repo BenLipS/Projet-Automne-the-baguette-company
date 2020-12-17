@@ -188,7 +188,7 @@ namespace PM3D
 			return nullptr;
 		}
 
-		void eraseBody(physx::PxRigidActor* _body) {
+		bool eraseBody(physx::PxRigidActor* _body) {
 			auto it = scenePhysic_->ListeScene_.begin();
 			bool erased = false;
 			while (it != scenePhysic_->ListeScene_.end() && !erased) {
@@ -205,6 +205,27 @@ namespace PM3D
 				}
 			}
 			if (erased) 
+				scenePhysic_->ListeScene_.erase(it);
+			return erased;
+		}
+
+		void eraseSprite(std::string _typeSprite) {
+			auto it = scenePhysic_->ListeScene_.begin();
+			bool erased = false;
+			while (it != scenePhysic_->ListeScene_.end() && !erased) {
+				if (it->get() != nullptr && it->get()->is2D()) {
+					if (static_cast<CAfficheur2D*>(it->get())->typeSprite == _typeSprite) {
+						erased = true;
+					}
+					else {
+						it++;
+					}
+				}
+				else {
+					it++;
+				}
+			}
+			if (erased)
 				scenePhysic_->ListeScene_.erase(it);
 		}
 
@@ -355,11 +376,11 @@ namespace PM3D
 				Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
 				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-				std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
+				//std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
 				// ajout de panneaux
 				//pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f),2000,2000);
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 1.0f, -2.0f));
-				pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 0.0f, -2.0f));
+				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 0.0f, -2.0f));
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-1.0f, 0.0f, 0.5f));
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-0.5f, 0.0f, 1.0f));
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
@@ -367,8 +388,8 @@ namespace PM3D
 				// Création de l’afficheur de sprites et ajout des sprites
 			
 				pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
-				pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
-				pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
+				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
+				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
 
 
 				CAfficheurTexte::Init();
@@ -384,7 +405,9 @@ namespace PM3D
 				pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
 
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
-				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
+
+				updateBonus();
+				//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
 			}
 			else {
 				float largeur = static_cast<float>(pDispositif->GetLargeur());
@@ -424,6 +447,8 @@ protected:
 				updateChrono();
 
 				updateSpeed();
+
+				updateBonus();
 			}
 
 			return true;
@@ -502,6 +527,48 @@ protected:
 				sstr << pourcentageVmax << " km/h";
 				std::wstring strVitesse = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(sstr.str());
 				pTexteVitesse->Ecrire(strVitesse);
+			}
+		}
+
+		void updateBonus() {
+			auto it = scenePhysic_->ListeScene_.begin();
+			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+				it++;
+			}
+			if (it != scenePhysic_->ListeScene_.end()) {
+				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+				BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
+				int nbBonus = vehicule->getNbBonus();
+
+				eraseSprite("spritebonus");
+
+				float largeur = static_cast<float>(pDispositif->GetLargeur());
+				float hauteur = static_cast<float>(pDispositif->GetHauteur());
+				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif,"spritebonus");
+				switch (nbBonus) {
+				case 0:
+					pAfficheurSprite->AjouterSprite(".\\src\\0Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 1:
+					pAfficheurSprite->AjouterSprite(".\\src\\1Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 2:
+					pAfficheurSprite->AjouterSprite(".\\src\\2Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 3:
+					pAfficheurSprite->AjouterSprite(".\\src\\3Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 4:
+					pAfficheurSprite->AjouterSprite(".\\src\\4Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				case 5:
+					pAfficheurSprite->AjouterSprite(".\\src\\5Bonus.dds"s, static_cast<int>(largeur * 0.8f), static_cast<int>(hauteur * 0.95f));
+					break;
+				default:
+					break;
+				}
+
+				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 			}
 		}
 

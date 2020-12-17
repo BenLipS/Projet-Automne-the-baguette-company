@@ -12,6 +12,7 @@ namespace PM3D
 	public:
 		CAfficheurPanneau(CDispositifD3D11* pDispositif) : CAfficheur2D(pDispositif) {
 			typeTag = "panneau";
+			typeSprite = "panneau";
 		}
 		virtual ~CAfficheurPanneau() { CAfficheur2D::~CAfficheur2D(); }
 		virtual void Draw();

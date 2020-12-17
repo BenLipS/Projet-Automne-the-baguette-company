@@ -224,7 +224,7 @@ namespace PM3D {
 			setPosition(XMVECTOR{ pose.p.x, pose.p.y + offsetY, pose.p.z - offsetZ });
 			setDirection(XMVECTOR{ 0.0f, -offsetY, offsetZ });
 
-		} else {
+		} else if (type == CAMERA_TYPE::FPCUBE) {
 			setPosition(XMVECTOR{ pose.p.x, pose.p.y + 40.0f, pose.p.z });
 			setDirection(XMVECTOR{ vecVitesse.getNormalized().x, vecVitesse.getNormalized().y, vecVitesse.getNormalized().z });
 		}

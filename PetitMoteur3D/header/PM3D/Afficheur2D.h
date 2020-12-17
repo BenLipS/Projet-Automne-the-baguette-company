@@ -48,6 +48,8 @@ namespace PM3D
 		virtual void Anime(float tempsEcoule) {};
 		virtual void Draw() = 0;
 
+		bool is2D() { return true; }
+		std::string typeSprite = "sprite";
 	protected:
 		static CSommetSprite sommets[6];
 		ID3D11Buffer* pVertexBuffer;

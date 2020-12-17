@@ -55,7 +55,7 @@ namespace PM3D
 		typeTag = "vehicule";
 
 		// Filtre pour les collisions
-		setupFiltering(body_, FILTER_TYPE::VEHICULE, FILTER_TYPE::OBSTACLE | FILTER_TYPE::TERRAIN);
+		setupFiltering(body_, FILTER_TYPE::VEHICULE, FILTER_TYPE::OBSTACLE | FILTER_TYPE::MUR);
 
 		// Inititalisation des shaders
 		//InitEffet();
@@ -107,7 +107,7 @@ namespace PM3D
 
 			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
 				//upPressed_ = true;
-				vVitesse = vVitesse * 1.05f;
+				vVitesse = vVitesse * 1.02f;
 			}
 
 			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {

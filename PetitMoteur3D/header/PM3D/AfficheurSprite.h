@@ -10,7 +10,8 @@ namespace PM3D
 	{
 
 	public:
-		CAfficheurSprite(CDispositifD3D11* pDispositif) : CAfficheur2D(pDispositif) {
+		CAfficheurSprite(CDispositifD3D11* pDispositif, std::string _typeSprite = "sprite") : CAfficheur2D(pDispositif) {
+			typeSprite = _typeSprite;
 			typeTag = "sprite";
 		}
 		virtual ~CAfficheurSprite() {
@@ -21,7 +22,6 @@ namespace PM3D
 		void AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y);
 
 	private:
-		
 		// Tous nos sprites
 		std::vector<std::unique_ptr<CSprite>> tabSprites;
 

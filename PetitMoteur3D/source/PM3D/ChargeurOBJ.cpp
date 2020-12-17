@@ -81,7 +81,32 @@ namespace PM3D
 		sumY /= Position.size();
 		sumZ /= Position.size();
 
-		std::for_each(Position.begin(), Position.end(), [&sumX, &sumY, &sumZ](XMFLOAT3& n) { n.x -= sumX; n.y -= sumY; n.z -= sumZ; n.x *= 100; n.y *= 100; n.z *= 100; });
+		float minX{};
+		float minY{};
+		float minZ{};
+		float maxX{};
+		float maxY{};
+		float maxZ{};
+		std::for_each(Position.begin(), Position.end(), [&sumX, &sumY, &sumZ, &minX, &minY, &minZ, &maxX, &maxY, &maxZ](XMFLOAT3& n) { 
+			n.x -= sumX; 
+			n.y -= sumY;
+			n.z -= sumZ;
+			n.x *= 100; 
+			n.y *= 100; 
+			n.z *= 100; 
+
+			minX = min(n.x, minX);
+			minY = min(n.y, minY);
+			minZ = min(n.z, minZ);
+
+			maxX = max(n.x, maxX);
+			maxY = max(n.y, maxY);
+			maxZ = max(n.z, maxZ);
+		});
+
+		distanceX = maxX - minX;
+		distanceY = maxY - minY;
+		distanceZ = maxZ - minZ;
 
 		if (OBJMaterialLib.length() > 0)
 		{
