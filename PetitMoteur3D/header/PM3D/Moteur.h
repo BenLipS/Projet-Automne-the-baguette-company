@@ -142,6 +142,7 @@ namespace PM3D
 				if (objet->typeTag == "pente") {
 					auto temp = objet.get();
 					PlanStatic* objetPlan = static_cast<PlanStatic*>(temp);
+					
 					float hauteur = objetPlan->getPointPlan(_position).y;
 					if (meilleurTerrain.first == nullptr || meilleurTerrain.second < hauteur) {
 						meilleurTerrain = { objetPlan, hauteur };

@@ -58,11 +58,21 @@ namespace PM3D {
 
 	PxVec3 PlanStatic::getPointPlan(physx::PxVec3 _point)
 	{
-		_point.y = 0.0f;
+		//_point.y = 0.0f;
 		PxVec3 projeteX = _point.dot(body_->getGlobalPose().q.getBasisVector1()) * body_->getGlobalPose().q.getBasisVector1();
 		PxVec3 projeteY = _point.dot(body_->getGlobalPose().q.getBasisVector2()) * body_->getGlobalPose().q.getBasisVector2();
-		PxVec3 projete = (projeteX + projeteY);
-		projete = (projete / projete.x) * _point.x;
+		PxVec3 pointProjete = (projeteX + projeteY);
+		PxVec3 vecteurProjete = pointProjete - _point;
+		PxVec3 direction;
+		if (pointProjete.y < _point.y) {
+			direction = PxVec3(0.0f, -1.0f, 0.0f);
+		}
+		else {
+			direction = PxVec3(0.0f, 1.0f, 0.0f);
+		}
+		float angle = acos(direction.dot(vecteurProjete.getNormalized()));
+		float longueurResultat = vecteurProjete.magnitude() / cos(angle);
+		PxVec3 projete = _point + direction * longueurResultat;
 		return projete;
 	}
 
