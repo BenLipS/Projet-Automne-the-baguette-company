@@ -487,4 +487,10 @@ namespace PM3D {
 	}
 
 	void Terrain::SetTexture(CTexture* pTexture) { pTextureD3D = pTexture->GetD3DTexture(); }
+
+	void Terrain::SetAlphaTexture(CTexture* texture1, CTexture* texture2, CTexture* textureMasque) {
+		pTexture1 = texture1->GetD3DTexture();
+		pTexture2 = texture2->GetD3DTexture();
+		pTextureMasque = textureMasque->GetD3DTexture();
+	}
 }

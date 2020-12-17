@@ -29,6 +29,8 @@ namespace PM3D
 
 		void SetTexture(CTexture* pTexture);
 
+		void SetAlphaTexture(CTexture* pTexture1, CTexture* pTexture2, CTexture* pTextureMasque);
+
 	private:
 		CSommetTerrain* sommets;
 
@@ -60,6 +62,11 @@ namespace PM3D
 
 		//Pour les textures
 		ID3D11ShaderResourceView* pTextureD3D;
+
+		ID3D11ShaderResourceView* pTexture1;
+		ID3D11ShaderResourceView* pTexture2;
+		ID3D11ShaderResourceView* pTextureMasque;
+
 		ID3D11SamplerState* pSampleState;
 
 		int numTerrain_;

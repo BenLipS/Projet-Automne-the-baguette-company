@@ -160,6 +160,7 @@ namespace PM3D {
 
 		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente);
 		HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
+		//HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\masqueDeluxe.dds", pDispositif_));
 		scenePhysic_->ListeScene_.emplace_back(move(HM));
 
 
