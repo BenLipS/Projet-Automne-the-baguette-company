@@ -36,7 +36,14 @@ namespace PM3D
 			XMMATRIX matWorldViewProj; // la matrice totale
 			XMMATRIX matWorld; // matrice de transformation dans le monde
 			XMVECTOR vLumiere1; // la position de la source d’éclairage 1 (Point)
-			XMVECTOR vLumiere2; // la position de la source d’éclairage 2 (Point)
+			XMVECTOR vLumiere2; // la position de la source d’éclairage 2 (Globe)
+			XMVECTOR vLumiere3; // la position de la source d’éclairage 3 (Globe)
+			XMVECTOR vLumiere4; // la position de la source d’éclairage 4 (Globe)
+			XMVECTOR vLumiere5; // la position de la source d’éclairage 5 (Globe)
+			XMVECTOR vLumiere6; // la position de la source d’éclairage 6 (Globe)
+			XMVECTOR vLumiere7; // la position de la source d’éclairage 7 (Globe)
+			XMVECTOR vLumiere8; // la position de la source d’éclairage 8 (Globe)
+			XMVECTOR vLumiere9; // la position de la source d’éclairage 9 (Globe)
 			XMVECTOR vCamera; // la position de la caméra
 			XMVECTOR vAEcl; // la valeur ambiante de l’éclairage
 			XMVECTOR vAMat; // la valeur ambiante du matériau

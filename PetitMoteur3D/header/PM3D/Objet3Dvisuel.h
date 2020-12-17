@@ -15,7 +15,7 @@ namespace PM3D {
 		public CObjetMesh
 	{
 	public:
-		Objet3Dvisuel(IChargeur* chargeur, CDispositifD3D11* pDispositif, float angle, float x = 0.0f, float y = 0.0f, float z = 0.0f) : CObjetMesh(chargeur, pDispositif) { pose = PxTransform(PxVec3(x, y, z), PxQuat(angle, PxVec3(1.0f, 0.0f, 0.0f))); }
+		Objet3Dvisuel(IChargeur* chargeur, CDispositifD3D11* pDispositif, float angle, float x = 0.0f, float y = 0.0f, float z = 0.0f) : CObjetMesh(chargeur, pDispositif) { pose = PxTransform(PxVec3(x, y, z), PxQuat(angle, PxVec3(1.0f, 0.0f, 0.0f))); typeTag = "obj3dVisuel"; }
 
 		virtual void Anime(float tempsEcoule) noexcept override;
 	private:
