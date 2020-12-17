@@ -133,10 +133,29 @@ namespace PM3D
 			return true;
 		}
 
+		PlanStatic* getTerrain(physx::PxVec3 _position) {
+			std::pair< PlanStatic*, float> meilleurTerrain(nullptr, 0.0f);
+			auto start = scenePhysic_->ListeScene_.begin();
+			auto end = scenePhysic_->ListeScene_.end();
+
+			std::for_each(scenePhysic_->ListeScene_.begin(), scenePhysic_->ListeScene_.end(), [&](std::unique_ptr<CObjet3D>& objet) {
+				if (objet->typeTag == "pente") {
+					auto temp = objet.get();
+					PlanStatic* objetPlan = static_cast<PlanStatic*>(temp);
+					
+					float hauteur = objetPlan->getPointPlan(_position).y;
+					if ((meilleurTerrain.first == nullptr || meilleurTerrain.second < hauteur) && hauteur < _position.y) {
+						meilleurTerrain = { objetPlan, hauteur };
+					}
+				}
+			});
+			return meilleurTerrain.first;
+		}
+
 		physx::PxTransform getTerrainNormale() {
 			auto start = scenePhysic_->ListeScene_.begin();
 			auto end = scenePhysic_->ListeScene_.end();
-			while (start != end && start->get()->typeTag != "terrain")
+			while (start != end && start->get()->typeTag != "pente")
 				start++;
 
 			if (start != end) {
@@ -264,7 +283,7 @@ namespace PM3D
 			// Appeler les fonctions de dessin de chaque objet de la sc�ne
 			for (auto& object3D : scenePhysic_->ListeScene_)
 			{
-				if (object3D->typeTag != "terrain" && object3D->typeTag != "mur" && object3D->typeTag != "sprite" && object3D->typeTag != "panneau") {
+				if (object3D->typeTag != "terrain" && object3D->typeTag != "pente" && object3D->typeTag != "mur" && object3D->typeTag != "sprite" && object3D->typeTag != "panneau") {
 					CObjetMesh* objetMesh = static_cast<CObjetMesh*>(object3D.get());
 					std::vector<IChargeur*> chargeurs = objetMesh->getChargeurs();
 					if (object3D.get()->isPhysic()) {
@@ -401,6 +420,9 @@ namespace PM3D
 				pTexteVitesse->Ecrire(L"0 km/h");
 				pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
 
+				pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
+				pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);
+
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 
 				updateBonus();
@@ -446,6 +468,24 @@ protected:
 				updateSpeed();
 
 				updateBonus();
+
+				/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
+					swapPose = true;	
+				}
+				else if (swapPose) {
+					swapPose = false;
+				}
+
+				if (swapPose) {
+					updatePose();
+				}*/
+				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3)) {
+					swapPose = true;
+				}
+
+				if (swapPose) {
+					updatePose();
+				}
 			}
 
 			return true;
@@ -456,10 +496,21 @@ protected:
 			int dureeMin = static_cast<int>(std::chrono::duration_cast<std::chrono::minutes>(chronoAp - chronoNow).count());
 			int dureeSec = abs(dureeMin * 60 - static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(chronoAp - chronoNow).count()));
 			int dureeMs = abs(dureeMin * 60'000 - dureeSec * 1000 - static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(chronoAp - chronoNow).count()));
-			tempsMin += dureeMin;
-			tempsSec += dureeSec;
-			tempsMs += dureeMs;
-
+			
+			auto it = scenePhysic_->ListeScene_.begin();
+			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+				it++;
+			}if (it != scenePhysic_->ListeScene_.end()) {
+				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+				int posZ = static_cast<int>(body->getGlobalPose().p.z);
+				if (posZ > 30000)
+					stopChrono_ = true;
+				else {
+					tempsMin += dureeMin;
+					tempsSec += dureeSec;
+					tempsMs += dureeMs;
+				}
+			}
 			if (tempsMs > 999) {
 				tempsSec += 1;
 				tempsMs -= 1000;
@@ -569,6 +620,32 @@ protected:
 			}
 		}
 
+		void updatePose() {
+
+			auto it = scenePhysic_->ListeScene_.begin();
+			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+				it++;
+			}
+			if (it != scenePhysic_->ListeScene_.end()) {
+				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+				BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
+				physx::PxVec3 pose = static_cast<physx::PxRigidDynamic*>(body)->getGlobalPose().p;
+				int Px = static_cast<int>(pose.x);
+				int Py = static_cast<int>(pose.y);
+				int Pz = static_cast<int>(pose.z);
+
+				int Cx = static_cast<int>(XMVectorGetX(camera.getPosition()));
+				int Cy = static_cast<int>(XMVectorGetY(camera.getPosition()));
+				int Cz = static_cast<int>(XMVectorGetZ(camera.getPosition()));
+
+				std::stringstream sstr;
+				sstr << "pose Camera : " << Cx << " " << Cy << " " << Cz << "\n" << "pose Personnage :" << Px << " " << Py << " " << Pz;
+				std::wstring strPosition = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(sstr.str());
+				pTextePosition->Ecrire(strPosition);
+			}
+
+		}
+
 	protected:
 		// Variables pour le temps de l'animation
 		int64_t TempsSuivant{};
@@ -614,11 +691,14 @@ protected:
 		// Le Texte
 		std::unique_ptr<CAfficheurTexte> pTexteChrono;
 		std::unique_ptr<CAfficheurTexte> pTexteVitesse;
+		std::unique_ptr<CAfficheurTexte> pTextePosition;
 
 		std::chrono::steady_clock::time_point chronoNow;
 		int tempsMin = 0;
 		int tempsSec = 0;
 		int tempsMs = 0;
+		bool stopChrono_ = false;
+		bool swapPose = false;
 
 		std::unique_ptr<Gdiplus::Font> pPolice;
 

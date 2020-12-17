@@ -79,11 +79,11 @@ namespace PM3D
 			}
 		}
 		
-		//PxTransform terrain = CMoteurWindows::GetInstance().getTerrainNormale();
-		pair<PxVec3, PxVec3> const terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
+		PlanStatic* terrain = CMoteurWindows::GetInstance().getTerrain(getPosition());
+		//pair<PxVec3, PxVec3> const terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
 
 		//PxVec3 normale = terrain.q.getBasisVector1();
-		PxVec3 const normale = terrainPair.first;
+		PxVec3 const normale = terrain->getNormale();
 
 		PxVec3 const gauche = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
 		PxVec3 const droite = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
@@ -152,7 +152,7 @@ namespace PM3D
 		PxVec3 const projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
 		float angle = acos(projete.dot(sens));
 
-		PxVec3 const directionPente = terrainPair.second;
+		PxVec3 const directionPente = terrain->getDirection();
 		if ((direction.cross(directionPente).y > 0)) {
 			angle = -angle;
 		}

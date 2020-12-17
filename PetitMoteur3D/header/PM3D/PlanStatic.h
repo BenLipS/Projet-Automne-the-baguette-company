@@ -10,14 +10,13 @@ namespace PM3D {
         public Objet3DStatic
     {
     public:
-        PlanStatic(Scene* _scene, physx::PxVec3 _point, physx::PxVec3 _normale, physx::PxVec3 _direction);
+        PlanStatic(Scene* _scene, physx::PxVec3 _point, physx::PxVec3 _normale);
         void Draw() noexcept override {};
         physx::PxTransform getTerrainNormale();
         physx::PxVec3 getDirection();
         physx::PxVec3 getNormale();
+        physx::PxVec3 getPointPlan(physx::PxVec3 _point);
     protected:
         static physx::PxRigidStatic* createRigidBody(Scene* _scene, physx::PxVec3 _point, physx::PxVec3 _normale);
-        physx::PxVec3 normale_;
-        physx::PxVec3 direction_;
     };
 }
