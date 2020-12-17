@@ -72,11 +72,20 @@ namespace PM3D
 		{
 			bool bBoucle = true;
 
+			
 
 			while (bBoucle)
 			{
 				// Propre � la plateforme - (Conditions d'arr�t, interface, messages)
 				bBoucle = RunSpecific();
+				
+				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_R)){
+					niveau->restart();
+					resetChrono = true;
+				}
+					
+					
+
 
 				// appeler la fonction d'animation
 				if (bBoucle)
@@ -239,6 +248,26 @@ namespace PM3D
 			if (erased)
 				scenePhysic_->ListeScene_.erase(it);
 		}
+		bool eraseBonus() {
+			auto it = scenePhysic_->ListeScene_.begin();
+			bool erased = false;
+			while (it != scenePhysic_->ListeScene_.end() && !erased) {
+				if (it->get() != nullptr) {
+					if (it->get()->typeTag == "bonus") {
+						erased = true;
+					}
+					else {
+						it++;
+					}
+				}
+				else {
+					it++;
+				}
+			}
+			if (erased)
+				scenePhysic_->ListeScene_.erase(it);
+			return erased;
+		}
 
 		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
 
@@ -300,7 +329,7 @@ namespace PM3D
 				object3D->Draw();
 			}
 
-			SkyBox* skybox = niveau->getSkyBox();
+			//SkyBox* skybox = niveau->getSkyBox();
 			//skybox->Draw();
 
 			EndRenderSceneSpecific();
@@ -383,14 +412,14 @@ namespace PM3D
 		bool InitObjets()
 		{
 
-			niveau = new Level(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
+			
 			float largeur = static_cast<float>(pDispositif->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif->GetHauteur());
 
 			if (!initEcranChargement_) {
 				scenePhysic_->ListeScene_.clear();
-				Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
-
+				//Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
+				niveau = new Level(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
 				//std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
 				// ajout de panneaux
@@ -509,6 +538,12 @@ protected:
 					tempsMin += dureeMin;
 					tempsSec += dureeSec;
 					tempsMs += dureeMs;
+				}
+				if (resetChrono) {
+					tempsMin = 0;
+					tempsSec = 0;
+					tempsMs = 0;
+					resetChrono = false;
 				}
 			}
 			if (tempsMs > 999) {
@@ -699,6 +734,7 @@ protected:
 		int tempsMs = 0;
 		bool stopChrono_ = false;
 		bool swapPose = false;
+		bool resetChrono = false;
 
 		std::unique_ptr<Gdiplus::Font> pPolice;
 

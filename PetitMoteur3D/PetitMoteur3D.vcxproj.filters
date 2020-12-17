@@ -239,6 +239,7 @@
     <ClInclude Include="header\PM3D\Objet3Dvisuel.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+
     <ClInclude Include="header\PM3D\AfficheurPanneau.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>

@@ -17,6 +17,10 @@
 // Fichiers d'en-tête C++ RunTime
 #include <exception>
 #include <memory>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <vector>
 
 // TODO : faites référence ici aux en-têtes supplémentaires nécessaires au programme
 #define _XM_NO_INTRINSICS_

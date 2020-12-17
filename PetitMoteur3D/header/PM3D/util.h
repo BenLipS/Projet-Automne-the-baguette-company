@@ -3,7 +3,7 @@
 namespace PM3D
 {
 
-// Essayer en envoyant le code d'erreur comme résultat
+// Essayer en envoyant le code d'erreur comme rï¿½sultat
 // Il ne faut pas oublier de "rattraper" le code...
 template <class Type>
 inline void DXEssayer(const Type& Resultat)
@@ -14,8 +14,8 @@ inline void DXEssayer(const Type& Resultat)
 	}
 }
 
-// Plus pratique, essayer en envoyant un code spécifique 
-// comme résultat
+// Plus pratique, essayer en envoyant un code spï¿½cifique 
+// comme rï¿½sultat
 template <class Type1, class Type2>
 inline void DXEssayer(const Type1& Resultat, const Type2& unCode)
 {
@@ -35,7 +35,7 @@ inline void DXValider(const void* UnPointeur, const Type& unCode)
 	}
 }
 
-// Relâcher un objet COM (un objet DirectX dans notre cas)
+// Relï¿½cher un objet COM (un objet DirectX dans notre cas)
 template <class Type>
 inline void DXRelacher(Type& UnPointeur)
 {
