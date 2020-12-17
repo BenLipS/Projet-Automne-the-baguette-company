@@ -176,7 +176,6 @@ namespace PM3D {
 
 		scenePhysic_->ListeScene_.emplace_back(move(HM));
 
-
 	};
 	void Level::initPente(Light_Manager _lm) {
 		// Pente

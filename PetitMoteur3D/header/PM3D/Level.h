@@ -62,6 +62,8 @@ namespace PM3D {
 
 		std::unique_ptr<SkyBox> skyBox_;
 
+		physx::PxTransform posDepart_;
+
 		void initJoueur();
 		void initPente(Light_Manager lm);
 		void initBonus(Light_Manager lm, float _x, float _y);
