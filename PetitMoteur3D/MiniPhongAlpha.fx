@@ -2,17 +2,19 @@ cbuffer param
 {
 	float4x4 matWorldViewProj;   // la matrice totale 
 	float4x4 matWorld;		// matrice de transformation dans le monde 
-	float4 vLumiere; 		// la position de la source d'éclairage (Point)
-	float4 vCamera; 			// la position de la caméra
-	float4 vAEcl; 			// la valeur ambiante de l'éclairage
-	float4 vAMat; 			// la valeur ambiante du matériau
-	float4 vDEcl; 			// la valeur diffuse de l'éclairage 
-	float4 vDMat; 			// la valeur diffuse du matériau 
-	float4 vSEcl; 			// la valeur spéculaire de l'éclairage 
-	float4 vSMat; 			// la valeur spéculaire du matériau 
+	float4 vLumiere1; 		// la position de la source d'Ã©clairage 1 (Point)
+	float4 vLumiere2; 		// la position de la source d'Ã©clairage 2 (Point)
+	float4 vCamera; 			// la position de la camï¿½ra
+	float4 vAEcl; 			// la valeur ambiante de l'ï¿½clairage
+	float4 vAMat; 			// la valeur ambiante du matï¿½riau
+	float4 vDEcl; 			// la valeur diffuse de l'ï¿½clairage 
+	float4 vDMat; 			// la valeur diffuse du matï¿½riau 
+	float4 vSEcl; 			// la valeur spï¿½culaire de l'ï¿½clairage 
+	float4 vSMat; 			// la valeur spï¿½culaire du matï¿½riau 
 	float puissance;
-	int bTex;		    // Booléen pour la présence de texture
+	int bTex;		    // Boolï¿½en pour la prï¿½sence de texture
 	float2 remplissage;
+	float4 vTEcl; 			// la valeur de l'Ã©clairage Tunnel
 }
 
 struct VS_Sortie
@@ -33,10 +35,10 @@ VS_Sortie MiniPhongAlphaVS(float4 Pos : POSITION, float3 Normale : NORMAL, float
 
 	float3 PosWorld = mul(Pos, matWorld).xyz;
 
-	sortie.vDirLum = vLumiere.xyz - PosWorld;
+	sortie.vDirLum = vLumiere1.xyz - PosWorld;
 	sortie.vDirCam = vCamera.xyz - PosWorld;
 
-	// Coordonnées d'application de texture
+	// Coordonnï¿½es d'application de texture
 	sortie.coordTex = coordTex;
 
 	return sortie;
@@ -45,13 +47,13 @@ VS_Sortie MiniPhongAlphaVS(float4 Pos : POSITION, float3 Normale : NORMAL, float
 Texture2D texture1;  // la texture
 Texture2D texture2;  // la texture
 Texture2D textureMasque;  // la texture
-SamplerState SampleState;  // l'état de sampling
+SamplerState SampleState;  // l'ï¿½tat de sampling
 
 float4 MiniPhongAlphaPS(VS_Sortie vs) : SV_Target
 {
 	float3 couleur;
 
-// Normaliser les paramètres
+// Normaliser les paramï¿½tres
 float3 N = normalize(vs.Norm);
 float3 L = normalize(vs.vDirLum);
 float3 V = normalize(vs.vDirCam);
@@ -59,10 +61,10 @@ float3 V = normalize(vs.vDirCam);
 // Valeur de la composante diffuse
 float3 diff = saturate(dot(N, L));
 
-// R = 2 * (N.L) * N – L
+// R = 2 * (N.L) * N ï¿½ L
 float3 R = normalize(2 * diff * N - L);
 
-// Calcul de la spécularité 
+// Calcul de la spï¿½cularitï¿½ 
 float3 S = pow(saturate(dot(R, V)), puissance);
 
 float3 couleurTexture;
@@ -72,7 +74,7 @@ float3 alpha;
 
 if (bTex > 0)
 {
-	// Échantillonner la couleur du pixel à partir de la texture
+	// ï¿½chantillonner la couleur du pixel ï¿½ partir de la texture
 	couleurTexture1 = texture1.Sample(SampleState, vs.coordTex).rgb;
 	couleurTexture2 = texture2.Sample(SampleState, vs.coordTex).rgb;
 	alpha = textureMasque.Sample(SampleState, vs.coordTex).rgb;
