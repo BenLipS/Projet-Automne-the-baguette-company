@@ -11,6 +11,7 @@
 #include "ChargeurOBJ.h"
 #include "GestionnaireDeTextures.h"
 #include "SkyBox.h"
+#include "Objet3Dvisuel.h"
 
 
 #include <d3d11.h>
@@ -33,6 +34,11 @@ namespace PM3D {
 		
 		void restart();
 	private:
+
+		//DELETE THAT
+		CChargeurOBJ skyboxModel;
+		CChargeurOBJ tunnelModel;
+
 		CChargeurOBJ chizHDModel;
 		CChargeurOBJ chizMidModel;
 		CChargeurOBJ chizLowModel;
@@ -61,11 +67,11 @@ namespace PM3D {
 		void initBonus(Light_Manager lm, float _x, float _y);
 		void initAllBonus();
 		void initBloc(Light_Manager lm, float _x, float _y);
-		void initSkyBox();
-		
 
 		void initHM(Light_Manager lm, int numPente, bool alpha = false);
 
-		physx::PxTransform posDepart_;
+		void initSkyBox();
+		void initTunnel(float _x, float _y);
+
 	};
 }

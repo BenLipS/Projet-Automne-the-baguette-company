@@ -20,7 +20,7 @@ public:
 	void setPosition(XMFLOAT3 v) noexcept { m_Position = v; };
 	void setNormal(XMFLOAT3 v) noexcept { m_Normal = v; };
 
-protected:
+private:
 	XMFLOAT3 m_Position;
 	XMFLOAT3 m_Normal;
 	XMFLOAT2 m_CoordTex;
