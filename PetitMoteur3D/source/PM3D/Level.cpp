@@ -91,7 +91,7 @@ namespace PM3D {
 		initJoueur();
 		initPente( LMB);
 		initHM(LMB, -200);
-		initHM(LMB, 0);
+		initHM(LMB, 0, true);
 		initHM(LMB, 1);
 		initHM(LMB, 2);
 
@@ -146,7 +146,7 @@ namespace PM3D {
 		//scenePhysic_->ListeScene_.emplace_back(move(bloc));
 	}
 
-	void Level::initHM(Light_Manager _lm, int numPente) {
+	void Level::initHM(Light_Manager _lm, int numPente, bool alpha) {
 		char* filename{};
 		if (numPente == 0) {
 			filename = new char[50]{ "./src/heighmap_Proj52_part1_montagne.bmp" };
@@ -158,8 +158,14 @@ namespace PM3D {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie.bmp" };
 		}
 
-		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente);
-		HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
+		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
+		if (!alpha) {
+			HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
+		}
+		else {
+			HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\masqueDeluxe.dds", pDispositif_));
+		}
+
 		scenePhysic_->ListeScene_.emplace_back(move(HM));
 
 

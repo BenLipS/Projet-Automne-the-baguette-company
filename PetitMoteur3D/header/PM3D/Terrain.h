@@ -12,7 +12,7 @@ namespace PM3D
 	class Terrain : public CObjet3D {
 	public:
 
-		Terrain(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif, float scaleFixX, float scaleFixY, float scaleFixZ, int numTerrain = 0);
+		Terrain(char* filename, XMFLOAT3 scale, CDispositifD3D11* pDispositif, float scaleFixX, float scaleFixY, float scaleFixZ, int numTerrain = 0, bool alpha = false);
 
 		// Destructeur
 		virtual ~Terrain();
@@ -29,12 +29,14 @@ namespace PM3D
 
 		void SetTexture(CTexture* pTexture);
 
+		void SetAlphaTexture(CTexture* pTexture1, CTexture* pTexture2, CTexture* pTextureMasque);
+
 	private:
 		CSommetTerrain* sommets;
 
 		char* filename;
 		CDispositifD3D11* pDispositif;
-		void InitShaders();
+		void InitShaders() {};
 		void InitEffect();
 
 		ID3D11Buffer* pVertexBuffer;
@@ -60,9 +62,16 @@ namespace PM3D
 
 		//Pour les textures
 		ID3D11ShaderResourceView* pTextureD3D;
+
+		ID3D11ShaderResourceView* pTexture1;
+		ID3D11ShaderResourceView* pTexture2;
+		ID3D11ShaderResourceView* pTextureMasque;
+
 		ID3D11SamplerState* pSampleState;
 
 		int numTerrain_;
 		float scaleFixX_, scaleFixZ_, scaleFixY_;
+
+		bool alpha = false;
 	};
 }
