@@ -54,25 +54,17 @@ namespace PM3D
 	template <class T, class TClasseDispositif> class CMoteur :public CSingleton<T>
 	{
 	public:
-		virtual void RunEcrantitre()
+		virtual void RunEcranChargement()
 		{
-			bool bBoucle = true;
-			
-			int itEcranTitre = 0;
-		
-			// Propre � la plateforme - (Conditions d'arr�t, interface, messages)
-				
-			bBoucle = Animation();
-			initEcranTitre_ = false;
-			bBoucle = false;
-
-			
+			Animation();
+			initEcranChargement_ = false;
+			InitScene();
 		}
 
 		virtual void Run()
 		{
 			bool bBoucle = true;
-			InitScene();
+			
 
 			while (bBoucle)
 			{
@@ -115,7 +107,7 @@ namespace PM3D
 			const double TempsEcoule = GetTimeIntervalsInSec(TempsCompteurPrecedent, TempsCompteurCourant);
 
 			// Est-il temps de rendre l'image?
-			if (TempsEcoule > EcartTemps || initEcranTitre_)
+			if (TempsEcoule > EcartTemps || initEcranChargement_)
 			{
 				// Affichage optimis�
 				pDispositif->Present(); // On enlevera �//� plus tard
@@ -284,7 +276,7 @@ namespace PM3D
 		public: 
 			virtual int InitScene()
 			{
-				if (initEcranTitre_) {
+				if (initEcranChargement_) {
 				// Scene physX
 				scenePhysic_ = new Scene();
 				//Partie physique
@@ -326,7 +318,7 @@ namespace PM3D
 			{
 				return 1;
 			}
-			if (!initEcranTitre_) {
+			if (!initEcranChargement_) {
 			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 			camera.update(character);
 			}
@@ -339,7 +331,7 @@ namespace PM3D
 			float largeur = static_cast<float>(pDispositif->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif->GetHauteur());
 
-			if (!initEcranTitre_) {
+			if (!initEcranChargement_) {
 				scenePhysic_->ListeScene_.clear();
 				Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
@@ -389,7 +381,7 @@ protected:
 			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
 				camera.update(tempsEcoule);
 			}
-			if (!initEcranTitre_){
+			if (!initEcranChargement_){
 				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 				camera.update(character, tempsEcoule);
@@ -435,7 +427,7 @@ protected:
 		CGestionnaireDeTextures TexturesManager;
 
 
-		bool initEcranTitre_ = true;
+		bool initEcranChargement_ = true;
 	
 	};
 } // namespace PM3D
