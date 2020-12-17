@@ -11,10 +11,14 @@
 #include "ChargeurOBJ.h"
 #include "GestionnaireDeTextures.h"
 #include "SkyBox.h"
+#include "Objet3Dvisuel.h"
+
 
 #include <d3d11.h>
 #include <PxPhysicsAPI.h>
 #include <fstream>
+#include<vector>
+#include <algorithm>
 
 namespace PM3D {
 
@@ -27,9 +31,13 @@ namespace PM3D {
 		~Level() = default;
 
 		SkyBox* getSkyBox() { return skyBox_.get(); }
-
+		
+		void restart();
 	private:
+
+		//DELETE THAT
 		CChargeurOBJ skyboxModel;
+		CChargeurOBJ tunnelModel;
 
 		CChargeurOBJ chizHDModel;
 		CChargeurOBJ chizMidModel;
@@ -54,12 +62,16 @@ namespace PM3D {
 
 		std::unique_ptr<SkyBox> skyBox_;
 
+		physx::PxTransform posDepart_;
+
 		void initJoueur();
 		void initPente(Light_Manager lm);
 		void initBonus(Light_Manager lm, float _x, float _y);
+		void initAllBonus();
 		void initBloc(Light_Manager lm, float _x, float _y);
-		void initSkyBox();
 
+		void initSkyBox();
+		void initTunnel(float _x, float _y);
 		void initHM(Light_Manager lm, int numPente, bool alpha = false);
 
 	};

@@ -35,7 +35,8 @@ namespace PM3D
 		struct ShadersParams {
 			XMMATRIX matWorldViewProj; // la matrice totale
 			XMMATRIX matWorld; // matrice de transformation dans le monde
-			XMVECTOR vLumiere; // la position de la source d’éclairage (Point)
+			XMVECTOR vLumiere1; // la position de la source d’éclairage 1 (Point)
+			XMVECTOR vLumiere2; // la position de la source d’éclairage 2 (Point)
 			XMVECTOR vCamera; // la position de la caméra
 			XMVECTOR vAEcl; // la valeur ambiante de l’éclairage
 			XMVECTOR vAMat; // la valeur ambiante du matériau
@@ -46,6 +47,7 @@ namespace PM3D
 			float puissance; // la puissance de spécularité
 			int bTex; // Texture ou matériau
 			XMFLOAT2 remplissage;
+			XMVECTOR vTEcl;
 		};
 
 		class CMaterial {

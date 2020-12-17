@@ -8,15 +8,15 @@ namespace PM3D
 
 CTexture* const CGestionnaireDeTextures::GetNewTexture(const std::wstring& filename, CDispositifD3D11* pDispositif)
 {
-	// On vérifie si la texture est déjà dans notre liste
+	// On vï¿½rifie si la texture est dï¿½jï¿½ dans notre liste
 	CTexture* pTexture = GetTexture(filename);
 
-	// Si non, on la crée
+	// Si non, on la crï¿½e
 	if (!pTexture)
 	{
 		auto texture = std::make_unique<CTexture>(filename, pDispositif);
 		pTexture = texture.get();
-		// Puis, il est ajouté à la scène
+		// Puis, il est ajoutï¿½ ï¿½ la scï¿½ne
 		ListeTextures.push_back(std::move(texture));
 	}
 

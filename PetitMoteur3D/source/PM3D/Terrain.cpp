@@ -21,7 +21,8 @@ namespace PM3D {
 	struct ShadersParams {
 		XMMATRIX matWorldViewProj; // la matrice totale 
 		XMMATRIX matWorld; // matrice de transformation dans le monde
-		XMVECTOR vLumiere; // la position de la source d’éclairage (Point)
+		XMVECTOR vLumiere1; // la position de la source d’éclairage (Point)
+		XMVECTOR vLumiere2; // la position de la source d’éclairage (Point)
 		XMVECTOR vCamera; // la position de la caméra
 		XMVECTOR vAEcl; // la valeur ambiante de l’éclairage
 		XMVECTOR vAMat; // la valeur ambiante du matériau
@@ -34,6 +35,7 @@ namespace PM3D {
 		float puissance; // la puissance de spécularité
 		int bTex; // Texture ou matériau
 		XMFLOAT2 remplissage;
+		XMVECTOR vTEcl; 			// la valeur de l'éclairage Tunnel
 		/*
 		XMMATRIX matWorldViewProj; // la matrice totale
 		XMMATRIX matWorld; // matrice de transformation dans le monde
@@ -350,35 +352,19 @@ namespace PM3D {
 		XMVECTOR view_camera = rMoteur.getCameraPosition();
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
-		/*
-		sp.vLumiere1 = XMVectorSet(0.0f, 10000.0f, 0.0f, 1.0f);
-		sp.vLumiere2 = XMVectorSet(0.0f, 10000.0f, 0.0f, 1.0f);
-		sp.vCamera = view_camera;
-		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vAMat = XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f);
-		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		sp.vDMat = XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f);
-		sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
-		sp.vSMat = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
-		sp.puissance = 100;*/
 
 		Scene* scenephysic = rMoteur.getScenePhysic();
 
-		/*XMVECTOR view_camera = {static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.x,
-								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.y,
-								static_cast<BlocRollerDynamic*> (scenephysic->ListeScene_[0].get())->getBody()->getGlobalPose().p.z,
-								1.0f
-		};*/
-		sp.vLumiere = XMVectorSet(-1000.0f, 10000.0f, -1500.0f, 1.0f);
-		//sp.vLumiere1 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
-		//sp.vLumiere2 = XMVectorSet(0.0f, 500000.0f, 0.0f, 1.0f);
-		sp.vCamera = view_camera;						//XMVectorSet(0.0f, 194220.0f, 0.0f, 0.0f);
-		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vDEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
+		sp.vLumiere1 = XMVectorSet(0.0f, 300000.0f, 200000.0f, 1.0f);
+		sp.vLumiere2 = XMVectorSet(0.0f, -6500, 16500.0f, 1.0f);
+		sp.vCamera = view_camera;
+		sp.vAEcl = XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
+		sp.vDEcl = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
 		sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
 		sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 		sp.vSMat = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+		sp.vTEcl = XMVectorSet(0.8f, 0.8f, 0.2f, 1.0f);
 		sp.puissance = 5;
 		
 
@@ -387,22 +373,7 @@ namespace PM3D {
 		// Nous n�avons qu�un seul CBuffer
 		ID3DX11EffectConstantBuffer* pCB = pEffet->GetConstantBufferByName("param");
 		pCB->SetConstantBuffer(pConstantBuffer);
-
-		/*
-		// Activation de la texture 
-		ID3DX11EffectShaderResourceVariable* variableTexture; 
 		
-		variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
-		variableTexture->SetResource(pTextureD3D);
-		
-		// Le sampler state 
-		ID3DX11EffectSamplerVariable* variableSampler; 
-		variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
-		variableSampler->SetSampler(0, pSampleState);
-		*/
-		
-		// Activation de la texture ou non 
-		//if (pTextureD3D != nullptr) {
 		if (!alpha) {
 			ID3DX11EffectShaderResourceVariable* variableTexture;
 			variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
@@ -426,11 +397,6 @@ namespace PM3D {
 		variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
 		variableSampler->SetSampler(0, pSampleState);
 		sp.bTex = 1;
-		//}
-		/*else {
-			sp.bTex = 0;
-		}*/
-		
 		
 		// **** Rendu de l�objet
 		pPasse->Apply(0, pImmediateContext);

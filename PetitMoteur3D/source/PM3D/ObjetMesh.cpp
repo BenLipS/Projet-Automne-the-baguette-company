@@ -255,11 +255,17 @@ namespace PM3D {
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 
-		sp.vLumiere = XMVectorSet(-1000.0f, 50000.0f, -15000.0f, 1.0f);
+		sp.vLumiere1 = XMVectorSet(0.0f, 300000.0f, 200000.0f, 1.0f);
+		sp.vLumiere2 = XMVectorSet(0.0f, -6500, 16500.0f, 1.0f);
 		sp.vCamera = rMoteur.getCamera().getPosition();
-		sp.vAEcl = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-		sp.vDEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		sp.vAEcl = XMVectorSet(0.3f, 0.3f, 0.3f, 1.0f);
+		sp.vDEcl = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
 		sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
+		sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		sp.vSMat = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+		sp.vTEcl = XMVectorSet(0.8f, 0.8f, 0.2f, 1.0f);
+		sp.puissance = 5;
 
 		// Le sampler state
 		ID3DX11EffectSamplerVariable* variableSampler;
