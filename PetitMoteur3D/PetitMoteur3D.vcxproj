@@ -199,6 +199,9 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\PM3D\AfficheurTexte.cpp" />
+    <ClCompile Include="source\PM3D\Afficheur2D.cpp" />
+    <ClCompile Include="source\PM3D\AfficheurPanneau.cpp" />
     <ClCompile Include="source\PM3D\AfficheurSprite.cpp" />
     <ClCompile Include="source\PM3D\BlocEffet1.cpp" />
     <ClCompile Include="source\PM3D\Bonus.cpp" />
@@ -236,6 +239,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\PM3D\AfficheurTexte.h" />
+    <ClInclude Include="header\PM3D\Afficheur2D.h" />
+    <ClInclude Include="header\PM3D\AfficheurPanneau.h" />
     <ClInclude Include="header\PM3D\AfficheurSprite.h" />
     <ClInclude Include="header\PM3D\Bloc.h" />
     <ClInclude Include="header\PM3D\BlocEffet1.h" />
@@ -282,6 +288,10 @@
       <CompileD2DCustomEffect Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileD2DCustomEffect>
     </FxCompile>
     <FxCompile Include="Sprite1.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="MiniPhongAlpha.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <None Include="PetitMoteur3D.ico" />

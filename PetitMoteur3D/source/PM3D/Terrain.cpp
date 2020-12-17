@@ -55,7 +55,7 @@ namespace PM3D {
 
 
 
-	Terrain::Terrain(char* filenameBMP, XMFLOAT3 scale, CDispositifD3D11* pDispositif_, float scaleFixX, float scaleFixY, float scaleFixZ, int numTerrain)
+	Terrain::Terrain(char* filenameBMP, XMFLOAT3 scale, CDispositifD3D11* pDispositif_, float scaleFixX, float scaleFixY, float scaleFixZ, int numTerrain, bool _alpha)
 		: pDispositif(pDispositif_) // Prendre en note le dispositif
 		, matWorld(XMMatrixIdentity())
 		, rotation(0.0f)
@@ -72,6 +72,7 @@ namespace PM3D {
 		, numTerrain_(numTerrain)
 		, pSampleState(nullptr)
 		, pTextureD3D(nullptr)
+		, alpha(_alpha)
 	{
 		this->scale = scale;
 		typeTag = "terrain";
@@ -240,7 +241,12 @@ namespace PM3D {
 
 		// Pour l�effet
 		ID3DBlob* pFXBlob = NULL;
-		DXEssayer( D3DCompileFromFile( L"MiniPhong.fx", 0, 0, 0, "fx_5_0", 0, 0, &pFXBlob, 0), DXE_ERREURCREATION_FX);
+		if (!alpha) {
+			DXEssayer(D3DCompileFromFile(L"MiniPhong.fx", 0, 0, 0, "fx_5_0", 0, 0, &pFXBlob, 0), DXE_ERREURCREATION_FX);
+		}
+		else {
+			DXEssayer(D3DCompileFromFile(L"MiniPhongAlpha.fx", 0, 0, 0, "fx_5_0", 0, 0, &pFXBlob, 0), DXE_ERREURCREATION_FX);
+		}
 		D3DX11CreateEffectFromMemory(  pFXBlob->GetBufferPointer(), pFXBlob->GetBufferSize(), 0, pD3DDevice, &pEffet);
 
 		pFXBlob->Release();
@@ -401,13 +407,29 @@ namespace PM3D {
 		
 		// Activation de la texture ou non 
 		//if (pTextureD3D != nullptr) {
+		if (!alpha) {
 			ID3DX11EffectShaderResourceVariable* variableTexture;
 			variableTexture = pEffet->GetVariableByName("textureEntree")->AsShaderResource();
 			variableTexture->SetResource(pTextureD3D);
-			ID3DX11EffectSamplerVariable* variableSampler;
-			variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
-			variableSampler->SetSampler(0, pSampleState);
-			sp.bTex = 1;
+		}
+		else {
+			ID3DX11EffectShaderResourceVariable* variableTexture1;
+			variableTexture1 = pEffet->GetVariableByName("texture1")->AsShaderResource();
+			variableTexture1->SetResource(pTexture1);
+
+			ID3DX11EffectShaderResourceVariable* variableTexture2;
+			variableTexture2 = pEffet->GetVariableByName("texture2")->AsShaderResource();
+			variableTexture2->SetResource(pTexture2);
+
+			ID3DX11EffectShaderResourceVariable* variableTextureMasque;
+			variableTextureMasque = pEffet->GetVariableByName("textureMasque")->AsShaderResource();
+			variableTextureMasque->SetResource(pTextureMasque);
+		}
+
+		ID3DX11EffectSamplerVariable* variableSampler;
+		variableSampler = pEffet->GetVariableByName("SampleState")->AsSampler();
+		variableSampler->SetSampler(0, pSampleState);
+		sp.bTex = 1;
 		//}
 		/*else {
 			sp.bTex = 0;
@@ -429,66 +451,11 @@ namespace PM3D {
 		DXRelacher(pVertexBuffer);
 	}
 
-	void Terrain::InitShaders()
-	{
-		// Compilation et chargement du vertex shader
-		ID3D11Device* pD3DDevice = pDispositif->GetD3DDevice();
-
-		ID3DBlob* pVSBlob = nullptr;
-		DXEssayer(D3DCompileFromFile(L"VS_MiniPhong.hlsl",
-			nullptr, nullptr,
-			"MiniPhongVS",
-			"vs_5_0",
-			D3DCOMPILE_ENABLE_STRICTNESS,
-			0,
-			&pVSBlob, nullptr), DXE_FICHIER_VS);
-
-		DXEssayer(pD3DDevice->CreateVertexShader(pVSBlob->GetBufferPointer(),
-			pVSBlob->GetBufferSize(),
-			nullptr,
-			&pVertexShader),
-			DXE_CREATION_VS);
-
-		// Cr�er l'organisation des sommets
-		pVertexLayout = nullptr;
-		DXEssayer(pD3DDevice->CreateInputLayout(CSommetTerrain::layout,
-			CSommetTerrain::numElements,
-			pVSBlob->GetBufferPointer(),
-			pVSBlob->GetBufferSize(),
-			&pVertexLayout),
-			DXE_CREATIONLAYOUT);
-
-		pVSBlob->Release(); //  On n'a plus besoin du blob
-
-		// Cr�ation d'un tampon pour les constantes du VS
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory(&bd, sizeof(bd));
-
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(ShadersParams);
-		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		bd.CPUAccessFlags = 0;
-		pD3DDevice->CreateBuffer(&bd, nullptr, &pConstantBuffer);
-
-		// Compilation et chargement du pixel shader
-		ID3DBlob* pPSBlob = nullptr;
-		DXEssayer(D3DCompileFromFile(L"PS_MiniPhong.hlsl",
-			nullptr, nullptr,
-			"MiniPhongPS",
-			"ps_5_0",
-			D3DCOMPILE_ENABLE_STRICTNESS,
-			0,
-			&pPSBlob,
-			nullptr), DXE_FICHIER_PS);
-
-		DXEssayer(pD3DDevice->CreatePixelShader(pPSBlob->GetBufferPointer(),
-			pPSBlob->GetBufferSize(),
-			nullptr,
-			&pPixelShader),
-			DXE_CREATION_PS);
-
-		pPSBlob->Release(); //  On n'a plus besoin du blob
-	}
-
 	void Terrain::SetTexture(CTexture* pTexture) { pTextureD3D = pTexture->GetD3DTexture(); }
+
+	void Terrain::SetAlphaTexture(CTexture* texture1, CTexture* texture2, CTexture* textureMasque) {
+		pTexture1 = texture1->GetD3DTexture();
+		pTexture2 = texture2->GetD3DTexture();
+		pTextureMasque = textureMasque->GetD3DTexture();
+	}
 }

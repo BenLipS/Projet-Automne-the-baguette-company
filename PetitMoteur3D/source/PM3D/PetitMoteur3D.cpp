@@ -30,7 +30,9 @@ int APIENTRY _tWinMain(
 		rMoteur.Initialisations();
 
 		// Boucle d'application
+		rMoteur.RunEcranChargement();
 		rMoteur.Run();
+
 
 		return (int)1;
 	}

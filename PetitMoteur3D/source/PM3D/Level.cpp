@@ -50,18 +50,17 @@ namespace PM3D {
 		};
 
 		// PROVISOIRE
-		CParametresChargement paramOBJ = CParametresChargement("jin.obj", ".\\modeles\\jin\\", true, false);
-		jinModel = CChargeurOBJ();
-		jinModel.Chargement(paramOBJ);
+		CParametresChargement paramOBJBonus0 = CParametresChargement("bonusrocket_LOD0.obj", ".\\modeles\\jin\\", true, false);
+		bonusHDModel = CChargeurOBJ();
+		bonusHDModel.Chargement(paramOBJBonus0);
 
+		CParametresChargement paramOBJBonus1 = CParametresChargement("bonusrocket_LOD1.obj", ".\\modeles\\jin\\", true, false);
+		bonusMidModel = CChargeurOBJ();
+		bonusMidModel.Chargement(paramOBJBonus1);
 
-		CParametresChargement paramOBJ1 = CParametresChargement("bonusrocket.obj", ".\\modeles\\jin\\", true, false);
-		bonusModel = CChargeurOBJ();
-		bonusModel.Chargement(paramOBJ1);
-
-		CParametresChargement paramOBJ2 = CParametresChargement("chizbox.obj", ".\\modeles\\jin\\", true, false);
-		boxModel = CChargeurOBJ();
-		boxModel.Chargement(paramOBJ2);
+		CParametresChargement paramOBJBonus2 = CParametresChargement("bonusrocket_LOD2.obj", ".\\modeles\\jin\\", true, false);
+		bonusLowModel = CChargeurOBJ();
+		bonusLowModel.Chargement(paramOBJBonus2);
 
 		/*CParametresChargement paramOBJSky = CParametresChargement("skybox.obj", ".\\modeles\\jin\\", true, false);
 		skyboxModel = CChargeurOBJ();
@@ -71,10 +70,35 @@ namespace PM3D {
 		tunnelModel = CChargeurOBJ();
 		tunnelModel.Chargement(paramOBJ3);
 
+		CParametresChargement paramOBJChiz0 = CParametresChargement("chizbox_LOD0.obj", ".\\modeles\\jin\\", true, false);
+		chizHDModel = CChargeurOBJ();
+		chizHDModel.Chargement(paramOBJChiz0);
+
+		CParametresChargement paramOBJChiz1 = CParametresChargement("chizbox_LOD1.obj", ".\\modeles\\jin\\", true, false);
+		chizMidModel = CChargeurOBJ();
+		chizMidModel.Chargement(paramOBJChiz1);
+
+		CParametresChargement paramOBJChiz2 = CParametresChargement("chizbox_LOD2.obj", ".\\modeles\\jin\\", true, false);
+		chizLowModel = CChargeurOBJ();
+		chizLowModel.Chargement(paramOBJChiz2);
+
+
+		CParametresChargement paramOBJSnow0 = CParametresChargement("snowbox_LOD0.obj", ".\\modeles\\jin\\", true, false);
+		snowHDModel = CChargeurOBJ();
+		snowHDModel.Chargement(paramOBJSnow0);
+
+		CParametresChargement paramOBJSnow1 = CParametresChargement("snowbox_LOD1.obj", ".\\modeles\\jin\\", true, false);
+		snowMidModel = CChargeurOBJ();
+		snowMidModel.Chargement(paramOBJSnow1);
+
+		CParametresChargement paramOBJSnow2 = CParametresChargement("snowbox_LOD2.obj", ".\\modeles\\jin\\", true, false);
+		snowLowModel = CChargeurOBJ();
+		snowLowModel.Chargement(paramOBJSnow2);
+
 		initJoueur();
 		initPente( LMB);
 		initHM(LMB, -200);
-		initHM(LMB, 0);
+		initHM(LMB, 0, true);
 		initHM(LMB, 1);
 		initHM(LMB, 2);
 
@@ -97,6 +121,7 @@ namespace PM3D {
 		initBonus(LMB, 700, 0);
 		initBonus(LMB, 800, 0);
 
+
 		initTunnel(1000,0);
 
 		initSkyBox();
@@ -115,8 +140,8 @@ namespace PM3D {
 	};
 	void Level::initJoueur() {
 
-		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
-		const std::vector<IChargeur*> listModels{ jinInstance};
+		CChargeurOBJ* snowInstance = new CChargeurOBJ(snowHDModel);
+		const std::vector<IChargeur*> listModels{ snowInstance};
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
@@ -132,20 +157,26 @@ namespace PM3D {
 		//scenePhysic_->ListeScene_.emplace_back(move(bloc));
 	}
 
-	void Level::initHM(Light_Manager _lm, int numPente) {
+	void Level::initHM(Light_Manager _lm, int numPente, bool alpha) {
 		char* filename{};
 		if (numPente == 0) {
 			filename = new char[50]{ "./src/heighmap_Proj52_part1_montagne.bmp" };
 		}
 		else if (numPente == 1) {
-			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie.bmp" };
+			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie_vallee.bmp" };
 		}
 		else {
 			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie.bmp" };
 		}
 
-		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente);
-		HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
+		std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
+		if (!alpha) {
+			HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
+		}
+		else {
+			HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\masqueDeluxe.dds", pDispositif_));
+		}
+
 		scenePhysic_->ListeScene_.emplace_back(move(HM));
 
 
@@ -157,7 +188,7 @@ namespace PM3D {
 		float const posZ = scaleFixZ_ * scaleZ_ / 2  - 55.f; // hauteur // centre de la pente � la mi hauteur de la pente
 
 		float const longueur = sqrt(scaleFixZ_ * scaleZ_ * scaleFixZ_ * scaleZ_ + scaleX_ * scaleFixX_ * scaleX_ * scaleFixX_); // pythagor
-		float constexpr largeur = 8000.0f;
+		float constexpr largeur = 1300.0f;
 		float constexpr epaisseur = 0.1f;
 
 		//mur invisible
@@ -172,15 +203,15 @@ namespace PM3D {
 
 	void Level::initBloc(Light_Manager _lm, float _x, float _y) {
 
-		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
-		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
-		CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
-		const std::vector<IChargeur*> listModels{ bonusInstance, boxInstance, jinInstance };
+		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(chizHDModel);
+		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(chizMidModel);
+		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(chizLowModel);
+		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
 
 		// Pente
-		float constexpr longueur = 100.0f;
-		float constexpr largeur = 100.0f;
-		float constexpr epaisseur = 100.0f;
+		float longueur = chiz0Instance->GetDistanceX();
+		float largeur = chiz0Instance->GetDistanceY();
+		float epaisseur = chiz0Instance->GetDistanceZ();
 
 		float const offsetZ = 250 / (cos(XM_PI - anglePente_))+300;
 		float const posZ =  tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
@@ -194,16 +225,16 @@ namespace PM3D {
 
 	void Level::initBonus(Light_Manager _lm, float _x, float _y) {
 
-		CChargeurOBJ* jinInstance = new CChargeurOBJ(jinModel);
-		CChargeurOBJ* boxInstance = new CChargeurOBJ(boxModel);
-		CChargeurOBJ* bonusInstance = new CChargeurOBJ(bonusModel);
-		const std::vector<IChargeur*> listModels{ bonusInstance, bonusInstance, bonusInstance  };
+		CChargeurOBJ* bonus0Instance = new CChargeurOBJ(bonusHDModel);
+		CChargeurOBJ* bonus1Instance = new CChargeurOBJ(bonusMidModel);
+		CChargeurOBJ* bonus2Instance = new CChargeurOBJ(bonusLowModel);
+		const std::vector<IChargeur*> listModels{ bonus0Instance, bonus1Instance, bonus2Instance };
 
 		// Pente
-		float constexpr rayon = 50.0f;
-		float constexpr demiHauteur = 20.0f;
+		float rayon = bonus0Instance->GetDistanceY() / 2;
+		float demiHauteur = bonus0Instance->GetDistanceZ();
 
-		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 340;
 		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
 		float const posY = _y * scaleY_;

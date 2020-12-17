@@ -49,7 +49,9 @@ namespace PM3D
 		float getVitesseBonusMax() { return vitesseBonusMax_; }
 
 		bool isContact() { return contact_; }
+		bool isTrigger() { return trigger_; }
 		void updateContact(bool _contact) { contact_ = _contact; }
+		void updateTrigger(bool _trigger) { trigger_ = _trigger; }
 
 		void SetTexture(CTexture* pTexture);
 
@@ -75,6 +77,7 @@ namespace PM3D
 		bool upPressed_ = false;
 		std::queue<float> speedY_buffer;
 		bool contact_ = false;
+		bool trigger_ = false;
 
 		float totalTempsEcoule{};
 

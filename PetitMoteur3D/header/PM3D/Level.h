@@ -31,11 +31,20 @@ namespace PM3D {
 
 	private:
 		//DELETE THAT
-		CChargeurOBJ jinModel;
-		CChargeurOBJ boxModel;
-		CChargeurOBJ bonusModel;
 		CChargeurOBJ skyboxModel;
 		CChargeurOBJ tunnelModel;
+
+		CChargeurOBJ chizHDModel;
+		CChargeurOBJ chizMidModel;
+		CChargeurOBJ chizLowModel;
+
+		CChargeurOBJ snowHDModel;
+		CChargeurOBJ snowMidModel;
+		CChargeurOBJ snowLowModel;
+
+		CChargeurOBJ bonusHDModel;
+		CChargeurOBJ bonusMidModel;
+		CChargeurOBJ bonusLowModel;
 
 		void initlevel();
 
@@ -52,9 +61,9 @@ namespace PM3D {
 		void initPente(Light_Manager lm);
 		void initBonus(Light_Manager lm, float _x, float _y);
 		void initBloc(Light_Manager lm, float _x, float _y);
-		void initHM(Light_Manager lm, int numPente);
 
 		void initSkyBox();
 		void initTunnel(float _x, float _y);
+		void initHM(Light_Manager lm, int numPente, bool alpha = false);
 	};
 }
