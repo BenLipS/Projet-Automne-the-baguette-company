@@ -7,7 +7,9 @@ namespace PM3D {
     class SkyBox : public CObjetMesh
     {
 	public:
-		SkyBox(CDispositifD3D11* _pDispositif, IChargeur* chargeur) : CObjetMesh(chargeur, _pDispositif) {}
+		SkyBox(CDispositifD3D11* _pDispositif, IChargeur* chargeur) : CObjetMesh(chargeur, _pDispositif) {
+			typeTag = "skybox";
+		}
 
 
 		// Destructeur
