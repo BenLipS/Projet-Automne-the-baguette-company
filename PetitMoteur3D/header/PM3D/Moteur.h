@@ -144,7 +144,7 @@ namespace PM3D
 					PlanStatic* objetPlan = static_cast<PlanStatic*>(temp);
 					
 					float hauteur = objetPlan->getPointPlan(_position).y;
-					if (meilleurTerrain.first == nullptr || meilleurTerrain.second < hauteur) {
+					if ((meilleurTerrain.first == nullptr || meilleurTerrain.second < hauteur) && hauteur < _position.y) {
 						meilleurTerrain = { objetPlan, hauteur };
 					}
 				}

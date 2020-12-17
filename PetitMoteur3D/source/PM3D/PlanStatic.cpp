@@ -58,7 +58,22 @@ namespace PM3D {
 
 	PxVec3 PlanStatic::getPointPlan(physx::PxVec3 _point)
 	{
-		//_point.y = 0.0f;
+		//différence hauteur
+		PxVec3 projeteXHauteur = body_->getGlobalPose().p.dot(body_->getGlobalPose().q.getBasisVector1()) * body_->getGlobalPose().q.getBasisVector1();
+		PxVec3 projeteYHauteur = body_->getGlobalPose().p.dot(body_->getGlobalPose().q.getBasisVector2()) * body_->getGlobalPose().q.getBasisVector2();
+		PxVec3 pointProjeteHauteur = (projeteXHauteur + projeteYHauteur);
+		PxVec3 vecteurProjeteHauteur = pointProjeteHauteur - body_->getGlobalPose().p;
+		PxVec3 directionHauteur;
+		if (pointProjeteHauteur.y < body_->getGlobalPose().p.y) {
+			directionHauteur = PxVec3(0.0f, -1.0f, 0.0f);
+		}
+		else {
+			directionHauteur = PxVec3(0.0f, 1.0f, 0.0f);
+		}
+		float angleHauteur = acos(directionHauteur.dot(vecteurProjeteHauteur.getNormalized()));
+		float differenceHauteur = (vecteurProjeteHauteur.magnitude() / cos(angleHauteur));
+
+		//Projete du point
 		PxVec3 projeteX = _point.dot(body_->getGlobalPose().q.getBasisVector1()) * body_->getGlobalPose().q.getBasisVector1();
 		PxVec3 projeteY = _point.dot(body_->getGlobalPose().q.getBasisVector2()) * body_->getGlobalPose().q.getBasisVector2();
 		PxVec3 pointProjete = (projeteX + projeteY);
@@ -72,7 +87,7 @@ namespace PM3D {
 		}
 		float angle = acos(direction.dot(vecteurProjete.getNormalized()));
 		float longueurResultat = vecteurProjete.magnitude() / cos(angle);
-		PxVec3 projete = _point + direction * longueurResultat;
+		PxVec3 projete = _point + direction * longueurResultat - (differenceHauteur * directionHauteur);
 		return projete;
 	}
 
