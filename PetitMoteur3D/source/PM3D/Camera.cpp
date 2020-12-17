@@ -42,17 +42,22 @@ namespace PM3D {
 
 	void CCamera::swapCameraModeFree()
 	{
-		if (type == CCamera::CAMERA_TYPE::FREE) type = CCamera::CAMERA_TYPE::CUBE;
-		else type = CCamera::CAMERA_TYPE::FREE;
-
-		waitForSwapFree = false;
+		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
+		if (rMoteur.getStarted()) {
+			if (type == CCamera::CAMERA_TYPE::FREE) { type = CCamera::CAMERA_TYPE::CUBE; }
+			else  type = CCamera::CAMERA_TYPE::FREE ;
+			waitForSwapFree = false;
+		}
 	}
 
 	void CCamera::swapCameraModeFP() {
-		if (type == CCamera::CAMERA_TYPE::FPCUBE) type = CCamera::CAMERA_TYPE::CUBE;
-		else type = CCamera::CAMERA_TYPE::FPCUBE;
+		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
+		if (rMoteur.getStarted()) {
+			if (type == CCamera::CAMERA_TYPE::FPCUBE) type = CCamera::CAMERA_TYPE::CUBE;
+			else type = CCamera::CAMERA_TYPE::FPCUBE;
 
-		waitForSwapFP = false;
+			waitForSwapFP = false;
+		}
 	}
 
 	void CCamera::update(float tempsEcoule)
@@ -68,56 +73,56 @@ namespace PM3D {
 
 
 		
+		if (rMoteur.getStarted()) {
+			// V�rifier l��tat de la touche gauche
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_A)) {
+				position += (coeffMove * relativeZ * tempsEcoule);
+			}
 
-		// V�rifier l��tat de la touche gauche
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_A)) {
-			position += (coeffMove * relativeZ * tempsEcoule);
-		}
+			// V�rifier l��tat de la touche droite
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_D)) {
+				position -= (coeffMove * relativeZ * tempsEcoule);
+			}
 
-		// V�rifier l��tat de la touche droite
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_D)) {
-			position -= (coeffMove * relativeZ * tempsEcoule);
-		}
+			// V�rifier l'�tat de la touche forward
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_W)) {
+				position += (coeffMove * direction * tempsEcoule);
+			}
 
-		// V�rifier l'�tat de la touche forward
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_W)) {
-			position += (coeffMove * direction * tempsEcoule);
-		}
+			// V�rifier l��tat de la touche backward
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_S)) {
+				position -= (coeffMove * direction * tempsEcoule);
+			}
 
-		// V�rifier l��tat de la touche backward
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_S)) {
-			position -= (coeffMove * direction * tempsEcoule);
-		}
-		
-		// V�rifier l��tat de la touche SwapMode
-		if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_M)) {
-			waitForSwapFree = true;
-		}
-		else {
-			if (waitForSwapFree) swapCameraModeFree();
-		}
-		
-		// ******** POUR LA SOURIS ************  
-		//V�rifier si d�placement vers la gauche
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(-XM_PI / (3000.0f * tempsEcoule)));
-		}
+			// V�rifier l��tat de la touche SwapMode
+			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_M)) {
+				waitForSwapFree = true;
+			}
+			else {
+				if (waitForSwapFree) swapCameraModeFree();
+			}
 
-		// V�rifier si d�placement vers la droite
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationY(XM_PI / (3000.0f * tempsEcoule)));
-		}
+			// ******** POUR LA SOURIS ************  
+			//V�rifier si d�placement vers la gauche
+			if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX < 0)) {
+				direction = XMVector3Transform(direction, XMMatrixRotationY(-XM_PI / (3000.0f * tempsEcoule)));
+			}
 
-		//V�rifier si d�placement vers le haut
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY < 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, XM_PI / (3000.0f * tempsEcoule)));
-		}
+			// V�rifier si d�placement vers la droite
+			if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lX > 0)) {
+				direction = XMVector3Transform(direction, XMMatrixRotationY(XM_PI / (3000.0f * tempsEcoule)));
+			}
 
-		// V�rifier si d�placement vers le bas
-		if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY > 0)) {
-			direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, -XM_PI / (3000.0f * tempsEcoule)));
-		}
+			//V�rifier si d�placement vers le haut
+			if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY < 0)) {
+				direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, XM_PI / (3000.0f * tempsEcoule)));
+			}
 
+			// V�rifier si d�placement vers le bas
+			if ((rGestionnaireDeSaisie.EtatSouris().rgbButtons[0] & 0x80) && (rGestionnaireDeSaisie.EtatSouris().lY > 0)) {
+				direction = XMVector3Transform(direction, XMMatrixRotationAxis(relativeZ, -XM_PI / (3000.0f * tempsEcoule)));
+			}
+		}
 		// Matrice de la vision
 		*pMatView = XMMatrixLookAtLH(position, position + direction, up);
 

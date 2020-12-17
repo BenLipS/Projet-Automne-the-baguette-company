@@ -33,6 +33,7 @@ namespace PM3D {
 		SkyBox* getSkyBox() { return skyBox_.get(); }
 		
 		void restart();
+		void start();
 	private:
 
 		//DELETE THAT

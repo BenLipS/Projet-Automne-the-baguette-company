@@ -78,10 +78,15 @@ namespace PM3D
 			{
 				// Propre � la plateforme - (Conditions d'arr�t, interface, messages)
 				bBoucle = RunSpecific();
-				
-				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_R)){
+				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_R)) {
 					niveau->restart();
 					resetChrono = true;
+				}
+				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_RETURN) && isGameStarted == false ){
+					isGameStarted = true;
+					niveau->start();
+					resetChrono = true;
+					InitObjets();
 				}
 					
 					
@@ -199,6 +204,7 @@ namespace PM3D
 		const XMMATRIX& GetMatViewProj() const noexcept { return m_MatViewProj; }
 		CCamera& getCamera() { return camera; };
 		Scene* getScenePhysic() { return scenePhysic_; }
+		bool getStarted() {return isGameStarted;}
 
 		BlocRollerDynamic* findVehiculeFromBody(physx::PxRigidActor* _body) {
 			for (int i = 0; i < scenePhysic_->ListeScene_.size(); ++i) {
@@ -391,7 +397,7 @@ namespace PM3D
 				planRapproche,
 				planEloigne);
 
-			camera.init(XMVectorSet(0.0f, 500.0f, -300.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj, CCamera::CAMERA_TYPE::CUBE);
+			camera.init(XMVectorSet(997.0f, -953.0f, 14121.0f, 1.0f), XMVectorSet(0.0f, -1.0f, 0.7f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f), &m_MatView, &m_MatProj, &m_MatViewProj, CCamera::CAMERA_TYPE::FREE);
 
 			m_MatView = XMMatrixLookAtLH(XMVectorSet(0.0f, 3.0f, -5.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
@@ -402,8 +408,8 @@ namespace PM3D
 				return 1;
 			}
 			if (!initEcranChargement_) {
-			BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
-			camera.update(character);
+			/*BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+			camera.update(character);*/
 			}
 
 			return 0;
@@ -417,11 +423,17 @@ namespace PM3D
 			float hauteur = static_cast<float>(pDispositif->GetHauteur());
 
 			if (!initEcranChargement_) {
+				if (!isGameStarted) {
+				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+				pAfficheurSprite->AjouterSprite(".\\src\\PressEnter.dds"s, static_cast<int>(largeur * 0.4f), static_cast<int>(hauteur * 0.6f));
 				scenePhysic_->ListeScene_.clear();
 				//Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 				niveau = new Level(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
-				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
 				//std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
+				
+				
+				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+				}
 				// ajout de panneaux
 				//pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f),2000,2000);
 				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 1.0f, -2.0f));
@@ -432,30 +444,32 @@ namespace PM3D
 
 				// Création de l’afficheur de sprites et ajout des sprites
 
-				pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
+				
 				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
 				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
+				if (isGameStarted) {
+					std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+					CAfficheurTexte::Init();
+					const Gdiplus::FontFamily oFamily(L"Comic Sans MS", nullptr);
+					pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 24.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+					pTexteChrono = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
+					pTexteChrono->Ecrire(L"00'00'000");
+					chronoNow = std::chrono::high_resolution_clock::now();
+					pAfficheurSprite->AjouterSpriteTexte(pTexteChrono->GetTextureView(), 900, 257);
 
+					pTexteVitesse = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
+					pTexteVitesse->Ecrire(L"0 km/h");
+					pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
 
-				CAfficheurTexte::Init();
-				const Gdiplus::FontFamily oFamily(L"Comic Sans MS", nullptr);
-				pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 24.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
-				pTexteChrono = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
-				pTexteChrono->Ecrire(L"00'00'000");
-				chronoNow = std::chrono::high_resolution_clock::now();
-				pAfficheurSprite->AjouterSpriteTexte(pTexteChrono->GetTextureView(), 900, 257);
-
-				pTexteVitesse = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
-				pTexteVitesse->Ecrire(L"0 km/h");
-				pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
-
-				pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
-				pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);
-
-				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
-
-				updateBonus();
-				//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
+					pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
+					pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);
+					updateBonus();
+				
+					scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+				}
+					
+					//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
+				
 			}
 			else {
 				float largeur = static_cast<float>(pDispositif->GetLargeur());
@@ -491,12 +505,13 @@ protected:
 				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 				camera.update(character, tempsEcoule);
+				if (isGameStarted) {
+					updateChrono();
 
-				updateChrono();
+					updateSpeed();
 
-				updateSpeed();
-
-				updateBonus();
+					updateBonus();
+				}
 
 				/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
 					swapPose = true;	
@@ -521,6 +536,7 @@ protected:
 		}
 
 		void updateChrono() {
+			
 			auto chronoAp = std::chrono::high_resolution_clock::now();
 			int dureeMin = static_cast<int>(std::chrono::duration_cast<std::chrono::minutes>(chronoAp - chronoNow).count());
 			int dureeSec = abs(dureeMin * 60 - static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(chronoAp - chronoNow).count()));
@@ -735,6 +751,7 @@ protected:
 		bool stopChrono_ = false;
 		bool swapPose = false;
 		bool resetChrono = false;
+		bool isGameStarted = false;
 
 		std::unique_ptr<Gdiplus::Font> pPolice;
 
