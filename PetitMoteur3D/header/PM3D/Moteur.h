@@ -269,6 +269,24 @@ namespace PM3D
 			return erased;
 		}
 
+		void updatePanneauCollision() {
+			auto it = scenePhysic_->ListeScene_.begin();
+			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+				it++;
+			}
+			if (it != scenePhysic_->ListeScene_.end()) {
+				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+				BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
+				physx::PxVec3 pose = static_cast<physx::PxRigidDynamic*>(body)->getGlobalPose().p;
+
+				eraseSprite("panneau");
+
+				std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
+				pAfficheurPanneau->AjouterPanneau(".\\src\\PAF.dds"s, XMFLOAT3{ pose.x + 50.0f, pose.y + 20.0f, pose.z });
+				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
+			}
+		}
+
 		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
 
 		XMVECTOR getCameraPosition() { return camera.getPosition(); }
@@ -440,17 +458,17 @@ namespace PM3D
 				CAfficheurTexte::Init();
 				const Gdiplus::FontFamily oFamily(L"Comic Sans MS", nullptr);
 				pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 24.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
-				pTexteChrono = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
+				pTexteChrono = std::make_unique<CAfficheurTexte>(pDispositif, 200, 50, pPolice.get());
 				pTexteChrono->Ecrire(L"00'00'000");
 				chronoNow = std::chrono::high_resolution_clock::now();
-				pAfficheurSprite->AjouterSpriteTexte(pTexteChrono->GetTextureView(), 900, 257);
+				pAfficheurSprite->AjouterSpriteTexte(pTexteChrono->GetTextureView(), 900, 157);
 
 				pTexteVitesse = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
 				pTexteVitesse->Ecrire(L"0 km/h");
 				pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
 
-				pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
-				pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);
+				/*pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
+				pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);*/
 
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 
@@ -514,6 +532,12 @@ protected:
 
 				if (swapPose) {
 					updatePose();
+				}
+
+				totalTempsEcoule += tempsEcoule;
+				if (totalTempsEcoule > 3) {
+					eraseSprite("panneau");
+					totalTempsEcoule = 0;
 				}
 			}
 
@@ -685,6 +709,8 @@ protected:
 		// Variables pour le temps de l'animation
 		int64_t TempsSuivant{};
 		int64_t TempsCompteurPrecedent{};
+
+		float totalTempsEcoule{};
 
 		// Le dispositif de rendu
 		TClasseDispositif* pDispositif{};
