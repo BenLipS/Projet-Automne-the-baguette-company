@@ -32,6 +32,7 @@ namespace PM3D
 		ID3D11ShaderResourceView* pTextureD3D;
 		XMMATRIX matPosDim;
 		bool bPanneau;
+		std::string typeSprite;
 		CSprite()
 			: bPanneau(false)
 			, pTextureD3D(nullptr)

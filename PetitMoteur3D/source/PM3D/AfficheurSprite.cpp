@@ -99,10 +99,11 @@ namespace PM3D
 		tabSprites.push_back(std::move(pSprite));
 	}
 
-	void CAfficheurSprite::AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y)
+	void CAfficheurSprite::AjouterSpriteTexte(ID3D11ShaderResourceView* pTexture, int _x, int _y, std::string typeTexte)
 	{
 		std::unique_ptr<CSprite> pSprite = std::make_unique<CSprite>();
 		pSprite->pTextureD3D = pTexture;
+		pSprite->typeSprite = typeTexte;
 
 		// Obtenir la dimension de la texture;
 		ID3D11Resource* pResource;
@@ -136,4 +137,25 @@ namespace PM3D
 		tabSprites.push_back(std::move(pSprite));
 	}
 
+	void CAfficheurSprite::SupprimerSpriteTexte(std::string typeTexte) {
+		bool erased;
+		do {
+			erased = false;
+			auto it = tabSprites.begin();
+			while (it != tabSprites.end() && !erased) {
+				if (it->get()->typeSprite == typeTexte) {
+					erased = true;
+				}
+				else {
+					it++;
+				}
+			}
+			if (erased) {
+				tabSprites.erase(it);
+			}
+		} while (erased);
+	}
+
+
 }
+

@@ -80,6 +80,9 @@ namespace PM3D
 				// Propre � la plateforme - (Conditions d'arr�t, interface, messages)
 				bBoucle = RunSpecific();
 				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_R)) {
+					if (isFinished()) {
+						resetSprite();
+					}
 					niveau->restart();
 					resetChrono = true;
 				}
@@ -147,8 +150,8 @@ namespace PM3D
 					isResetPause = false;
 				}
 					TempsCompteurPrecedent = TempsCompteurCourant;
-				
-				
+
+
 			}
 
 			return true;
@@ -163,7 +166,7 @@ namespace PM3D
 				if (objet->typeTag == "pente") {
 					auto temp = objet.get();
 					PlanStatic* objetPlan = static_cast<PlanStatic*>(temp);
-					
+
 					float hauteur = objetPlan->getPointPlan(_position).y;
 					if ((meilleurTerrain.first == nullptr || meilleurTerrain.second < hauteur) && hauteur < _position.y) {
 						meilleurTerrain = { objetPlan, hauteur };
@@ -261,6 +264,27 @@ namespace PM3D
 			if (erased)
 				scenePhysic_->ListeScene_.erase(it);
 		}
+
+		void eraseSpriteTexte(std::string typeTexte) {
+			auto it = scenePhysic_->ListeScene_.begin();
+			bool erased = false;
+			while (it != scenePhysic_->ListeScene_.end() && !erased) {
+				if (it->get() != nullptr && it->get()->is2D()) {
+					CAfficheur2D* afficheur = static_cast<CAfficheur2D*>(it->get());
+					if (afficheur->typeSprite == "sprite") {
+						static_cast<CAfficheurSprite*>(afficheur)->SupprimerSpriteTexte(typeTexte);
+						erased = true;
+					}
+					else {
+						it++;
+					}
+				}
+				else {
+					it++;
+				}
+			}
+		}
+
 		bool eraseBonus() {
 			auto it = scenePhysic_->ListeScene_.begin();
 			bool erased = false;
@@ -298,6 +322,19 @@ namespace PM3D
 				pAfficheurPanneau->AjouterPanneau(".\\src\\PAF.dds"s, XMFLOAT3{ pose.x + 50.0f, pose.y + 20.0f, pose.z });
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
 			}
+		}
+
+		bool isFinished() {
+			auto it = scenePhysic_->ListeScene_.begin();
+			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+				it++;
+			}
+			if (it != scenePhysic_->ListeScene_.end()) {
+				physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+				BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
+				return (body->getGlobalPose().p.z >= 29600.f);
+			}
+			return false;
 		}
 
 		CGestionnaireDeTextures& GetTextureManager() { return TexturesManager; }
@@ -443,7 +480,7 @@ namespace PM3D
 		bool InitObjets()
 		{
 
-			
+
 			float largeur = static_cast<float>(pDispositif->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif->GetHauteur());
 
@@ -455,8 +492,8 @@ namespace PM3D
 				//Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 				niveau = new Level(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 				//std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
-				
-				
+
+
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 				}
 				// ajout de panneaux
@@ -469,7 +506,7 @@ namespace PM3D
 
 				// Création de l’afficheur de sprites et ajout des sprites
 
-				
+
 				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
 				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
 
@@ -481,11 +518,11 @@ namespace PM3D
 					pTexteChrono = std::make_unique<CAfficheurTexte>(pDispositif, 200, 50, pPolice.get());
 					pTexteChrono->Ecrire(L"00'00'000");
 					chronoNow = std::chrono::high_resolution_clock::now();
-					pAfficheurSprite->AjouterSpriteTexte(pTexteChrono->GetTextureView(), 900, 157);
+					pAfficheurSprite->AjouterSpriteTexte(pTexteChrono->GetTextureView(), 900, 157, "spritechrono");
 
 					pTexteVitesse = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
 					pTexteVitesse->Ecrire(L"0 km/h");
-					pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
+					pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960, "spritevitesse");
 
 					pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
 					pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);
@@ -495,7 +532,7 @@ namespace PM3D
 					updateBonus();
 					//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
 				}
-					
+
 					//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
 
 			}
@@ -537,7 +574,7 @@ protected:
 							PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
 							vitessePause = bodyD->getLinearVelocity();
 						}
-						
+
 					}
 					else {
 						auto it = scenePhysic_->ListeScene_.begin();
@@ -588,6 +625,7 @@ protected:
 					camera.update(tempsEcoule);
 				}
 				if (!initEcranChargement_) {
+					
 					BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
 					//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
 					camera.update(character, tempsEcoule);
@@ -604,7 +642,38 @@ protected:
 						}
 						else if (swapPose) {
 							swapPose = false;
+						}*/
+
+					auto it = scenePhysic_->ListeScene_.begin();
+					while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+						it++;
+					}
+					if (it != scenePhysic_->ListeScene_.end()) {
+						physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+						BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
+						//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
+						camera.update(vehicule, tempsEcoule);
+						if (isGameStarted && body->getGlobalPose().p.z < 29600.f) {
+							updateChrono();
+
+							updateSpeed();
+
+							updateBonus();
+						} else if (body->getGlobalPose().p.z >= 29600.f) {
+							eraseSprite("spritebonus");
+							eraseSprite("spritecompteur");
+							eraseSpriteTexte("spritevitesse");
+							eraseSpriteTexte("spritechrono");
+							afficheArrivee();
 						}
+
+						/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
+							swapPose = true;
+						}
+						else if (swapPose) {
+							swapPose = false;
+						}
+
 
 						if (swapPose) {
 							updatePose();
@@ -629,12 +698,12 @@ protected:
 		}
 
 		void updateChrono() {
-			
+
 			auto chronoAp = std::chrono::high_resolution_clock::now();
 			int dureeMin = static_cast<int>(std::chrono::duration_cast<std::chrono::minutes>(chronoAp - chronoNow).count());
 			int dureeSec = abs(dureeMin * 60 - static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(chronoAp - chronoNow).count()));
 			int dureeMs = abs(dureeMin * 60'000 - dureeSec * 1000 - static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(chronoAp - chronoNow).count()));
-			
+
 			auto it = scenePhysic_->ListeScene_.begin();
 			while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
 				it++;
@@ -700,7 +769,7 @@ protected:
 			else {
 				str << tempsMin << "'" << tempsSec << "'" << tempsMs;
 			}
-
+			strChrono = str.str();
 			std::wstring strChrono = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(str.str());
 			pTexteChrono->Ecrire(strChrono);
 			chronoNow = std::chrono::high_resolution_clock::now();
@@ -799,6 +868,86 @@ protected:
 
 		}
 
+		void afficheArrivee() {
+			float largeur = static_cast<float>(pDispositif->GetLargeur());
+			float hauteur = static_cast<float>(pDispositif->GetHauteur());
+
+			auto it = scenePhysic_->ListeScene_.begin();
+			bool affichee = false;
+			while (it != scenePhysic_->ListeScene_.end() && !affichee) {
+				if (it->get() != nullptr && it->get()->is2D()) {
+					if (static_cast<CAfficheur2D*>(it->get())->typeSprite == "spritearrivee") {
+						affichee = true;
+					}
+					else {
+						it++;
+					}
+				}
+				else {
+					it++;
+				}
+			}
+			if (!affichee) {
+				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif, "spritearrivee");
+				CAfficheurTexte::Init();
+				const Gdiplus::FontFamily oFamily(L"Comic Sans MS", nullptr);
+				pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 45.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+				pTexteArrivee = std::make_unique<CAfficheurTexte>(pDispositif, 600, 350, pPolice.get());
+				std::stringstream sstr;
+				sstr << "\tBRAVO !\nTu as fini en : " << strChrono;
+
+				std::wstring strArrivee = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(sstr.str());
+				pTexteArrivee->Ecrire(strArrivee);
+				pAfficheurSprite->AjouterSpriteTexte(pTexteArrivee->GetTextureView(), 700, 600, "spritearrivee");
+				//pAfficheurSprite->AjouterSprite(".\\src\\PressR.dds"s, static_cast<int>(largeur * 0.4f), static_cast<int>(hauteur * 0.9f));
+
+				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+			}
+		}
+
+		void resetSprite() {
+			bool erased = false;
+			do {
+				erased = false;
+				auto it = scenePhysic_->ListeScene_.begin();
+				while (it != scenePhysic_->ListeScene_.end() && !erased) {
+					if (it->get() != nullptr && it->get()->is2D()) {
+						erased = true;
+					}
+					else {
+						it++;
+					}
+				}
+				if (it != scenePhysic_->ListeScene_.end()) {
+					scenePhysic_->ListeScene_.erase(it);
+				}
+			} while (erased);
+
+			float largeur = static_cast<float>(pDispositif->GetLargeur());
+			float hauteur = static_cast<float>(pDispositif->GetHauteur());
+
+			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif, "spritecompteur");
+			pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
+			scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+
+			std::unique_ptr<CAfficheurSprite> pAfficheurSpriteTexte = std::make_unique<CAfficheurSprite>(pDispositif);
+			CAfficheurTexte::Init();
+			const Gdiplus::FontFamily oFamily(L"Comic Sans MS", nullptr);
+			pPolice = std::make_unique<Gdiplus::Font>(&oFamily, 24.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+			pTexteChrono = std::make_unique<CAfficheurTexte>(pDispositif, 200, 50, pPolice.get());
+			pTexteChrono->Ecrire(L"00'00'000");
+			chronoNow = std::chrono::high_resolution_clock::now();
+			pAfficheurSpriteTexte->AjouterSpriteTexte(pTexteChrono->GetTextureView(), 900, 157, "spritechrono");
+
+			pTexteVitesse = std::make_unique<CAfficheurTexte>(pDispositif, 300, 256, pPolice.get());
+			pTexteVitesse->Ecrire(L"0 km/h");
+			pAfficheurSpriteTexte->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960, "spritevitesse");
+
+			scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSpriteTexte));
+
+			updateBonus();
+		}
+
 	protected:
 		// Variables pour le temps de l'animation
 		int64_t TempsSuivant{};
@@ -847,8 +996,10 @@ protected:
 		std::unique_ptr<CAfficheurTexte> pTexteChrono;
 		std::unique_ptr<CAfficheurTexte> pTexteVitesse;
 		std::unique_ptr<CAfficheurTexte> pTextePosition;
+		std::unique_ptr<CAfficheurTexte> pTexteArrivee;
 
 		std::chrono::steady_clock::time_point chronoNow;
+		std::string strChrono;
 		int tempsMin = 0;
 		int tempsSec = 0;
 		int tempsMs = 0;
@@ -866,7 +1017,7 @@ protected:
 		int tempsMsPause = 0;
 		bool isResetPause = false;
 		bool effacerPause = false;
-		
+
 
 
 		std::unique_ptr<Gdiplus::Font> pPolice;

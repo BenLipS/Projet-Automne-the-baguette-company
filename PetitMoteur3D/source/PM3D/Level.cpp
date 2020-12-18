@@ -239,7 +239,9 @@ namespace PM3D {
 		float const posZ = scaleFixZ_ * scaleZ_ + 20; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
 		posDepart_ = PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f)));
 
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, posDepart_, 20.0f, pDispositif_, listModels));
+		float rayon = voitureCOBJ->GetDistanceY();
+
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, posDepart_, rayon, pDispositif_, listModels));
 
 		//std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif_);
 		//bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
@@ -285,7 +287,7 @@ namespace PM3D {
 				HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
 			}
 			else {
-				HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\snow.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\herbe.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
+				HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\Snow.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\herbe.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
 			}
 
 			scenePhysic_->ListeScene_.emplace_back(move(HM));
@@ -336,7 +338,7 @@ namespace PM3D {
 		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(chizHDModel);
 		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(chizMidModel);
 		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(chizLowModel);
-		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
+		const std::vector<IChargeur*> listModels{ chiz0Instance, chiz1Instance, chiz2Instance };
 
 		// Pente
 		float longueur = chiz0Instance->GetDistanceX();
@@ -368,15 +370,15 @@ namespace PM3D {
 	}
 	void Level::initBlocSnow(Light_Manager _lm, float _x, float _y) {
 
-		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(snowHDModel);
-		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(snowMidModel);
-		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(snowLowModel);
-		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
+		CChargeurOBJ* snow0Instance = new CChargeurOBJ(snowHDModel);
+		CChargeurOBJ* snow1Instance = new CChargeurOBJ(snowMidModel);
+		CChargeurOBJ* snow2Instance = new CChargeurOBJ(snowLowModel);
+		const std::vector<IChargeur*> listModels{ snow0Instance, snow1Instance, snow2Instance };
 
 		// Pente
-		float longueur = chiz0Instance->GetDistanceX();
-		float largeur = chiz0Instance->GetDistanceY();
-		float epaisseur = chiz0Instance->GetDistanceZ();
+		float longueur = snow0Instance->GetDistanceX();
+		float largeur = snow0Instance->GetDistanceY();
+		float epaisseur = snow0Instance->GetDistanceZ();
 
 		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
 		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
@@ -405,15 +407,15 @@ namespace PM3D {
 
 	void Level::initBlocRondin(Light_Manager _lm, float _x, float _y) {
 
-		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(rondinHDModel);
-		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(rondinMidModel);
-		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(rondinLowModel);
-		const std::vector<IChargeur*> listModels{ chiz0Instance, chiz1Instance, chiz2Instance };
+		CChargeurOBJ* rondin0Instance = new CChargeurOBJ(rondinHDModel);
+		CChargeurOBJ* rondin1Instance = new CChargeurOBJ(rondinMidModel);
+		CChargeurOBJ* rondin2Instance = new CChargeurOBJ(rondinLowModel);
+		const std::vector<IChargeur*> listModels{ rondin0Instance, rondin1Instance, rondin2Instance };
 
 		// Pente
-		float longueur = chiz0Instance->GetDistanceX();
-		float largeur = chiz0Instance->GetDistanceY();
-		float epaisseur = chiz0Instance->GetDistanceZ();
+		float longueur = rondin0Instance->GetDistanceX();
+		float largeur = rondin0Instance->GetDistanceY();
+		float epaisseur = rondin0Instance->GetDistanceZ();
 
 		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
 		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
@@ -523,7 +525,8 @@ namespace PM3D {
 		auto it = scenePhysic_->ListeScene_.begin();
 		while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
 			it++;
-		}if (it != scenePhysic_->ListeScene_.end()) {
+		}
+		if (it != scenePhysic_->ListeScene_.end()) {
 			physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
 			body->setGlobalPose(posDepart_);
 			PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
@@ -560,7 +563,7 @@ namespace PM3D {
 			float largeur = static_cast<float>(pDispositif_->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif_->GetHauteur());
 
-			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif_);
+			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif_,"spritecompteur");
 			pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
 			scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 		};

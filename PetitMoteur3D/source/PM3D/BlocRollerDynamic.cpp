@@ -67,135 +67,168 @@ namespace PM3D
 		setVitesseMax(nbBonus_ * vitesseBonus + vitesseMaxDefault_);
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		CDIManipulateur& rGestionnaireDeSaisie = rMoteur.GetGestionnaireDeSaisie();
+
 		auto body = static_cast<PxRigidDynamic*>(body_);
 		auto speed = body->getLinearVelocity();
 
-		if (isContact()) {
-			totalTempsEcoule += tempsEcoule;
-			if (totalTempsEcoule > .75f) {
-				updateContact(false);
-				totalTempsEcoule = 0.f;
-				//body->setLinearVelocity(PxZero);
-			}
-		}
-		
 		PlanStatic* terrain = CMoteurWindows::GetInstance().getTerrain(getPosition());
-		//pair<PxVec3, PxVec3> const terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
-
-		//PxVec3 normale = terrain.q.getBasisVector1();
 		PxVec3 const normale = terrain->getNormale();
 
-		PxVec3 const gauche = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
-		PxVec3 const droite = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
-
-		PxVec3 vVitesse = speed;
-
-		// V�rifier l��tat de la touche gauche
-		float constexpr coeffMoveCote = 50;
-		if (!isContact()) {
-			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
-				auto const direction = gauche * speed.magnitude();
-				vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
+		if (body->getGlobalPose().p.z > 30000.f) {
+			PxVec3 vitesseFinale = speed * 0.9f;
+			if (vitesseFinale.magnitude() < 10.0f) {
+				vitesseFinale = PxZero;
 			}
-			// V�rifier l��tat de la touche droite
-			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
-				auto const direction = droite * speed.magnitude();
-				vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
-			}
+			body->setLinearVelocity(vitesseFinale);
 
-			vVitesse = vVitesse.getNormalized() * speed.magnitude();
+			PxVec3 const direction = vitesseFinale.getNormalized();
+			PxVec3 const sens = PxVec3(0.0f, 0.0f, 1.0f);
+			PxVec3 const projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
+			float angle = acos(projete.dot(sens));
 
-			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
-				//upPressed_ = true;
-				vVitesse = vVitesse * 1.02f;
+			PxVec3 const directionPente = terrain->getDirection();
+			if ((direction.cross(directionPente).y > 0)) {
+				angle = -angle;
 			}
 
-			if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
-				vVitesse = vVitesse * 0.99f;
-			}
-		}
 
-		//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
+			PxVec3 const largeurPente = normale.cross(directionPente);
+			PxQuat const pente = PxQuat(acos(normale.dot(PxVec3(0.0f, 1.0f, 0.0f))), largeurPente);
+			PxQuat const orientation = PxQuat(angle, normale).getNormalized();
 
-		/*PxTransform pose = body_->getGlobalPose();
-		//pose.q = PxQuat(0.1f, PxVec3(1.0f, 0.0f, 0.0f));
-
-		if (pose.p.x > 2375.0f) {
-			pose.p.x = 2375.0f;
-			PxVec3 vitesse = body->getLinearVelocity();
-			body->setLinearVelocity({ vitesse.x, vitesse.y, vitesse.z });
-		}
-		else if (pose.p.x < -2375.0f) {
-			pose.p.x = -2375.0f;
-			PxVec3 vitesse = body->getLinearVelocity();
-			body->setLinearVelocity({ vitesse.y, vitesse.y, vitesse.z });
-		}
-
-		body_->setGlobalPose(pose);*/
-
-		speedY_buffer.pop();
-		speedY_buffer.push(speed.y);
-
-		float moyenne = 0.0f;
-
-		for (unsigned int i = 0; i < 10; i++) {
-			moyenne += speedY_buffer.front();
-			speedY_buffer.emplace(speedY_buffer.front());
-			speedY_buffer.pop();
-		}
-
-		speed.y = moyenne/10.0f;
-		
-		PxVec3 const direction = speed.getNormalized();
-		//normale = CMoteurWindows::GetInstance().getTerrainNormale();
-		PxVec3 const sens = PxVec3(0.0f, 0.0f, 1.0f);
-		PxVec3 const projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
-		float angle = acos(projete.dot(sens));
-
-		PxVec3 const directionPente = terrain->getDirection();
-		if ((direction.cross(directionPente).y > 0)) {
-			angle = -angle;
-		}
-
-
-		PxVec3 const largeurPente = normale.cross(directionPente);
-		PxQuat const pente = PxQuat(acos(normale.dot(PxVec3(0.0f,1.0f,0.0f))), largeurPente);
-		PxQuat const orientation = PxQuat(angle, normale).getNormalized();
-
-		float const valProjete = normale.dot(vVitesse);
-		PxVec3 vitesseFinale{ vVitesse - (valProjete * normale) };
-		float const ValProjPente = directionPente.dot(vitesseFinale);
-
-		if (ValProjPente >= 0) {
-			if (vitesseFinale.magnitude() > vitesseMax_)
-				body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
-			else if (vitesseFinale.magnitude() < vitesseMin_)
-				body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
-			else
-				body->setLinearVelocity(vitesseFinale);
-		}
-		else {
-			float const coeffRemontePente = 0.9f;
-			if (abs(ValProjPente) > 200.f) {//Pour pas remonter la pente
-				body->setLinearVelocity(vitesseFinale * coeffRemontePente);
-			}
-			else
-				body->setLinearVelocity(vitesseFinale);
-		}
-		//body->addForce({ 10000000000.f,0.f,0.f }, PxForceMode::eIMPULSE);
-
-		//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
-		if (!isContact()) {
 			matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
 			matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
 		}
 		else {
-			matWorld = XMMatrixRotationQuaternion(XMVectorSet(body_->getGlobalPose().q.x, body_->getGlobalPose().q.y, body_->getGlobalPose().q.z, body_->getGlobalPose().q.w)); //Orientation
-			if (abs(totalTempsEcoule - tempsEcoule) < 0.0001f) {
-				body->setLinearVelocity(vitesseFinale * 0.5f);
-				suppBonus();
+
+			if (isContact()) {
+				totalTempsEcoule += tempsEcoule;
+				if (totalTempsEcoule > .75f) {
+					updateContact(false);
+					totalTempsEcoule = 0.f;
+					//body->setLinearVelocity(PxZero);
+				}
 			}
+
+			//pair<PxVec3, PxVec3> const terrainPair = CMoteurWindows::GetInstance().getTerrainPair();
+
+			//PxVec3 normale = terrain.q.getBasisVector1();
+
+
+			PxVec3 const gauche = (-normale).cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,1,0)
+			PxVec3 const droite = normale.cross(speed.getNormalized()); //produit vectoriel(speed.norme * 0,-1,0)
+
+			PxVec3 vVitesse = speed;
+
+			// V�rifier l��tat de la touche gauche
+			float constexpr coeffMoveCote = 50;
+			if (!isContact()) {
+				if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_LEFT)) {
+					auto const direction = gauche * speed.magnitude();
+					vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
+				}
+				// V�rifier l��tat de la touche droite
+				if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_RIGHT)) {
+					auto const direction = droite * speed.magnitude();
+					vVitesse += (direction.getNormalized() * (speed.magnitude() / coeffMoveCote));
+				}
+
+				vVitesse = vVitesse.getNormalized() * speed.magnitude();
+
+				if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_UP)) {
+					//upPressed_ = true;
+					vVitesse = vVitesse * 1.02f;
+				}
+
+				if (rGestionnaireDeSaisie.ToucheAppuyee(DIK_DOWN)) {
+					vVitesse = vVitesse * 0.99f;
+				}
+			}
+
+			//((PxRigidDynamic*)body_)->setAngularVelocity(PxVec3(1.0, 0.0, 0.0).getNormalized());
+
+			/*PxTransform pose = body_->getGlobalPose();
+			//pose.q = PxQuat(0.1f, PxVec3(1.0f, 0.0f, 0.0f));
+
+			if (pose.p.x > 2375.0f) {
+				pose.p.x = 2375.0f;
+				PxVec3 vitesse = body->getLinearVelocity();
+				body->setLinearVelocity({ vitesse.x, vitesse.y, vitesse.z });
+			}
+			else if (pose.p.x < -2375.0f) {
+				pose.p.x = -2375.0f;
+				PxVec3 vitesse = body->getLinearVelocity();
+				body->setLinearVelocity({ vitesse.y, vitesse.y, vitesse.z });
+			}
+
+			body_->setGlobalPose(pose);*/
+
+			speedY_buffer.pop();
+			speedY_buffer.push(speed.y);
+
+			float moyenne = 0.0f;
+
+			for (unsigned int i = 0; i < 10; i++) {
+				moyenne += speedY_buffer.front();
+				speedY_buffer.emplace(speedY_buffer.front());
+				speedY_buffer.pop();
+			}
+
+			speed.y = moyenne / 10.0f;
+
+			PxVec3 const direction = speed.getNormalized();
+			//normale = CMoteurWindows::GetInstance().getTerrainNormale();
+			PxVec3 const sens = PxVec3(0.0f, 0.0f, 1.0f);
+			PxVec3 const projete = PxVec3(direction.x, 0.0f, direction.z).getNormalized();
+			float angle = acos(projete.dot(sens));
+
+			PxVec3 const directionPente = terrain->getDirection();
+			if ((direction.cross(directionPente).y > 0)) {
+				angle = -angle;
+			}
+
+
+			PxVec3 const largeurPente = normale.cross(directionPente);
+			PxQuat const pente = PxQuat(acos(normale.dot(PxVec3(0.0f, 1.0f, 0.0f))), largeurPente);
+			PxQuat const orientation = PxQuat(angle, normale).getNormalized();
+
+			float const valProjete = normale.dot(vVitesse);
+			PxVec3 vitesseFinale{ vVitesse - (valProjete * normale) };
+			float const ValProjPente = directionPente.dot(vitesseFinale);
+
+			if (ValProjPente >= 0) {
+				if (vitesseFinale.magnitude() > vitesseMax_)
+					body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMax_);
+				else if (vitesseFinale.magnitude() < vitesseMin_)
+					body->setLinearVelocity(vitesseFinale.getNormalized() * vitesseMin_);
+				else
+					body->setLinearVelocity(vitesseFinale);
+			}
+			else {
+				float const coeffRemontePente = 0.9f;
+				if (abs(ValProjPente) > 200.f) {//Pour pas remonter la pente
+					body->setLinearVelocity(vitesseFinale * coeffRemontePente);
+				}
+				else
+					body->setLinearVelocity(vitesseFinale);
+			}
+			//body->addForce({ 10000000000.f,0.f,0.f }, PxForceMode::eIMPULSE);
+
+			//PxQuat orientation = PxQuat(3.14f/3.0f, normale);
+			if (!isContact()) {
+				matWorld = XMMatrixRotationQuaternion(XMVectorSet(pente.x, pente.y, pente.z, pente.w)); //Orientation
+				matWorld *= XMMatrixRotationQuaternion(XMVectorSet(orientation.x, orientation.y, orientation.z, orientation.w)); //Orientation
+			}
+			else {
+				matWorld = XMMatrixRotationQuaternion(XMVectorSet(body_->getGlobalPose().q.x, body_->getGlobalPose().q.y, body_->getGlobalPose().q.z, body_->getGlobalPose().q.w)); //Orientation
+				if (abs(totalTempsEcoule - tempsEcoule) < 0.0001f) {
+					body->setLinearVelocity(vitesseFinale * 0.5f);
+					suppBonus();
+				}
+			}
+
 		}
+
 		matWorld *= XMMatrixTranslationFromVector(XMVectorSet(body_->getGlobalPose().p.x, body_->getGlobalPose().p.y, body_->getGlobalPose().p.z, 1)); //Position
 
 	}
