@@ -86,7 +86,7 @@ namespace PM3D {
 		chizLowModel.Chargement(paramOBJChiz2);
 
 
-		CParametresChargement paramOBJSnow0 = CParametresChargement("snowbox_LOD0.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJSnow0 = CParametresChargement("Soapbox_Car.obj", ".\\modeles\\jin\\", true, false);
 		snowHDModel = CChargeurOBJ();
 		snowHDModel.Chargement(paramOBJSnow0);
 
@@ -191,7 +191,7 @@ namespace PM3D {
 				HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
 			}
 			else {
-				HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\snow.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\herbe.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
+				HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\frozengrass100.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\rockgrass.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\mask.dds", pDispositif_));
 			}
 
 			scenePhysic_->ListeScene_.emplace_back(move(HM));
