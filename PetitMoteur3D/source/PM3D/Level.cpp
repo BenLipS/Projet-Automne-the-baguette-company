@@ -138,36 +138,38 @@ namespace PM3D {
 		//Bottleneck
 		initBlocChiz(LMBOr, 670, 30);
 		initBlocChiz(LMBOr, 680, 22);
-		initBlocChiz(LMBOr, 690, 14);
-		initBlocChiz(LMBOr, 700, 7);
+		initBlocSnow(LMBOr, 690, 14);
+		initBlocSnow(LMBOr, 700, 7);
 		initBlocChiz(LMBOr, 710, 14);
-		initBlocChiz(LMBOr, 720, 22);
+		initBlocSnow(LMBOr, 720, 22);
 		initBlocChiz(LMBOr, 730, 30);
-		initBlocChiz(LMBOr, 670, -30);
+		initBlocSnow(LMBOr, 670, -30);
 		initBlocChiz(LMBOr, 680, -22);
-		initBlocChiz(LMBOr, 690, -14);
+		initBlocSnow(LMBOr, 690, -14);
 		initBlocChiz(LMBOr, 700, -7);
 		initBlocChiz(LMBOr, 710, -14);
-		initBlocChiz(LMBOr, 720, -22);
+		initBlocSnow(LMBOr, 720, -22);
 		initBlocChiz(LMBOr, 730, -30);
-		initBlocChiz(LMBOr, 990, 0);
+		initBlocSnow(LMBOr, 990, 0);
 		initBlocChizAbs(LMBOr, -450, 0, 12500);
 		initBlocChizAbs(LMBOr, 450, 0, 12500);
 
 		initBlocChizAbs(LMBOr, 0, 0, 15000);
 		initBlocChizAbs(LMBOr, 200, 0, 15000);
-		initBlocChizAbs(LMBOr, -200, 0, 15000);
+		initBlocSnowAbs(LMBOr, -200, 0, 15000);
 		initBlocChizAbs(LMBOr, 0, 0, 15200);
-		initBlocChizAbs(LMBOr, 0, 0, 14800);
+		initBlocSnowAbs(LMBOr, 0, 0, 14800);
 
 		initBlocChizAbs(LMBOr, -1000, 0, 30000);
-		initBlocChizAbs(LMBOr, -800, 0, 30000);
+		initBlocSnowAbs(LMBOr, -800, 0, 30000);
 		initBlocChizAbs(LMBOr, -600, 0, 30000);
 		initBlocChizAbs(LMBOr, 1000, 0, 30000);
-		initBlocChizAbs(LMBOr, 800, 0, 30000);
+		initBlocSnowAbs(LMBOr, 800, 0, 30000);
 		initBlocChizAbs(LMBOr, 600, 0, 30000);
 
 		initBlocChizAbs(LMBOr, -100, 0, 10440);
+		initBlocChizAbs(LMBOr, 100, 0, 23873);
+
 
 		initBlocRondin(LMBOr, 75, -20);
 		initBlocRondin(LMBOr, 75, 20);
@@ -189,6 +191,18 @@ namespace PM3D {
 		initBlocRondinAbs(LMBOr, 330, 0, 16175);
 		initBlocRondinAbs(LMBOr, -230, 0, 20000);
 		initBlocRondinAbs(LMBOr, 200, 0, 26500);
+		initBlocRondinAbs(LMBOr, -535, 0, 24600);
+
+		initBlocRondinAbs(LMBOr, -100, 0, 22533);
+		initBlocRondinAbs(LMBOr, 500, 0, 29779);
+		initBlocRondinAbs(LMBOr, -500, 0, 29779);
+
+		initBlocRondinAbs(LMBOr, -456, 0, 17181);
+		initBlocRondinAbs(LMBOr, 22, 0, 18617);
+
+		initBlocSnowAbs(LMBOr, 383, 0, 17067);
+
+
 
 		initBlocRondin(LMBOr, 1000, 0);
 
