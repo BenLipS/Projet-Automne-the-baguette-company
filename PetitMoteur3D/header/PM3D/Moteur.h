@@ -503,6 +503,12 @@ protected:
 			if (GestionnaireDeSaisie.ToucheAppuyee(DIK_P) && isGameStarted) {
 				waitforswapPause = true;
 			}
+			else if (GestionnaireDeSaisie.ToucheAppuyee(DIK_B) && isGameStarted) {
+				waitforswapBut = true;
+			}
+			else if (GestionnaireDeSaisie.ToucheAppuyee(DIK_C) && isGameStarted) {
+				waitforswapCommandes = true;
+			}
 			else {
 				if (waitforswapPause) {
 					isGamePaused = !isGamePaused;
@@ -536,6 +542,70 @@ protected:
 					}
 					waitforswapPause = false;
 				}
+				else if (waitforswapBut) {
+					isGamePaused = !isGamePaused;
+					if (isGamePaused) {
+						auto it = scenePhysic_->ListeScene_.begin();
+						while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+							it++;
+						}
+						if (it != scenePhysic_->ListeScene_.end()) {
+							physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+							posPause = body->getGlobalPose();
+							PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
+							vitessePause = bodyD->getLinearVelocity();
+						}
+
+					}
+					else {
+						auto it = scenePhysic_->ListeScene_.begin();
+						while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+							it++;
+						}
+						if (it != scenePhysic_->ListeScene_.end()) {
+							physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+							body->setGlobalPose(posPause);
+							PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
+							bodyD->setLinearVelocity(vitessePause);
+							isResetPause = true;
+							scenePhysic_->ListeScene_.erase(scenePhysic_->ListeScene_.begin() + 1);
+							effacerPause = false;
+						}
+					}
+					waitforswapBut = false;
+				}
+				else if (waitforswapCommandes) {
+					isGamePaused = !isGamePaused;
+					if (isGamePaused) {
+						auto it = scenePhysic_->ListeScene_.begin();
+						while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+							it++;
+						}
+						if (it != scenePhysic_->ListeScene_.end()) {
+							physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+							posPause = body->getGlobalPose();
+							PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
+							vitessePause = bodyD->getLinearVelocity();
+						}
+
+					}
+					else {
+						auto it = scenePhysic_->ListeScene_.begin();
+						while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+							it++;
+						}
+						if (it != scenePhysic_->ListeScene_.end()) {
+							physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+							body->setGlobalPose(posPause);
+							PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
+							bodyD->setLinearVelocity(vitessePause);
+							isResetPause = true;
+							scenePhysic_->ListeScene_.erase(scenePhysic_->ListeScene_.begin() + 1);
+							effacerPause = false;
+						}
+					}
+					waitforswapCommandes = false;
+				}
 			}
 
 			if (waitforswapPause && !effacerPause) {
@@ -545,6 +615,26 @@ protected:
 				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
 				pAfficheurSprite->AjouterSprite(".\\src\\PressP.dds"s, static_cast<int>(largeur * 0.4f), static_cast<int>(hauteur * 0.6f));
 				pAfficheurSprite->AjouterSprite(".\\src\\PressEscape.dds"s, static_cast<int>(largeur * 0.03f), static_cast<int>(hauteur * 0.25f));
+				scenePhysic_->ListeScene_.insert(scenePhysic_->ListeScene_.begin() + 1, std::move(pAfficheurSprite));
+				effacerPause = true;
+			}
+
+			if (waitforswapBut && !effacerPause) {
+				float largeur = static_cast<float>(pDispositif->GetLargeur());
+				float hauteur = static_cast<float>(pDispositif->GetHauteur());
+
+				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+				pAfficheurSprite->AjouterSprite(".\\src\\but.dds"s, static_cast<int>(largeur * 0.4f), static_cast<int>(hauteur * 0.6f));
+				scenePhysic_->ListeScene_.insert(scenePhysic_->ListeScene_.begin() + 1, std::move(pAfficheurSprite));
+				effacerPause = true;
+			}
+
+			if (waitforswapCommandes && !effacerPause) {
+				float largeur = static_cast<float>(pDispositif->GetLargeur());
+				float hauteur = static_cast<float>(pDispositif->GetHauteur());
+
+				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+				pAfficheurSprite->AjouterSprite(".\\src\\Commandes.dds"s, static_cast<int>(largeur * 0.4f), static_cast<int>(hauteur * 0.6f));
 				scenePhysic_->ListeScene_.insert(scenePhysic_->ListeScene_.begin() + 1, std::move(pAfficheurSprite));
 				effacerPause = true;
 			}
@@ -919,6 +1009,8 @@ protected:
 
 		bool isGamePaused = false;
 		bool waitforswapPause = false;
+		bool waitforswapBut = false;
+		bool waitforswapCommandes = false;
 		physx::PxTransform posPause;
 		physx::PxVec3 vitessePause;
 		int tempsMinPause = 0;
