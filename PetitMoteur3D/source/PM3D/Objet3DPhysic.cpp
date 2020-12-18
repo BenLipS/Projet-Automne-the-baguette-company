@@ -12,7 +12,11 @@ namespace PM3D {
 
 	IChargeur* Objet3DPhysic::getChargeurLOD(std::vector<IChargeur*> chargeurs, PxRigidActor* body) {
 		XMVECTOR camPoseDX = CMoteurWindows::GetInstance().getCameraPosition();
-		PxVec3 camPose{ XMVectorGetX(camPoseDX),XMVectorGetY(camPoseDX),XMVectorGetZ(camPoseDX) };
+		PxVec3 camPose;
+		if (XMVectorGetZ(camPoseDX) > 0)
+			camPose = PxVec3{ XMVectorGetY(camPoseDX),XMVectorGetZ(camPoseDX), XMVectorGetX(camPoseDX) };
+		else
+			camPose = PxVec3{ XMVectorGetX(camPoseDX),XMVectorGetY(camPoseDX), XMVectorGetZ(camPoseDX) };
 		PxVec3 objPose = body->getGlobalPose().p;
 		float distance = (objPose - camPose).magnitude();
 		if (chargeurs.size() == 3) {
@@ -31,9 +35,13 @@ namespace PM3D {
 
 	IChargeur* Objet3DPhysic::getChargeurLODMoteur(std::vector<IChargeur*> chargeurs, PxRigidActor* body) {
 		XMVECTOR camPoseDX = CMoteurWindows::GetInstance().getCameraPosition();
-		PxVec3 camPose{ XMVectorGetX(camPoseDX),XMVectorGetY(camPoseDX),XMVectorGetZ(camPoseDX) };
+		PxVec3 camPose;
+		if(XMVectorGetZ(camPoseDX) > 0)
+			camPose= PxVec3{XMVectorGetY(camPoseDX),XMVectorGetZ(camPoseDX), XMVectorGetX(camPoseDX) };
+		else
+			camPose= PxVec3{ XMVectorGetX(camPoseDX),XMVectorGetY(camPoseDX), XMVectorGetZ(camPoseDX) };
 		PxVec3 objPose = body->getGlobalPose().p;
-		float distance = (objPose - camPose).magnitude();
+		float distance =(objPose - camPose).magnitude();
 		if (chargeurs.size() == 3) {
 			if (distance < 5000.f) {
 				return chargeurs.front();
