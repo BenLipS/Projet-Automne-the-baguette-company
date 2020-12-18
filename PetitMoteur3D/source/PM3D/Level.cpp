@@ -191,12 +191,12 @@ namespace PM3D {
 		const std::vector<IChargeur*> listModels{ voitureCOBJ };
 
 		// Joueur
-		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
+		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_ + 150.f; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
 		float constexpr posY = 0.0f; // largeur // au centre de la pente
 		float const posZ = scaleFixZ_ * scaleZ_ + 20; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
 		posDepart_ = PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f)));
 
-		float rayon = voitureCOBJ->GetDistanceY();
+		float rayon = voitureCOBJ->GetDistanceY() - 10.f;
 
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, posDepart_, rayon, pDispositif_, listModels));
 	}
@@ -376,7 +376,7 @@ namespace PM3D {
 
 
 
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), longueur, largeur, epaisseur, pDispositif_, listModels));
 	}
 	void Level::initBlocRondinAbs( float _x, float _y, float _z) {
 
@@ -390,7 +390,7 @@ namespace PM3D {
 		float largeur = chiz0Instance->GetDistanceY();
 		float epaisseur = chiz0Instance->GetDistanceZ();
 
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, getYwithZ(_z) + 50, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, getYwithZ(_z) + 50, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), longueur, largeur, epaisseur, pDispositif_, listModels));
 	}
 	void Level::initAllBonus() {
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();

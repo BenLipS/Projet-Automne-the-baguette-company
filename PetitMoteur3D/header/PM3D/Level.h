@@ -80,10 +80,10 @@ namespace PM3D {
 		void initBlocSnow(float _x, float _y);
 		void initBlocRondin(float _x, float _y);
 
-		void initBonusAbs(Light_Manager lm, float _x, float _y, float _z);
-		void initBlocChizAbs(Light_Manager lm, float _x, float _y, float _z);
-		void initBlocSnowAbs(Light_Manager lm, float _x, float _y, float _z);
-		void initBlocRondinAbs(Light_Manager lm, float _x, float _y, float _z);
+		void initBonusAbs( float _x, float _y, float _z);
+		void initBlocChizAbs( float _x, float _y, float _z);
+		void initBlocSnowAbs( float _x, float _y, float _z);
+		void initBlocRondinAbs( float _x, float _y, float _z);
 
 		void initSkyBox();
 		void initTunnel(float _x, float _y);
