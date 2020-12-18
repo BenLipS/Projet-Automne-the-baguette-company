@@ -50,7 +50,7 @@ namespace PM3D {
 			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f) // vDMat
 		};
 
-		// PROVISOIRE
+
 		CParametresChargement paramOBJBonus0 = CParametresChargement("bonusrocket_LOD0.obj", ".\\modeles\\jin\\", true, false);
 		bonusHDModel = CChargeurOBJ();
 		bonusHDModel.Chargement(paramOBJBonus0);
@@ -63,9 +63,7 @@ namespace PM3D {
 		bonusLowModel = CChargeurOBJ();
 		bonusLowModel.Chargement(paramOBJBonus2);
 
-
 		CParametresChargement paramOBJSky = CParametresChargement("skybox.obj", ".\\modeles\\jin\\", true, false);
-
 		skyboxModel = CChargeurOBJ();
 		skyboxModel.Chargement(paramOBJSky);
 
@@ -85,8 +83,7 @@ namespace PM3D {
 		chizLowModel = CChargeurOBJ();
 		chizLowModel.Chargement(paramOBJChiz2);
 
-
-		CParametresChargement paramOBJSnow0 = CParametresChargement("Soapbox_Car.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJSnow0 = CParametresChargement("snowbox_LOD0.obj", ".\\modeles\\jin\\", true, false);
 		snowHDModel = CChargeurOBJ();
 		snowHDModel.Chargement(paramOBJSnow0);
 
@@ -98,19 +95,19 @@ namespace PM3D {
 		snowLowModel = CChargeurOBJ();
 		snowLowModel.Chargement(paramOBJSnow2);
 
-		CParametresChargement voitureOBJ = CParametresChargement("Soapbox_Car.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement voitureOBJ = CParametresChargement("UdeSSavon8.obj", ".\\modeles\\jin\\", true, false);
 		voiture = CChargeurOBJ();
 		voiture.Chargement(voitureOBJ);
 
-		CParametresChargement paramOBJrondin0 = CParametresChargement("rond1.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJrondin0 = CParametresChargement("rond1_LOD0.obj", ".\\modeles\\jin\\", true, false);
 		rondinHDModel = CChargeurOBJ();
 		rondinHDModel.Chargement(paramOBJrondin0);
 
-		CParametresChargement paramOBJrondin1 = CParametresChargement("rond1.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJrondin1 = CParametresChargement("rond1_LOD1.obj", ".\\modeles\\jin\\", true, false);
 		rondinMidModel = CChargeurOBJ();
 		rondinMidModel.Chargement(paramOBJrondin1);
 
-		CParametresChargement paramOBJrondin2 = CParametresChargement("rond1.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJrondin2 = CParametresChargement("rond1_LOD2.obj", ".\\modeles\\jin\\", true, false);
 		rondinLowModel = CChargeurOBJ();
 		rondinLowModel.Chargement(paramOBJrondin2);
 
@@ -136,8 +133,41 @@ namespace PM3D {
 		initBlocChiz(LMBOr, 370, -20);
 		initBlocChiz(LMBOr, 390, 20);
 		initBlocChiz(LMBOr, 390, -20);
-		//initBlocChizAbs(LMBOr, -20, 6000, 3690);
+		initBlocChizAbs(LMBOr, 0, 0, 0);
 
+		//Bottleneck
+		initBlocChiz(LMBOr, 670, 30);
+		initBlocChiz(LMBOr, 680, 22);
+		initBlocChiz(LMBOr, 690, 14);
+		initBlocChiz(LMBOr, 700, 7);
+		initBlocChiz(LMBOr, 710, 14);
+		initBlocChiz(LMBOr, 720, 22);
+		initBlocChiz(LMBOr, 730, 30);
+		initBlocChiz(LMBOr, 670, -30);
+		initBlocChiz(LMBOr, 680, -22);
+		initBlocChiz(LMBOr, 690, -14);
+		initBlocChiz(LMBOr, 700, -7);
+		initBlocChiz(LMBOr, 710, -14);
+		initBlocChiz(LMBOr, 720, -22);
+		initBlocChiz(LMBOr, 730, -30);
+		initBlocChiz(LMBOr, 990, 0);
+		initBlocChizAbs(LMBOr, -450, 0, 12500);
+		initBlocChizAbs(LMBOr, 450, 0, 12500);
+
+		initBlocChizAbs(LMBOr, 0, 0, 15000);
+		initBlocChizAbs(LMBOr, 200, 0, 15000);
+		initBlocChizAbs(LMBOr, -200, 0, 15000);
+		initBlocChizAbs(LMBOr, 0, 0, 15200);
+		initBlocChizAbs(LMBOr, 0, 0, 14800);
+
+		initBlocChizAbs(LMBOr, -1000, 0, 30000);
+		initBlocChizAbs(LMBOr, -800, 0, 30000);
+		initBlocChizAbs(LMBOr, -600, 0, 30000);
+		initBlocChizAbs(LMBOr, 1000, 0, 30000);
+		initBlocChizAbs(LMBOr, 800, 0, 30000);
+		initBlocChizAbs(LMBOr, 600, 0, 30000);
+
+		initBlocChizAbs(LMBOr, -100, 0, 10440);
 
 		initBlocRondin(LMBOr, 75, -20);
 		initBlocRondin(LMBOr, 75, 20);
@@ -145,15 +175,29 @@ namespace PM3D {
 		initBlocRondin(LMBOr, 150, 0);
 		initBlocRondin(LMBOr, 200, 7.5);
 		initBlocRondin(LMBOr, 200, 20);
-		initBlocRondin(LMBOr, 1000, 0);
-		initBlocRondinAbs(LMBOr, 0, 7500, 2000);
+		initBlocRondin(LMBOr, 500, 20);
+		initBlocRondin(LMBOr, 550, -20);
 
-		initBlocRondinAbs(LMBOr, 0, 0, 1000);
+		initBlocRondin(LMBOr, 760, -20);
+		initBlocRondin(LMBOr, 775, -20);
+		initBlocRondin(LMBOr, 790, -20);
+
+		initBlocRondin(LMBOr, 830, 20);
+		initBlocRondin(LMBOr, 845, 20);
+		initBlocRondin(LMBOr, 860, 20);
+		initBlocRondinAbs(LMBOr, -373, 0, 13200);
+		initBlocRondinAbs(LMBOr, 330, 0, 16175);
+		initBlocRondinAbs(LMBOr, -230, 0, 20000);
+		initBlocRondinAbs(LMBOr, 200, 0, 26500);
+
+		initBlocRondin(LMBOr, 1000, 0);
+
 		initBlocChizAbs(LMBOr, 0, 0, 28000);
+
 
 		initAllBonus();
 
-		initTunnel(1000,0);
+		initTunnel(1000, 0);
 
 		initSkyBox();
 
@@ -396,13 +440,11 @@ namespace PM3D {
 		initBonus(LMB, 170, 0);
 		initBonus(LMB, 300, 0);
 		initBonus(LMB, 400, 0);
-		initBonus(LMB, 670, 0);
-		initBonus(LMB, 1100, 0);
-		initBonus(LMB, 1200, 0);
-		initBonus(LMB, 1500, 0);
-		//initBonusAbs(LMB, 510, 6898, 3011);
-	}
+		initBonus(LMB, 710, -7.5);
+		initBonus(LMB, 1400, -9);
+		initBonusAbs(LMB, -130, 0, 11367);
 
+	}
 
 	void Level::initBonus(Light_Manager _lm, float _x, float _y) {
 
@@ -509,5 +551,4 @@ namespace PM3D {
 			scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 		};
 	}
-
 }
