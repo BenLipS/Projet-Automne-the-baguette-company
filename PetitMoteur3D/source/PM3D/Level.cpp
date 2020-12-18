@@ -139,14 +139,14 @@ namespace PM3D {
 		initBlocChiz(LMBOr, 670, 30);
 		initBlocChiz(LMBOr, 680, 22);
 		initBlocSnow(LMBOr, 690, 14);
-		initBlocSnow(LMBOr, 700, 7);
+		initBlocSnow(LMBOr, 700, 10);
 		initBlocChiz(LMBOr, 710, 14);
 		initBlocSnow(LMBOr, 720, 22);
 		initBlocChiz(LMBOr, 730, 30);
 		initBlocSnow(LMBOr, 670, -30);
 		initBlocChiz(LMBOr, 680, -22);
 		initBlocSnow(LMBOr, 690, -14);
-		initBlocChiz(LMBOr, 700, -7);
+		initBlocChiz(LMBOr, 700, -10);
 		initBlocChiz(LMBOr, 710, -14);
 		initBlocSnow(LMBOr, 720, -22);
 		initBlocChiz(LMBOr, 730, -30);

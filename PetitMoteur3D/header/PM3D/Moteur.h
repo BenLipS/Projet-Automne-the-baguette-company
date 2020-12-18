@@ -524,8 +524,8 @@ namespace PM3D
 					pTexteVitesse->Ecrire(L"0 km/h");
 					pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960, "spritevitesse");
 
-					pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
-					pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);
+					//pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
+					//pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);
 
 					scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 
@@ -625,25 +625,6 @@ protected:
 					camera.update(tempsEcoule);
 				}
 				if (!initEcranChargement_) {
-					
-					BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
-					//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
-					camera.update(character, tempsEcoule);
-					if (isGameStarted) {
-						updateChrono();
-
-						updateSpeed();
-
-						updateBonus();
-
-
-						/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
-							swapPose = true;
-						}
-						else if (swapPose) {
-							swapPose = false;
-						}*/
-
 					auto it = scenePhysic_->ListeScene_.begin();
 					while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
 						it++;
@@ -659,14 +640,15 @@ protected:
 							updateSpeed();
 
 							updateBonus();
-						} else if (body->getGlobalPose().p.z >= 29600.f) {
+						}
+						else if (body->getGlobalPose().p.z >= 29600.f) {
 							eraseSprite("spritebonus");
 							eraseSprite("spritecompteur");
 							eraseSpriteTexte("spritevitesse");
 							eraseSpriteTexte("spritechrono");
 							afficheArrivee();
 						}
-
+					}
 						/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
 							swapPose = true;
 						}
@@ -678,14 +660,6 @@ protected:
 						if (swapPose) {
 							updatePose();
 						}*/
-						if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3)) {
-							swapPose = true;
-						}
-
-						if (swapPose) {
-							updatePose();
-						}
-					}
 				}
 
 				totalTempsEcoule += tempsEcoule;
