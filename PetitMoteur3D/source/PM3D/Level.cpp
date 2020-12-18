@@ -132,6 +132,10 @@ namespace PM3D {
 		initBlocChiz(LMBOr, 920, 20);
 
 
+		initBlocRondin(LMBOr, 1200, 0);
+		initBlocRondin(LMBOr, 1500, 0);
+
+
 		initAllBonus();
 
 		initTunnel(1000,0);
