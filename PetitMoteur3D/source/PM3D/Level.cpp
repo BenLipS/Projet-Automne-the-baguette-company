@@ -98,6 +98,22 @@ namespace PM3D {
 		snowLowModel = CChargeurOBJ();
 		snowLowModel.Chargement(paramOBJSnow2);
 
+		CParametresChargement voitureOBJ = CParametresChargement("Soapbox_Car.obj", ".\\modeles\\jin\\", true, false);
+		voiture = CChargeurOBJ();
+		voiture.Chargement(voitureOBJ);
+
+		CParametresChargement paramOBJrondin0 = CParametresChargement("rond1.obj", ".\\modeles\\jin\\", true, false);
+		rondinHDModel = CChargeurOBJ();
+		rondinHDModel.Chargement(paramOBJrondin0);
+
+		CParametresChargement paramOBJrondin1 = CParametresChargement("rond1.obj", ".\\modeles\\jin\\", true, false);
+		rondinMidModel = CChargeurOBJ();
+		rondinMidModel.Chargement(paramOBJrondin1);
+
+		CParametresChargement paramOBJrondin2 = CParametresChargement("rond1.obj", ".\\modeles\\jin\\", true, false);
+		rondinLowModel = CChargeurOBJ();
+		rondinLowModel.Chargement(paramOBJrondin2);
+
 		initJoueur();
 		initPente(LMB);
 		initHM(LMB, -200);
@@ -105,15 +121,15 @@ namespace PM3D {
 		initHM(LMB, 1, true);
 		initHM(LMB, 2, true);
 
-		initBloc(LMBOr, 100, 0); //X Y
-		initBloc(LMBOr, 220, 0);
-		initBloc(LMBOr, 420, 0);
-		initBloc(LMBOr, 550, -35);
-		initBloc(LMBOr, 680, -18);
-		initBloc(LMBOr, 730, -90);
-		initBloc(LMBOr, 730, -10);
-		initBloc(LMBOr, 730, 50);
-		initBloc(LMBOr, 920, 20);
+		initBlocChiz(LMBOr, 100, 0); //X Y
+		initBlocChiz(LMBOr, 220, 0);
+		initBlocChiz(LMBOr, 420, 0);
+		initBlocChiz(LMBOr, 550, -35);
+		initBlocChiz(LMBOr, 680, -18);
+		initBlocChiz(LMBOr, 730, -90);
+		initBlocChiz(LMBOr, 730, -10);
+		initBlocChiz(LMBOr, 730, 50);
+		initBlocChiz(LMBOr, 920, 20);
 
 		initAllBonus();
 
@@ -136,8 +152,8 @@ namespace PM3D {
 	};
 	void Level::initJoueur() {
 
-		CChargeurOBJ* snowInstance = new CChargeurOBJ(snowHDModel);
-		const std::vector<IChargeur*> listModels{ snowInstance };
+		CChargeurOBJ* voitureCOBJ = new CChargeurOBJ(voiture);
+		const std::vector<IChargeur*> listModels{ voitureCOBJ };
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
@@ -237,11 +253,55 @@ namespace PM3D {
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, scaleZ_ * scaleFixZ_ / 2, 0.0f), normPente));
 	}
 
-	void Level::initBloc(Light_Manager _lm, float _x, float _y) {
+	void Level::initBlocChiz(Light_Manager _lm, float _x, float _y) {
 
 		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(chizHDModel);
 		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(chizMidModel);
 		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(chizLowModel);
+		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
+
+		// Pente
+		float longueur = chiz0Instance->GetDistanceX();
+		float largeur = chiz0Instance->GetDistanceY();
+		float epaisseur = chiz0Instance->GetDistanceZ();
+
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
+		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
+		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
+		float const posY = _y * scaleY_;
+
+
+
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+	}
+
+	void Level::initBlocSnow(Light_Manager _lm, float _x, float _y) {
+
+		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(snowHDModel);
+		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(snowMidModel);
+		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(snowLowModel);
+		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
+
+		// Pente
+		float longueur = chiz0Instance->GetDistanceX();
+		float largeur = chiz0Instance->GetDistanceY();
+		float epaisseur = chiz0Instance->GetDistanceZ();
+
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
+		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
+		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
+		float const posY = _y * scaleY_;
+
+
+
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+	}
+
+	void Level::initBlocRondin(Light_Manager _lm, float _x, float _y) {
+
+		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(rondinHDModel);
+		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(rondinMidModel);
+		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(rondinLowModel);
 		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
 
 		// Pente
