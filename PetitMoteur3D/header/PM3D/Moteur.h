@@ -487,8 +487,8 @@ namespace PM3D
 					pTexteVitesse->Ecrire(L"0 km/h");
 					pAfficheurSprite->AjouterSpriteTexte(pTexteVitesse->GetTextureView(), 200, 960);
 
-					/*pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
-					pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);*/
+					pTextePosition = std::make_unique<CAfficheurTexte>(pDispositif, 700, 556, pPolice.get());
+					pAfficheurSprite->AjouterSpriteTexte(pTextePosition->GetTextureView(), 800, 810);
 
 					scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 
@@ -597,24 +597,25 @@ protected:
 						updateSpeed();
 
 						updateBonus();
-					}
 
-					/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
-						swapPose = true;
-					}
-					else if (swapPose) {
-						swapPose = false;
-					}
 
-					if (swapPose) {
-						updatePose();
-					}*/
-					if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3)) {
-						swapPose = true;
-					}
+						/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
+							swapPose = true;
+						}
+						else if (swapPose) {
+							swapPose = false;
+						}
 
-					if (swapPose) {
-						updatePose();
+						if (swapPose) {
+							updatePose();
+						}*/
+						if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3)) {
+							swapPose = true;
+						}
+
+						if (swapPose) {
+							updatePose();
+						}
 					}
 				}
 

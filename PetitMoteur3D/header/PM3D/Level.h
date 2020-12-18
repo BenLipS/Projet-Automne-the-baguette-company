@@ -72,11 +72,18 @@ namespace PM3D {
 
 		void initJoueur();
 		void initPente(Light_Manager lm);
-		void initBonus(Light_Manager lm, float _x, float _y);
+		
 		void initAllBonus();
+
+		void initBonus(Light_Manager lm, float _x, float _y);
 		void initBlocChiz(Light_Manager lm, float _x, float _y);
 		void initBlocSnow(Light_Manager lm, float _x, float _y);
 		void initBlocRondin(Light_Manager lm, float _x, float _y);
+
+		void initBonusAbs(Light_Manager lm, float _x, float _y, float _z);
+		void initBlocChizAbs(Light_Manager lm, float _x, float _y, float _z);
+		void initBlocSnowAbs(Light_Manager lm, float _x, float _y, float _z);
+		void initBlocRondinAbs(Light_Manager lm, float _x, float _y, float _z);
 
 		void initSkyBox();
 		void initTunnel(float _x, float _y);

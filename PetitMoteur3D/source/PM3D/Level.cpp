@@ -279,7 +279,20 @@ namespace PM3D {
 
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
 	}
+	void Level::initBlocChizAbs(Light_Manager _lm, float _x, float _y, float _z) {
 
+		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(chizHDModel);
+		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(chizMidModel);
+		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(chizLowModel);
+		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
+
+		// Pente
+		float longueur = chiz0Instance->GetDistanceX();
+		float largeur = chiz0Instance->GetDistanceY();
+		float epaisseur = chiz0Instance->GetDistanceZ();
+
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, _y, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+	}
 	void Level::initBlocSnow(Light_Manager _lm, float _x, float _y) {
 
 		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(snowHDModel);
@@ -300,6 +313,21 @@ namespace PM3D {
 
 
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+	}
+	void Level::initBlocSnowAbs(Light_Manager _lm, float _x, float _y, float _z) {
+
+		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(snowHDModel);
+		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(snowMidModel);
+		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(snowLowModel);
+		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
+
+		// Pente
+		float longueur = chiz0Instance->GetDistanceX();
+		float largeur = chiz0Instance->GetDistanceY();
+		float epaisseur = chiz0Instance->GetDistanceZ();
+
+
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, _y, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
 	}
 
 	void Level::initBlocRondin(Light_Manager _lm, float _x, float _y) {
@@ -323,7 +351,20 @@ namespace PM3D {
 
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
 	}
+	void Level::initBlocRondinAbs(Light_Manager _lm, float _x, float _y, float _z) {
 
+		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(rondinHDModel);
+		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(rondinMidModel);
+		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(rondinLowModel);
+		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
+
+		// Pente
+		float longueur = chiz0Instance->GetDistanceX();
+		float largeur = chiz0Instance->GetDistanceY();
+		float epaisseur = chiz0Instance->GetDistanceZ();
+
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, _y, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+	}
 	void Level::initAllBonus() {
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		while (rMoteur.eraseBonus());
@@ -341,10 +382,11 @@ namespace PM3D {
 		initBonus(LMB, 200, 0);
 		initBonus(LMB, 300, 0);
 		initBonus(LMB, 400, 0);
-		initBonus(LMB, 500, 0);
-		initBonus(LMB, 600, 0);
-		initBonus(LMB, 700, 0);
-		initBonus(LMB, 800, 0);
+		initBonus(LMB, 1000, 0);
+		initBonus(LMB, 1100, 0);
+		initBonus(LMB, 1200, 0);
+		initBonus(LMB, 1500, 0);
+		initBonusAbs(LMB, 510, 6898, 3011);
 	}
 
 	void Level::initBonus(Light_Manager _lm, float _x, float _y) {
@@ -364,6 +406,22 @@ namespace PM3D {
 		float const posY = _y * scaleY_;
 
 		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels, _lm));
+
+	}
+
+	void Level::initBonusAbs(Light_Manager _lm, float _x, float _y, float _z) {
+
+		CChargeurOBJ* bonus0Instance = new CChargeurOBJ(bonusHDModel);
+		CChargeurOBJ* bonus1Instance = new CChargeurOBJ(bonusMidModel);
+		CChargeurOBJ* bonus2Instance = new CChargeurOBJ(bonusLowModel);
+		const std::vector<IChargeur*> listModels{ bonus0Instance, bonus1Instance, bonus2Instance };
+
+		// Pente
+		float rayon = bonus0Instance->GetDistanceY() / 2;
+		float demiHauteur = bonus0Instance->GetDistanceZ();
+
+
+		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(_x, _y, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels, _lm));
 
 	}
 
