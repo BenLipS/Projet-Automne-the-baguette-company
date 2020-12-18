@@ -119,6 +119,7 @@ namespace PM3D {
 		initBloc(LMBOr, 730, 50);
 		initBloc(LMBOr, 920, 20);
 
+
 		initAllBonus();
 
 		initTunnel(1000,0);
