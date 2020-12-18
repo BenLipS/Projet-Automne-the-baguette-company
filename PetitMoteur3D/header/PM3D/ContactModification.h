@@ -1,12 +1,10 @@
 #pragma once
 #include "PxPhysicsAPI.h"
-#include <vector>
 
 namespace PM3D {
 
-	class ContactModification : public physx::PxContactModifyCallback, public physx::PxSimulationEventCallback
+	struct ContactModification : public physx::PxContactModifyCallback, public physx::PxSimulationEventCallback
 	{
-	public:
 
 		void onContactModify(physx::PxContactModifyPair* const pairs, physx::PxU32 count);
 

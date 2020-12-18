@@ -7,12 +7,11 @@
 #include <fstream>
 #include <algorithm>
 
+#include "stdafx.h"
 #include "Objet3D.h"
 #include "Terrain.h"
 #include "DIManipulateur.h"
 #include "Camera.h"
-#include "PxPhysicsAPI.h"
-#include "stdafx.h"
 #include "tools.h"
 #include "BlocDynamic.h"
 #include "BlocStatic.h"
@@ -26,10 +25,11 @@
 #include "GestionnaireDeTextures.h"
 #include "ObjetMesh.h"
 #include "chargeur.h"
-#include "BlocEffet1.h"
 #include "AfficheurSprite.h"
 #include "AfficheurPanneau.h"
 #include "AfficheurTexte.h"
+
+#include "PxPhysicsAPI.h"
 
 #include <chrono>
 #include <sstream>
@@ -37,7 +37,6 @@
 #include <locale>
 
 using namespace std;
-//using namespace physx;
 
 namespace PM3D
 {
@@ -73,7 +72,6 @@ namespace PM3D
 			bool bBoucle = true;
 
 			bool waitforswapPause = false;
-			bool waitforswapPause2 = false;
 
 			while (bBoucle)
 			{
@@ -98,11 +96,11 @@ namespace PM3D
 				}
 
 				// appeler la fonction d'animation
-					if (bBoucle)
-					{
-						bBoucle = Animation();
-					}
+				if (bBoucle)
+				{
+					bBoucle = Animation();
 				}
+			}
 
 		}
 
@@ -174,37 +172,6 @@ namespace PM3D
 				}
 			});
 			return meilleurTerrain.first;
-		}
-
-		physx::PxTransform getTerrainNormale() {
-			auto start = scenePhysic_->ListeScene_.begin();
-			auto end = scenePhysic_->ListeScene_.end();
-			while (start != end && start->get()->typeTag != "pente")
-				start++;
-
-			if (start != end) {
-				PlanStatic* terrain = static_cast<PlanStatic*>(start->get());
-				return terrain->getTerrainNormale();
-			}
-			else {
-				return physx::PxTransform();
-			}
-		}
-
-		pair<physx::PxVec3, physx::PxVec3> getTerrainPair() {
-			auto start = scenePhysic_->ListeScene_.begin();
-			auto end = scenePhysic_->ListeScene_.end();
-			while (start != end && start->get()->typeTag != "terrain")
-				start++;
-
-			if (start != end) {
-				PlanStatic* terrain = dynamic_cast<PlanStatic*>(start->get());
-				pair<physx::PxVec3, physx::PxVec3> pair{ terrain->getNormale(), terrain->getDirection() };
-				return pair;
-			}
-			else {
-				return {};
-			}
 		}
 
 		CDIManipulateur& GetGestionnaireDeSaisie() noexcept { return GestionnaireDeSaisie; }
@@ -397,9 +364,6 @@ namespace PM3D
 				object3D->Draw();
 			}
 
-			//SkyBox* skybox = niveau->getSkyBox();
-			//skybox->Draw();
-
 			EndRenderSceneSpecific();
 			return true;
 		}
@@ -420,10 +384,11 @@ namespace PM3D
 				delete scenePhysic_;
 			}
 		}
-		public:
-			virtual int InitScene()
-			{
-				if (initEcranChargement_) {
+	public:
+
+		virtual int InitScene()
+		{
+			if (initEcranChargement_) {
 				// Scene physX
 				scenePhysic_ = new Scene();
 				//Partie physique
@@ -447,7 +412,7 @@ namespace PM3D
 				scenePhysic_->material_ = scenePhysic_->physic_->createMaterial(0.5f, 0.5f, 0.6f);
 			}
 
-			constexpr float champDeVision = XM_PI / 3; 	// 45 degr�s
+			constexpr float champDeVision = XM_PI / 3;
 			const float ratioDAspect = static_cast<float>(pDispositif->GetLargeur()) / static_cast<float>(pDispositif->GetHauteur());
 			const float planRapproche = 1.0f;
 			const float planEloigne = 1000000.0f;
@@ -469,10 +434,6 @@ namespace PM3D
 			{
 				return 1;
 			}
-			if (!initEcranChargement_) {
-			/*BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
-			camera.update(character);*/
-			}
 
 			return 0;
 		}
@@ -486,31 +447,15 @@ namespace PM3D
 
 			if (!initEcranChargement_) {
 				if (!isGameStarted) {
-				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-				pAfficheurSprite->AjouterSprite(".\\src\\SnowGlissSavon_8_ET.dds"s, static_cast<int>(0), static_cast<int>(hauteur), static_cast<int>(largeur), static_cast<int>(hauteur));
-				scenePhysic_->ListeScene_.clear();
-				//Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
-				niveau = new Level(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
-				//std::unique_ptr<CAfficheurPanneau> pAfficheurPanneau = std::make_unique<CAfficheurPanneau>(pDispositif);
+					std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+					pAfficheurSprite->AjouterSprite(".\\src\\SnowGlissSavon_8_ET.dds"s, static_cast<int>(0), static_cast<int>(hauteur), static_cast<int>(largeur), static_cast<int>(hauteur));
+					scenePhysic_->ListeScene_.clear();
+					niveau = new Level(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 
+					scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 
-				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
-				}
-				// ajout de panneaux
-				//pAfficheurSprite->AjouterPanneau(".\\src\\Elcomptero.dds"s, XMFLOAT3(9980.0f, 0.0f, 19197.0f),2000,2000);
-				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 1.0f, -2.0f));
-				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(1.0f, 0.0f, -2.0f));
-				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-1.0f, 0.0f, 0.5f));
-				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-0.5f, 0.0f, 1.0f));
-				//pAfficheurPanneau->AjouterPanneau(".\\src\\grass_v1_basic_tex.dds"s, XMFLOAT3(-2.0f, 0.0f, 2.0f));
+				} else {
 
-				// Création de l’afficheur de sprites et ajout des sprites
-
-
-				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 500, 500, 100, 100);
-				//pAfficheurSprite->AjouterSprite(".\\src\\tree02s.dds"s, 800, 200, 100, 100);
-
-				if (isGameStarted) {
 					std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
 					CAfficheurTexte::Init();
 					const Gdiplus::FontFamily oFamily(L"Comic Sans MS", nullptr);
@@ -530,10 +475,7 @@ namespace PM3D
 					scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 
 					updateBonus();
-					//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
 				}
-
-					//scenePhysic_->ListeScene_.push_back(std::move(pAfficheurPanneau));
 
 			}
 			else {
@@ -568,7 +510,8 @@ protected:
 						auto it = scenePhysic_->ListeScene_.begin();
 						while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
 							it++;
-						}if (it != scenePhysic_->ListeScene_.end()) {
+						}
+						if (it != scenePhysic_->ListeScene_.end()) {
 							physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
 							posPause = body->getGlobalPose();
 							PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
@@ -580,7 +523,8 @@ protected:
 						auto it = scenePhysic_->ListeScene_.begin();
 						while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
 							it++;
-						}if (it != scenePhysic_->ListeScene_.end()) {
+						}
+						if (it != scenePhysic_->ListeScene_.end()) {
 							physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
 							body->setGlobalPose(posPause);
 							PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
@@ -593,6 +537,7 @@ protected:
 					waitforswapPause = false;
 				}
 			}
+
 			if (waitforswapPause && !effacerPause) {
 				float largeur = static_cast<float>(pDispositif->GetLargeur());
 				float hauteur = static_cast<float>(pDispositif->GetHauteur());
@@ -614,8 +559,7 @@ protected:
 					PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
 					bodyD->setLinearVelocity(PxZero);
 				}
-			}
-			if (!isGamePaused) {
+			} else {
 				for (auto& object3D : scenePhysic_->ListeScene_)
 				{
 					object3D->Anime(tempsEcoule);
@@ -651,9 +595,6 @@ protected:
 					}
 						/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
 							swapPose = true;
-						}
-						else if (swapPose) {
-							swapPose = false;
 						}
 
 
@@ -932,9 +873,6 @@ protected:
 		// Le dispositif de rendu
 		TClasseDispositif* pDispositif{};
 
-		// La seule sc�ne
-		//std::vector<std::unique_ptr<CObjet3D>> ListeScene;
-
 		// Les matrices
 		XMMATRIX m_MatView{};
 		XMMATRIX m_MatProj{};
@@ -954,9 +892,6 @@ protected:
 
 		// Le niveau
 		Level* niveau;
-
-		//ControllerManager
-		//PxControllerManager * controllerManager_;
 
 		// Gestion des collisions
 		ContactModification contactModif_{};

@@ -1,7 +1,6 @@
 #pragma once
 #include "Afficheur2D.h"
 
-
 using namespace DirectX;
 
 namespace PM3D

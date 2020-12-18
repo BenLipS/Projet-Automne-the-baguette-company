@@ -1,6 +1,6 @@
 #pragma once
-#include <string.h>
 #include "dispositifD3D11.h"
+
 #include <Gdiplus.h> 
 #include <string> 
 #pragma comment(lib, "gdiplus.lib")

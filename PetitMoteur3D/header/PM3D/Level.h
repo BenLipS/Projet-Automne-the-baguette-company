@@ -13,11 +13,11 @@
 #include "SkyBox.h"
 #include "Objet3Dvisuel.h"
 
+#include "PxPhysicsAPI.h"
 
 #include <d3d11.h>
-#include <PxPhysicsAPI.h>
 #include <fstream>
-#include<vector>
+#include <vector>
 #include <algorithm>
 
 namespace PM3D {
@@ -30,15 +30,15 @@ namespace PM3D {
 		Level(const Level&) = delete;
 		~Level() = default;
 
-		SkyBox* getSkyBox() { return skyBox_.get(); }
-		
 		void restart();
 		void start();
+
 	private:
 
-		//DELETE THAT
 		CChargeurOBJ skyboxModel;
+
 		CChargeurOBJ tunnelModel;
+
 		CChargeurOBJ voiture;
 
 		CChargeurOBJ chizHDModel;
@@ -61,7 +61,9 @@ namespace PM3D {
 
 		float scaleX_, scaleY_, scaleZ_;
 		float scaleFixX_, scaleFixZ_, scaleFixY_;
+
 		float anglePente_;
+
 		Scene* scenePhysic_;
 		CDispositifD3D11* pDispositif_;
 		CGestionnaireDeTextures* TexturesManager;
@@ -71,14 +73,12 @@ namespace PM3D {
 		physx::PxTransform posDepart_;
 
 		void initJoueur();
-		void initPente(Light_Manager lm);
-		
+		void initPente();
+		void initBonus(float _x, float _y);
 		void initAllBonus();
-
-		void initBonus(Light_Manager lm, float _x, float _y);
-		void initBlocChiz(Light_Manager lm, float _x, float _y);
-		void initBlocSnow(Light_Manager lm, float _x, float _y);
-		void initBlocRondin(Light_Manager lm, float _x, float _y);
+		void initBlocChiz(float _x, float _y);
+		void initBlocSnow(float _x, float _y);
+		void initBlocRondin(float _x, float _y);
 
 		void initBonusAbs(Light_Manager lm, float _x, float _y, float _z);
 		void initBlocChizAbs(Light_Manager lm, float _x, float _y, float _z);
@@ -87,7 +87,8 @@ namespace PM3D {
 
 		void initSkyBox();
 		void initTunnel(float _x, float _y);
-		void initHM(Light_Manager lm, int numPente, bool alpha = false);
+
+
 		float getYwithZ(float _z) {
 			float hauteur = 38202;
 			float longueur = 39692;
@@ -96,6 +97,9 @@ namespace PM3D {
 			float y = coordY - 18977;
 			return y;
 		}
+
+		void initHM(int numPente, bool alpha = false);
+
 
 	};
 }
