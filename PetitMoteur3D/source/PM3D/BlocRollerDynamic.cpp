@@ -34,7 +34,7 @@ namespace PM3D
 		XMVECTOR vDMat;     // la valeur diffuse du mat�riau
 	};
 
-	constexpr float BlocRollerDynamic::vitesseMaxDefault_ = 2800.0f;
+	constexpr float BlocRollerDynamic::vitesseMaxDefault_ = 800.0f;
 	constexpr float BlocRollerDynamic::vitesseMinDefault_ = 10.0f;
 	constexpr float BlocRollerDynamic::vitesseBonusMax_ = 1800.0f;
 
@@ -75,7 +75,7 @@ namespace PM3D
 		PxVec3 const normale = terrain->getNormale();
 
 		if (body->getGlobalPose().p.z > 30000.f) {
-			PxVec3 vitesseFinale = speed * 0.8f;
+			PxVec3 vitesseFinale = speed * 0.9f;
 			if (vitesseFinale.magnitude() < 10.0f) {
 				vitesseFinale = PxZero;
 			}

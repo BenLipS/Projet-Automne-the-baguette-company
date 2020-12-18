@@ -223,15 +223,37 @@ namespace PM3D {
 			if (pourcentageVmax < 0.25f)// pour eviter les tremblement a faible vitesse
 				pourcentageVmax = 0.25f;
 
-			float offsetY = 100.f + 500.f * pourcentageVmax;
-			float offsetZ = 50.f + 200.f * pourcentageVmax;
+			float offsetY;
+			float offsetZ;
+			if (pose.p.z < 30000.f) {
+				offsetY = 100.f + 500.f * pourcentageVmax;
+				offsetZ = 50.f + 200.f * pourcentageVmax;
+			}
+			else {
+				offsetY = 100.f + 500.f * pourcentageVmax;
+				offsetZ = 350.0f + 200.f * pourcentageVmax;
+			}
 
 			setPosition(XMVECTOR{ pose.p.x, pose.p.y + offsetY, pose.p.z - offsetZ });
 			setDirection(XMVECTOR{ 0.0f, -offsetY, offsetZ });
 
 		} else if (type == CAMERA_TYPE::FPCUBE) {
-			setPosition(XMVECTOR{ pose.p.x, pose.p.y + 40.0f, pose.p.z });
-			setDirection(XMVECTOR{ vecVitesse.getNormalized().x, vecVitesse.getNormalized().y, vecVitesse.getNormalized().z });
+			if (pose.p.z < 29600.f) {
+				setPosition(XMVECTOR{ pose.p.x, pose.p.y + 40.0f, pose.p.z });
+				setDirection(XMVECTOR{ vecVitesse.getNormalized().x, vecVitesse.getNormalized().y, vecVitesse.getNormalized().z });
+			}
+			else {
+				float vitesseMax = _character->getVitesseBonusMax();
+				float pourcentageVmax = vecVitesse.magnitude() / vitesseMax;
+
+				if (pourcentageVmax < 0.25f)// pour eviter les tremblement a faible vitesse
+					pourcentageVmax = 0.25f;
+
+				float offsetY = 100.f + 500.f * pourcentageVmax;
+				float offsetZ = 350.0f + 200.f * pourcentageVmax;
+				setPosition(XMVECTOR{ pose.p.x, pose.p.y + offsetY, pose.p.z - offsetZ });
+				setDirection(XMVECTOR{ 0.0f, -offsetY, offsetZ });
+			}
 		}
 
 		//float z = XMVectorGetZ(position);

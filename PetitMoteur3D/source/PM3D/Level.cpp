@@ -329,7 +329,8 @@ namespace PM3D {
 		auto it = scenePhysic_->ListeScene_.begin();
 		while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
 			it++;
-		}if (it != scenePhysic_->ListeScene_.end()) {
+		}
+		if (it != scenePhysic_->ListeScene_.end()) {
 			physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
 			body->setGlobalPose(posDepart_);
 			PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
@@ -366,7 +367,7 @@ namespace PM3D {
 			float largeur = static_cast<float>(pDispositif_->GetLargeur());
 			float hauteur = static_cast<float>(pDispositif_->GetHauteur());
 
-			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif_);
+			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif_,"spritecompteur");
 			pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
 			scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 		};
