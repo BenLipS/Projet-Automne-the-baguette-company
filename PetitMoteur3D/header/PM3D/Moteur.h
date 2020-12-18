@@ -553,7 +553,8 @@ protected:
 				auto it = scenePhysic_->ListeScene_.begin();
 				while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
 					it++;
-				}if (it != scenePhysic_->ListeScene_.end()) {
+				}
+				if (it != scenePhysic_->ListeScene_.end()) {
 					physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
 					body->setGlobalPose(posPause);
 					PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
