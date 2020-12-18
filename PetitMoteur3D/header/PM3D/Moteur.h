@@ -72,7 +72,8 @@ namespace PM3D
 		{
 			bool bBoucle = true;
 
-			
+			bool waitforswapPause = false;
+			bool waitforswapPause2 = false;
 
 			while (bBoucle)
 			{
@@ -82,22 +83,24 @@ namespace PM3D
 					niveau->restart();
 					resetChrono = true;
 				}
-				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_RETURN) && isGameStarted == false ){
+				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_RETURN) && isGameStarted == false) {
 					isGameStarted = true;
 					niveau->start();
 					resetChrono = true;
 					InitObjets();
 				}
-					
-					
 
+				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_ESCAPE) && isGamePaused == true) {
+					exit(0);
+				}
 
 				// appeler la fonction d'animation
-				if (bBoucle)
-				{
-					bBoucle = Animation();
+					if (bBoucle)
+					{
+						bBoucle = Animation();
+					}
 				}
-			}
+
 		}
 
 		virtual int Initialisations()
@@ -135,13 +138,17 @@ namespace PM3D
 
 				// On pr�pare la prochaine image
 				AnimeScene(static_cast<float>(TempsEcoule));
+				if (!isGamePaused) {
+					// On rend l'image sur la surface de travail
+					// (tampon d'arri�re plan)
+					RenderScene();
 
-				// On rend l'image sur la surface de travail
-				// (tampon d'arri�re plan)
-				RenderScene();
-
-				// Calcul du temps du prochain affichage
-				TempsCompteurPrecedent = TempsCompteurCourant;
+					// Calcul du temps du prochain affichage
+					isResetPause = false;
+				}
+					TempsCompteurPrecedent = TempsCompteurCourant;
+				
+				
 			}
 
 			return true;
@@ -493,45 +500,103 @@ protected:
 			// Prendre en note l��tat de la souris
 			GestionnaireDeSaisie.SaisirEtatSouris();
 
-			for (auto& object3D : scenePhysic_->ListeScene_)
-			{
-				object3D->Anime(tempsEcoule);
+			if (GestionnaireDeSaisie.ToucheAppuyee(DIK_P) && isGameStarted) {
+				waitforswapPause = true;
 			}
-
-			if (camera.getType() == CCamera::CAMERA_TYPE::FREE){
-				camera.update(tempsEcoule);
-			}
-			if (!initEcranChargement_){
-				BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
-				//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
-				camera.update(character, tempsEcoule);
-				if (isGameStarted) {
-					updateChrono();
-
-					updateSpeed();
-
-					updateBonus();
-				}
-
-				/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
-					swapPose = true;	
-				}
-				else if (swapPose) {
-					swapPose = false;
-				}
-
-				if (swapPose) {
-					updatePose();
-				}*/
-				if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3)) {
-					swapPose = true;
-				}
-
-				if (swapPose) {
-					updatePose();
+			else {
+				if (waitforswapPause) {
+					isGamePaused = !isGamePaused;
+					if (isGamePaused) {
+						auto it = scenePhysic_->ListeScene_.begin();
+						while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+							it++;
+						}if (it != scenePhysic_->ListeScene_.end()) {
+							physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+							posPause = body->getGlobalPose();
+							PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
+							vitessePause = bodyD->getLinearVelocity();
+						}
+						
+					}
+					else {
+						auto it = scenePhysic_->ListeScene_.begin();
+						while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+							it++;
+						}if (it != scenePhysic_->ListeScene_.end()) {
+							physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+							body->setGlobalPose(posPause);
+							PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
+							bodyD->setLinearVelocity(vitessePause);
+							isResetPause = true;
+							scenePhysic_->ListeScene_.erase(scenePhysic_->ListeScene_.begin() + 1);
+							effacerPause = false;
+						}
+					}
+					waitforswapPause = false;
 				}
 			}
+			if (waitforswapPause && !effacerPause) {
+				float largeur = static_cast<float>(pDispositif->GetLargeur());
+				float hauteur = static_cast<float>(pDispositif->GetHauteur());
 
+				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
+				pAfficheurSprite->AjouterSprite(".\\src\\PressP.dds"s, static_cast<int>(largeur * 0.4f), static_cast<int>(hauteur * 0.6f));
+				pAfficheurSprite->AjouterSprite(".\\src\\PressEscape.dds"s, static_cast<int>(largeur * 0.03f), static_cast<int>(hauteur * 0.25f));
+				scenePhysic_->ListeScene_.insert(scenePhysic_->ListeScene_.begin() + 1, std::move(pAfficheurSprite));
+				effacerPause = true;
+			}
+
+			if (isGamePaused) {
+				auto it = scenePhysic_->ListeScene_.begin();
+				while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+					it++;
+				}if (it != scenePhysic_->ListeScene_.end()) {
+					physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+					body->setGlobalPose(posPause);
+					PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
+					bodyD->setLinearVelocity(PxZero);
+				}
+			}
+			if (!isGamePaused) {
+				for (auto& object3D : scenePhysic_->ListeScene_)
+				{
+					object3D->Anime(tempsEcoule);
+				}
+
+				if (camera.getType() == CCamera::CAMERA_TYPE::FREE) {
+					camera.update(tempsEcoule);
+				}
+				if (!initEcranChargement_) {
+					BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
+					//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
+					camera.update(character, tempsEcoule);
+					if (isGameStarted) {
+						updateChrono();
+
+						updateSpeed();
+
+						updateBonus();
+					}
+
+					/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
+						swapPose = true;
+					}
+					else if (swapPose) {
+						swapPose = false;
+					}
+
+					if (swapPose) {
+						updatePose();
+					}*/
+					if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3)) {
+						swapPose = true;
+					}
+
+					if (swapPose) {
+						updatePose();
+					}
+				}
+			}
 			return true;
 		}
 
@@ -560,6 +625,11 @@ protected:
 					tempsSec = 0;
 					tempsMs = 0;
 					resetChrono = false;
+				}
+				if (isResetPause) {
+					tempsMin = tempsMinPause;
+					tempsSec = tempsSecPause;
+					tempsMs = tempsMsPause;
 				}
 			}
 			if (tempsMs > 999) {
@@ -606,6 +676,10 @@ protected:
 			std::wstring strChrono = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(str.str());
 			pTexteChrono->Ecrire(strChrono);
 			chronoNow = std::chrono::high_resolution_clock::now();
+
+			tempsMinPause = tempsMin;
+			tempsSecPause = tempsSec;
+			tempsMsPause = tempsMs;
 		}
 
 		void updateSpeed() {
@@ -752,6 +826,18 @@ protected:
 		bool swapPose = false;
 		bool resetChrono = false;
 		bool isGameStarted = false;
+
+		bool isGamePaused = false;
+		bool waitforswapPause = false;
+		physx::PxTransform posPause;
+		physx::PxVec3 vitessePause;
+		int tempsMinPause = 0;
+		int tempsSecPause = 0;
+		int tempsMsPause = 0;
+		bool isResetPause = false;
+		bool effacerPause = false;
+		
+
 
 		std::unique_ptr<Gdiplus::Font> pPolice;
 
