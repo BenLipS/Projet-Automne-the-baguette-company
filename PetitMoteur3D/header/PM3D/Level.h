@@ -88,6 +88,14 @@ namespace PM3D {
 		void initSkyBox();
 		void initTunnel(float _x, float _y);
 		void initHM(Light_Manager lm, int numPente, bool alpha = false);
+		float getYwithZ(float _z) {
+			float hauteur = 38202;
+			float longueur = 39692;
+			float coordZ = _z + 9960;
+			float coordY = tan(anglePente_) * (longueur - coordZ);
+			float y = coordY - 18977;
+			return y;
+		}
 
 	};
 }

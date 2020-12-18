@@ -148,6 +148,8 @@ namespace PM3D {
 		initBlocRondin(LMBOr, 1000, 0);
 		initBlocRondinAbs(LMBOr, 0, 7500, 2000);
 
+		initBlocRondinAbs(LMBOr, 0, 0, 1000);
+		initBlocChizAbs(LMBOr, 0, 0, 28000);
 
 		initAllBonus();
 
@@ -304,7 +306,7 @@ namespace PM3D {
 		float largeur = chiz0Instance->GetDistanceY();
 		float epaisseur = chiz0Instance->GetDistanceZ();
 
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, _y, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, getYwithZ(_z) + 15, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
 	}
 	void Level::initBlocSnow(Light_Manager _lm, float _x, float _y) {
 
@@ -340,7 +342,7 @@ namespace PM3D {
 		float epaisseur = chiz0Instance->GetDistanceZ();
 
 
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, _y, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, getYwithZ(_z) + 15, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
 	}
 
 	void Level::initBlocRondin(Light_Manager _lm, float _x, float _y) {
@@ -376,7 +378,7 @@ namespace PM3D {
 		float largeur = chiz0Instance->GetDistanceY();
 		float epaisseur = chiz0Instance->GetDistanceZ();
 
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, _y, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(_x, getYwithZ(_z) + 50, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
 	}
 	void Level::initAllBonus() {
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
@@ -434,7 +436,7 @@ namespace PM3D {
 		float demiHauteur = bonus0Instance->GetDistanceZ();
 
 
-		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(_x, _y, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels, _lm));
+		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(_x, getYwithZ(_z) + 5, _z, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels, _lm));
 
 	}
 
