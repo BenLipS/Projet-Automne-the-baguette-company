@@ -125,20 +125,28 @@ namespace PM3D {
 		initBlocChiz(LMBOr, 180, 0);
 		initBlocChiz(LMBOr, 215, -5);
 		initBlocChiz(LMBOr, 215, -15);
-		initBlocChiz(LMBOr, 680, -18);
-		initBlocChiz(LMBOr, 730, -90);
-		initBlocChiz(LMBOr, 730, -10);
-		initBlocChiz(LMBOr, 730, 50);
-		initBlocChiz(LMBOr, 920, 20);
+		initBlocChiz(LMBOr, 260, -20);
+		initBlocChiz(LMBOr, 280, -20);
+		initBlocChiz(LMBOr, 260, 20);
+		initBlocChiz(LMBOr, 280, 20);
+
+		initBlocChiz(LMBOr, 350, 20);
+		initBlocChiz(LMBOr, 350, -20);
+		initBlocChiz(LMBOr, 370, 20);
+		initBlocChiz(LMBOr, 370, -20);
+		initBlocChiz(LMBOr, 390, 20);
+		initBlocChiz(LMBOr, 390, -20);
+		//initBlocChizAbs(LMBOr, -20, 6000, 3690);
 
 
 		initBlocRondin(LMBOr, 75, -20);
 		initBlocRondin(LMBOr, 75, 20);
 		initBlocRondin(LMBOr, 150, -20);
 		initBlocRondin(LMBOr, 150, 0);
-		initBlocRondin(LMBOr, 160, 7.5);
-		initBlocRondin(LMBOr, 190, 20);
-		//initBlocRondin(LMBOr, 200, -7.5);
+		initBlocRondin(LMBOr, 200, 7.5);
+		initBlocRondin(LMBOr, 200, 20);
+		initBlocRondin(LMBOr, 1000, 0);
+		initBlocRondinAbs(LMBOr, 0, 7500, 2000);
 
 
 		initAllBonus();
@@ -383,16 +391,15 @@ namespace PM3D {
 			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
 			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f) // vDMat
 		};
-		initBonus(LMB, 175, 0);
-		initBonus(LMB, 200, 0);
-
+		initBonus(LMB, 170, 0);
 		initBonus(LMB, 300, 0);
 		initBonus(LMB, 400, 0);
-		initBonus(LMB, 1000, 0);
+		initBonus(LMB, 670, 0);
 		initBonus(LMB, 1100, 0);
 		initBonus(LMB, 1200, 0);
 		initBonus(LMB, 1500, 0);
-		initBonusAbs(LMB, 510, 6898, 3011);
+		//initBonusAbs(LMB, 510, 6898, 3011);
+	}
 
 
 	void Level::initBonus(Light_Manager _lm, float _x, float _y) {
