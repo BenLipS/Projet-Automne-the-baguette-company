@@ -408,7 +408,7 @@ namespace PM3D {
 		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(rondinHDModel);
 		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(rondinMidModel);
 		CChargeurOBJ* chiz2Instance = new CChargeurOBJ(rondinLowModel);
-		const std::vector<IChargeur*> listModels{ chiz2Instance, chiz1Instance, chiz0Instance };
+		const std::vector<IChargeur*> listModels{ chiz0Instance, chiz1Instance, chiz2Instance };
 
 		// Pente
 		float longueur = chiz0Instance->GetDistanceX();
