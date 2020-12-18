@@ -273,8 +273,8 @@ namespace PM3D {
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, -(0.985f * scaleFixZ_ * scaleZ_), (1.0f * scaleFixX_ * scaleX_)), PxVec3(0.0f, 1.0f, 0.01f).getNormalized()));
 
 		//mur invisible
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(largeur / 2, 0.0f, 0.0f), PxVec3(-1.0f, 0.0f, 0.0f)));
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(-largeur / 2, 0.0f, 0.0f), PxVec3(1.0f, 0.0f, 0.0f)));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(largeur / 2 + 30.f, 0.0f, 0.0f), PxVec3(-1.0f, 0.0f, 0.0f)));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(-largeur / 2 - 30.f, 0.0f, 0.0f), PxVec3(1.0f, 0.0f, 0.0f)));
 
 		PxQuat quatPente = PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f));
 		PxVec3 const normPente = quatPente.getBasisVector1();
