@@ -588,33 +588,40 @@ protected:
 					camera.update(tempsEcoule);
 				}
 				if (!initEcranChargement_) {
-					BlocRollerDynamic* character = dynamic_cast<BlocRollerDynamic*>(scenePhysic_->ListeScene_[0].get());
-					//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
-					camera.update(character, tempsEcoule);
-					if (isGameStarted) {
-						updateChrono();
-
-						updateSpeed();
-
-						updateBonus();
+					auto it = scenePhysic_->ListeScene_.begin();
+					while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+						it++;
 					}
+					if (it != scenePhysic_->ListeScene_.end()) {
+						physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+						BlocRollerDynamic* vehicule = findVehiculeFromBody(body);
+						//camera.update((PxRigidBody*)character->getBody(),tempsEcoule);
+						camera.update(vehicule, tempsEcoule);
+						if (isGameStarted) {
+							updateChrono();
 
-					/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
-						swapPose = true;
-					}
-					else if (swapPose) {
-						swapPose = false;
-					}
+							updateSpeed();
 
-					if (swapPose) {
-						updatePose();
-					}*/
-					if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3)) {
-						swapPose = true;
-					}
+							updateBonus();
+						}
 
-					if (swapPose) {
-						updatePose();
+						/*if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3) && !swapPose) {
+							swapPose = true;
+						}
+						else if (swapPose) {
+							swapPose = false;
+						}
+
+						if (swapPose) {
+							updatePose();
+						}*/
+						if (GestionnaireDeSaisie.ToucheAppuyee(DIK_F3)) {
+							swapPose = true;
+						}
+
+						if (swapPose) {
+							updatePose();
+						}
 					}
 				}
 
