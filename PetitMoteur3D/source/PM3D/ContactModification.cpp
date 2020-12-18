@@ -67,7 +67,7 @@ namespace PM3D {
 					/*body0->addForce(- vitesseVehicule.getNormalized() * 30000000000000.0f, PxForceMode::eIMPULSE);*/
 					vehicule = CMoteurWindows::GetInstance().findVehiculeFromBody(body0);
 					vehicule->updateContact(true);
-
+					CMoteurWindows::GetInstance().updatePanneauCollision();
 					//body0->setGlobalPose({ poseVehicule.p,PxQuat(PxPi,PxVec3{0.0f,1.0f,0.0f}) });
 					//body0->setAngularVelocity({ 10000000.f, 10000000.f,10000000.f });
 					//body0->setLinearDamping(1000);
@@ -83,6 +83,7 @@ namespace PM3D {
 				case FILTER_TYPE::VEHICULE | FILTER_TYPE::MUR:
 					vehicule = CMoteurWindows::GetInstance().findVehiculeFromBody(body0);
 					vehicule->updateContact(true);
+					CMoteurWindows::GetInstance().updatePanneauCollision();
 					break;
 				default:
 					/*for (PxU32 j = 0; j < pair.contacts.size(); j++) {

@@ -3,7 +3,14 @@ cbuffer param
 	float4x4 matWorldViewProj;   // la matrice totale 
 	float4x4 matWorld;		// matrice de transformation dans le monde 
 	float4 vLumiere1; 		// la position de la source d'éclairage 1 (Point)
-	float4 vLumiere2; 		// la position de la source d'éclairage 2 (Point)
+	float4 vLumiere2; 		// la position de la source d'éclairage 2 (Globe)
+	float4 vLumiere3; 		// la position de la source d'éclairage 3 (Globe)
+	float4 vLumiere4; 		// la position de la source d'éclairage 4 (Globe)
+	float4 vLumiere5; 		// la position de la source d'éclairage 5 (Globe)
+	float4 vLumiere6; 		// la position de la source d'éclairage 6 (Globe)
+	float4 vLumiere7; 		// la position de la source d'éclairage 7 (Globe)
+	float4 vLumiere8; 		// la position de la source d'éclairage 8 (Globe)
+	float4 vLumiere9; 		// la position de la source d'éclairage 9 (Globe)
 	float4 vCamera; 			// la position de la caméra
 	float4 vAEcl; 			// la valeur ambiante de l'éclairage
 	float4 vAMat; 			// la valeur ambiante du matériau
@@ -24,7 +31,7 @@ struct VS_Sortie
 	float3 vDirLum : TEXCOORD1;
 	float3 vDirCam : TEXCOORD2;
 	float2 coordTex : TEXCOORD3;
-	int bTun : TEXCOORD4;
+	float bTun : TEXCOORD4;
 };
 
 VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coordTex : TEXCOORD)
@@ -43,13 +50,35 @@ VS_Sortie MiniPhongVS(float4 Pos : POSITION, float3 Normale : NORMAL, float2 coo
 	sortie.coordTex = coordTex;
 
 	float3 diffPosET = vLumiere2.xyz - PosWorld;
-
 	float dist = pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2);
 
-	if (dist < 500000)
-		sortie.bTun = 1;
+	diffPosET = vLumiere3.xyz - PosWorld;
+	dist = min(dist,pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2));
+
+	diffPosET = vLumiere4.xyz - PosWorld;
+	dist = min(dist, pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2));
+
+	diffPosET = vLumiere5.xyz - PosWorld;
+	dist = min(dist, pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2));
+
+	diffPosET = vLumiere6.xyz - PosWorld;
+	dist = min(dist, pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2));
+
+	diffPosET = vLumiere7.xyz - PosWorld;
+	dist = min(dist, pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2));
+
+	diffPosET = vLumiere8.xyz - PosWorld;
+	dist = min(dist, pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2));
+
+	diffPosET = vLumiere9.xyz - PosWorld;
+	dist = min(dist, pow(diffPosET.x, 2) + pow(diffPosET.y, 2) + pow(diffPosET.z, 2));
+
+	if (dist < 200000)
+		sortie.bTun = 1.0f;
+	else if (dist < 500000)
+		sortie.bTun = 1.0f - ((dist - 200000) / 300000);
 	else
-		sortie.bTun = 0;
+		sortie.bTun = 0.0f;
 
 	return sortie;
 }
@@ -88,7 +117,7 @@ if (bTex > 0)
 		vSEcl.rgb * vSMat.rgb * S;
 	if (vs.bTun > 0)
 	{
-		couleur = couleurTexture * vTEcl.rgb + couleurTexture * vAEcl.rgb;
+		couleur = couleurTexture * vTEcl.rgb * vs.bTun * diff + couleurTexture * vAEcl.rgb + (1.0f - vs.bTun) * vDEcl.rgb * diff;
 	}
 	/*couleur = couleurTexture * vAEcl.rgb*/
 }
@@ -98,7 +127,7 @@ else
 		vSEcl.rgb * vSMat.rgb * S;
 	if (vs.bTun > 0)
 	{
-		couleur = vDMat * vTEcl.rgb + vAEcl.rgb * vAMat.rgb;
+		couleur = vAMat.rgb * vTEcl.rgb * vs.bTun * diff + vAEcl.rgb * vAMat.rgb + (1.0f - vs.bTun) * vDEcl.rgb * diff * vAMat.rgb;
 	}
 }
 return float4(couleur, 1.0f);

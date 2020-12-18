@@ -33,11 +33,13 @@ namespace PM3D {
 		SkyBox* getSkyBox() { return skyBox_.get(); }
 		
 		void restart();
+		void start();
 	private:
 
 		//DELETE THAT
 		CChargeurOBJ skyboxModel;
 		CChargeurOBJ tunnelModel;
+		CChargeurOBJ voiture;
 
 		CChargeurOBJ chizHDModel;
 		CChargeurOBJ chizMidModel;

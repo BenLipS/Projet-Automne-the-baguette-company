@@ -21,8 +21,15 @@ namespace PM3D {
 	struct ShadersParams {
 		XMMATRIX matWorldViewProj; // la matrice totale 
 		XMMATRIX matWorld; // matrice de transformation dans le monde
-		XMVECTOR vLumiere1; // la position de la source d’éclairage (Point)
-		XMVECTOR vLumiere2; // la position de la source d’éclairage (Point)
+		XMVECTOR vLumiere1; // la position de la source d’éclairage 1 (Point)
+		XMVECTOR vLumiere2; // la position de la source d’éclairage 2 (Globe)
+		XMVECTOR vLumiere3; // la position de la source d’éclairage 3 (Globe)
+		XMVECTOR vLumiere4; // la position de la source d’éclairage 4 (Globe)
+		XMVECTOR vLumiere5; // la position de la source d’éclairage 5 (Globe)
+		XMVECTOR vLumiere6; // la position de la source d’éclairage 6 (Globe)
+		XMVECTOR vLumiere7; // la position de la source d’éclairage 7 (Globe)
+		XMVECTOR vLumiere8; // la position de la source d’éclairage 8 (Globe)
+		XMVECTOR vLumiere9; // la position de la source d’éclairage 9 (Globe)
 		XMVECTOR vCamera; // la position de la caméra
 		XMVECTOR vAEcl; // la valeur ambiante de l’éclairage
 		XMVECTOR vAMat; // la valeur ambiante du matériau
@@ -356,7 +363,14 @@ namespace PM3D {
 		Scene* scenephysic = rMoteur.getScenePhysic();
 
 		sp.vLumiere1 = XMVectorSet(0.0f, 300000.0f, 200000.0f, 1.0f);
-		sp.vLumiere2 = XMVectorSet(0.0f, -6500, 16500.0f, 1.0f);
+		sp.vLumiere2 = XMVectorSet(0.0f, -3500.0f, 13500.0f, 1.0f);
+		sp.vLumiere3 = XMVectorSet(0.0f, -4500.0f, 14500.0f, 1.0f);
+		sp.vLumiere4 = XMVectorSet(0.0f, -5500.0f, 15500.0f, 1.0f);
+		sp.vLumiere5 = XMVectorSet(0.0f, -6500.0f, 16500.0f, 1.0f);
+		sp.vLumiere6 = XMVectorSet(0.0f, -7500.0f, 17500.0f, 1.0f);
+		sp.vLumiere7 = XMVectorSet(0.0f, -8500.0f, 18500.0f, 1.0f);
+		sp.vLumiere8 = XMVectorSet(0.0f, -9500.0f, 19500.0f, 1.0f);
+		sp.vLumiere9 = XMVectorSet(0.0f, -10500.0f, 20500.0f, 1.0f);
 		sp.vCamera = view_camera;
 		sp.vAEcl = XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
 		sp.vDEcl = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);

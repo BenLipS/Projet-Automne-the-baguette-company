@@ -98,6 +98,10 @@ namespace PM3D {
 		snowLowModel = CChargeurOBJ();
 		snowLowModel.Chargement(paramOBJSnow2);
 
+		CParametresChargement voitureOBJ = CParametresChargement("Soapbox_Car.obj", ".\\modeles\\jin\\", true, false);
+		voiture = CChargeurOBJ();
+		voiture.Chargement(voitureOBJ);
+
 		initJoueur();
 		initPente(LMB);
 		initHM(LMB, -200);
@@ -136,8 +140,8 @@ namespace PM3D {
 	};
 	void Level::initJoueur() {
 
-		CChargeurOBJ* snowInstance = new CChargeurOBJ(snowHDModel);
-		const std::vector<IChargeur*> listModels{ snowInstance };
+		CChargeurOBJ* voitureCOBJ = new CChargeurOBJ(voiture);
+		const std::vector<IChargeur*> listModels{ voitureCOBJ };
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
@@ -156,7 +160,7 @@ namespace PM3D {
 	void Level::initHM(Light_Manager _lm, int numPente, bool alpha) {
 		char* filename{};
 		if (numPente == 0) {
-			filename = new char[50]{ "./src/heighmap_Proj52_part1_montagne.bmp" };
+			filename = new char[50]{ "./src/HM_Montagne.bmp" };
 
 
 			std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
@@ -171,7 +175,7 @@ namespace PM3D {
 
 		}
 		else if (numPente == 1) {
-			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie_vallee.bmp" };
+			filename = new char[50]{ "./src/HM_Prairie.bmp" };
 
 			std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
 			if (!alpha) {
@@ -179,6 +183,19 @@ namespace PM3D {
 			}
 			else {
 				HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\snow10.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
+			}
+
+			scenePhysic_->ListeScene_.emplace_back(move(HM));
+		}
+		else if (numPente == 2) {
+			filename = new char[50]{ "./src/HM_DDD.bmp" };
+
+			std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
+			if (!alpha) {
+				HM->SetTexture(TexturesManager->GetNewTexture(L".\\src\\Neige2.dds", pDispositif_));
+			}
+			else {
+				HM->SetAlphaTexture(TexturesManager->GetNewTexture(L".\\src\\snow.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\herbe.dds", pDispositif_), TexturesManager->GetNewTexture(L".\\src\\Mask.dds", pDispositif_));
 			}
 
 			scenePhysic_->ListeScene_.emplace_back(move(HM));
@@ -209,7 +226,7 @@ namespace PM3D {
 		float constexpr epaisseur = 0.1f;
 
 		//Arrivée
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, -(1.0f * scaleFixZ_ * scaleZ_), (1.0f * scaleFixX_ * scaleX_)), PxVec3(0.0f, 1.0f, 0.01f).getNormalized()));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, -(0.985f * scaleFixZ_ * scaleZ_), (1.0f * scaleFixX_ * scaleX_)), PxVec3(0.0f, 1.0f, 0.01f).getNormalized()));
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, -28000.0f, 0.0f), PxVec3(0.0f, 1.0f, 0.01f).getNormalized()))
 		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, posZ - 50.0f, 0.0f), PxVec3(0.0f, 1.0f, 0.1f).getNormalized()));
 
@@ -293,7 +310,7 @@ namespace PM3D {
 
 		CChargeurOBJ* TunnelInstance = new CChargeurOBJ(tunnelModel);
 
-		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 300;
+		float const offsetZ = 250 / (cos(XM_PI - anglePente_)) + 180;
 		float const posZ = tan(anglePente_) * abs(scaleX_ * scaleFixX_ - _x * scaleX_) - offsetZ; // hauteur //A REVOIR
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
 		float const posY = _y * scaleY_;
@@ -326,6 +343,37 @@ namespace PM3D {
 			vehicule->resetBonus();
 		};
 
+	}
+	void Level::start() {
+		auto it1 = scenePhysic_->ListeScene_.begin();
+		while (it1 != scenePhysic_->ListeScene_.end() && it1->get()->typeTag != "sprite") {
+			it1++;
+		}if (it1 != scenePhysic_->ListeScene_.end()) {
+			scenePhysic_->ListeScene_.erase(it1);
+		}
+
+		auto it = scenePhysic_->ListeScene_.begin();
+		while (it != scenePhysic_->ListeScene_.end() && it->get()->typeTag != "vehicule") {
+			it++;
+		}if (it != scenePhysic_->ListeScene_.end()) {
+			physx::PxRigidActor* body = static_cast<Objet3DPhysic*>(it->get())->getBody();
+			body->setGlobalPose(posDepart_);
+			PxRigidDynamic* bodyD = static_cast<PxRigidDynamic*>(body);
+			bodyD->setLinearVelocity(PxZero);
+			CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
+			BlocRollerDynamic* vehicule = rMoteur.findVehiculeFromBody(body);
+			vehicule->resetBonus();
+			//set la cam
+			CCamera& cam = rMoteur.getCamera();
+			cam.swapCameraModeFree();
+
+			float largeur = static_cast<float>(pDispositif_->GetLargeur());
+			float hauteur = static_cast<float>(pDispositif_->GetHauteur());
+
+			std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif_);
+			pAfficheurSprite->AjouterSprite(".\\src\\Elcomptero.dds"s, static_cast<int>(largeur * 0.05f), static_cast<int>(hauteur * 0.95f));
+			scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
+		};
 	}
 
 }
