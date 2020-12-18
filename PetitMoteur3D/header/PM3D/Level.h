@@ -39,6 +39,7 @@ namespace PM3D {
 		//DELETE THAT
 		CChargeurOBJ skyboxModel;
 		CChargeurOBJ tunnelModel;
+		CChargeurOBJ voiture;
 
 		CChargeurOBJ chizHDModel;
 		CChargeurOBJ chizMidModel;
