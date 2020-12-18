@@ -3,6 +3,9 @@
 #include "resource.h"
 #include "MoteurWindows.h"
 #include "util.h"
+
+#include "PxPhysicsAPI.h"
+
 namespace PM3D
 {
 
@@ -40,8 +43,10 @@ namespace PM3D
 			ShadersParams sp;
 			const XMMATRIX& viewProj = CMoteurWindows::GetInstance().GetMatViewProj();
 			tabPanneaux[i]->matPosDim = XMMatrixIdentity() * XMMatrixScaling(tabPanneaux[i]->dimension.x, tabPanneaux[i]->dimension.y, 1.0f);
-			//tabPanneaux[i]->matPosDim *= XMMatrixTranslation(tabPanneaux[i]->position.x, tabPanneaux[i]->position.y, tabPanneaux[i]->position.z);
-			tabPanneaux[i]->matPosDim *= XMMatrixTranslation(-1500.0f, 3500.0f, 6000.0f);
+			physx::PxQuat quat{ XM_PI / 3,physx::PxVec3(0.0f,1.0f,0.0f) };
+			tabPanneaux[i]->matPosDim *= XMMatrixRotationQuaternion(XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+			tabPanneaux[i]->matPosDim *= XMMatrixTranslation(tabPanneaux[i]->position.x, tabPanneaux[i]->position.y, tabPanneaux[i]->position.z);
+			//tabPanneaux[i]->matPosDim *= XMMatrixTranslation(-1500.0f, 3500.0f, 6000.0f);
 			tabPanneaux[i]->matPosDim *= viewProj;
 			sp.matWVP = XMMatrixTranspose(tabPanneaux[i]->matPosDim);
 			pImmediateContext->UpdateSubresource(pConstantBuffer, 0, nullptr, &sp, 0, 0);
@@ -83,8 +88,8 @@ namespace PM3D
 			pPanneau->dimension.y = float(desc.Height);
 
 			// Dimension en facteur
-			pPanneau->dimension.x = pPanneau->dimension.x * 6000.0f / pDispositif->GetLargeur();
-			pPanneau->dimension.y = pPanneau->dimension.y * 6000.0f / pDispositif->GetHauteur();
+			pPanneau->dimension.x = pPanneau->dimension.x * 300.0f / pDispositif->GetLargeur();
+			pPanneau->dimension.y = pPanneau->dimension.y * 300.0f / pDispositif->GetHauteur();
 		}
 		else
 		{

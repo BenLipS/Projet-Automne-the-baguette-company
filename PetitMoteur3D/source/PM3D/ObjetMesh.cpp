@@ -255,25 +255,17 @@ namespace PM3D {
 		sp.matWorldViewProj = XMMatrixTranspose(matWorld * viewProj);
 		sp.matWorld = XMMatrixTranspose(matWorld);
 
-		if (typeTag != "skybox") {
-
-			sp.vLumiere1 = XMVectorSet(0.0f, 300000.0f, 200000.0f, 1.0f);
-			sp.vLumiere2 = XMVectorSet(0.0f, -6500.0f, 16500.0f, 1.0f);
-			sp.vCamera = rMoteur.getCamera().getPosition();
-			sp.vAEcl = XMVectorSet(0.3f, 0.3f, 0.3f, 1.0f);
-			sp.vDEcl = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
-			sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
-			sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-			sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-			sp.vSMat = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-			sp.vTEcl = XMVectorSet(0.8f, 0.8f, 0.2f, 1.0f);
-			sp.puissance = 5;
-
-		}
-		else {
+		if (typeTag == "skybox" || typeTag == "obj3dVisuel") {
 
 			sp.vLumiere1 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			sp.vLumiere2 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			sp.vLumiere3 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			sp.vLumiere4 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			sp.vLumiere5 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			sp.vLumiere6 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			sp.vLumiere7 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			sp.vLumiere8 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			sp.vLumiere9 = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			sp.vCamera = rMoteur.getCamera().getPosition();
 			sp.vAEcl = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 			sp.vDEcl = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
@@ -282,6 +274,27 @@ namespace PM3D {
 			sp.vDMat = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			sp.vSMat = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			sp.vTEcl = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+			sp.puissance = 5;
+
+		}
+		else {
+			sp.vLumiere1 = XMVectorSet(0.0f, 300000.0f, 200000.0f, 1.0f);
+			sp.vLumiere2 = XMVectorSet(0.0f, -3500.0f, 13500.0f, 1.0f);
+			sp.vLumiere3 = XMVectorSet(0.0f, -4500.0f, 14500.0f, 1.0f);
+			sp.vLumiere4 = XMVectorSet(0.0f, -5500.0f, 15500.0f, 1.0f);
+			sp.vLumiere5 = XMVectorSet(0.0f, -6500.0f, 16500.0f, 1.0f);
+			sp.vLumiere6 = XMVectorSet(0.0f, -7500.0f, 17500.0f, 1.0f);
+			sp.vLumiere7 = XMVectorSet(0.0f, -8500.0f, 18500.0f, 1.0f);
+			sp.vLumiere8 = XMVectorSet(0.0f, -9500.0f, 19500.0f, 1.0f);
+			sp.vLumiere9 = XMVectorSet(0.0f, -10500.0f, 20500.0f, 1.0f);
+			sp.vCamera = rMoteur.getCamera().getPosition();
+			sp.vAEcl = XMVectorSet(0.3f, 0.3f, 0.3f, 1.0f);
+			sp.vDEcl = XMVectorSet(0.8f, 0.8f, 0.8f, 1.0f);
+			sp.vSEcl = XMVectorSet(0.6f, 0.6f, 0.6f, 1.0f);
+			sp.vAMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+			sp.vDMat = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+			sp.vSMat = XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+			sp.vTEcl = XMVectorSet(0.642f, 0.642f, 0.2f, 1.0f);
 			sp.puissance = 5;
 
 		}
