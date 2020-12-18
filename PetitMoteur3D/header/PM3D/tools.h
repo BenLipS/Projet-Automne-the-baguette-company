@@ -25,15 +25,4 @@ namespace PM3D {
 		
 	};	
 
-	struct Light_Manager{
-
-		DirectX::XMVECTOR vLumiere1;    // la position de la source d��clairage (Point)
-		DirectX::XMVECTOR vLumiere2;    // la position de la source d��clairage (Point)
-		DirectX::XMVECTOR vCamera;    // la position de la cam�ra
-		DirectX::XMVECTOR vAEcl;		// la valeur ambiante de l��clairage
-		DirectX::XMVECTOR vAMat;     // la valeur ambiante du mat�riau
-		DirectX::XMVECTOR vDEcl;     // la valeur diffuse de l��clairage
-		DirectX::XMVECTOR vDMat;     // la valeur diffuse du mat�riau
-	};
-
 }

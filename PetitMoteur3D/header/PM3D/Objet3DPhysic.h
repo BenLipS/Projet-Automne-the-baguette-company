@@ -32,6 +32,7 @@ namespace PM3D
 		~Objet3DPhysic();
 
 		virtual void Anime(float) = 0;
+
 		bool isPhysic() { return true; }
 		physx::PxRigidActor* getBody() { return body_; }
 		physx::PxVec3 getPosition() { return body_->getGlobalPose().p; }

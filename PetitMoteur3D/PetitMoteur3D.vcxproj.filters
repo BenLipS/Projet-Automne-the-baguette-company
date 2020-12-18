@@ -102,9 +102,6 @@
     <ClCompile Include="source\PM3D\Texture.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="source\PM3D\BlocEffet1.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="source\PM3D\AfficheurSprite.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -188,9 +185,6 @@
     <ClInclude Include="header\PM3D\BlocStatic.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="header\PM3D\IndexModel.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="header\PM3D\BlocRollerDynamic.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -230,19 +224,12 @@
     <ClInclude Include="header\PM3D\Texture.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="header\PM3D\BlocEffet1.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PM3D\Bloc.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="header\PM3D\AfficheurSprite.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="header\PM3D\Objet3Dvisuel.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-
     <ClInclude Include="header\PM3D\AfficheurPanneau.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>

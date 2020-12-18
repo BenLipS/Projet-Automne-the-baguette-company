@@ -1,5 +1,4 @@
 #pragma once
-
 #include "texture.h"
 
 namespace PM3D
@@ -13,6 +12,7 @@ namespace PM3D
 		CTexture* const GetTexture(const std::wstring& filename);
 
 	private:
+
 		// Le tableau de textures
 		std::vector<std::unique_ptr<CTexture>> ListeTextures;
 	};

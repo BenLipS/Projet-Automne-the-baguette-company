@@ -4,7 +4,6 @@
 #include "GestionnaireDeTextures.h"
 #include <cmath>
 #include <vector>
-#include "BlocEffet1.h"
 #include "MoteurWindows.h"
 
 using namespace physx;
@@ -21,36 +20,6 @@ namespace PM3D {
 
 	void Level::initlevel()
 	{
-		Light_Manager LMBOr{
-			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere1
-			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere2
-			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
-			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
-			XMVectorSet(1.0f, 1.0f, 0.0f, 1.0f), // vAMat
-			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
-			XMVectorSet(1.0f, 1.0f, 0.0f, 1.0f) // vDMat
-		};
-		Light_Manager LMP{
-			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere1
-			XMVectorSet(10000.0f, 125000.0f, -10000.0f, 1.0f), // vLumiere2
-			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
-			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
-			XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f), // vAMat
-			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
-			XMVectorSet(0.9f, 0.9f, 0.9f, 1.0f) // vDMat
-		};
-		Light_Manager LMB{
-
-			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere1
-			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere2
-			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
-			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
-			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f), // vAMat
-			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
-			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f) // vDMat
-		};
-
-		// PROVISOIRE
 		CParametresChargement paramOBJBonus0 = CParametresChargement("bonusrocket_LOD0.obj", ".\\modeles\\jin\\", true, false);
 		bonusHDModel = CChargeurOBJ();
 		bonusHDModel.Chargement(paramOBJBonus0);
@@ -115,41 +84,29 @@ namespace PM3D {
 		rondinLowModel.Chargement(paramOBJrondin2);
 
 		initJoueur();
-		initPente(LMB);
-		initHM(LMB, -200);
-		initHM(LMB, 0, true);
-		initHM(LMB, 1, true);
-		initHM(LMB, 2, true);
+		initPente();
+		initHM(-200);
+		initHM(0, true);
+		initHM(1, true);
+		initHM(2, true);
 
-		initBlocChiz(LMBOr, 100, 0); //X Y
-		initBlocChiz(LMBOr, 220, 0);
-		initBlocChiz(LMBOr, 420, 0);
-		initBlocChiz(LMBOr, 550, -35);
-		initBlocChiz(LMBOr, 680, -18);
-		initBlocChiz(LMBOr, 730, -90);
-		initBlocChiz(LMBOr, 730, -10);
-		initBlocChiz(LMBOr, 730, 50);
-		initBlocChiz(LMBOr, 920, 20);
+		initBlocChiz(100, 0); //X Y
+		initBlocChiz(220, 0);
+		initBlocChiz(420, 0);
+		initBlocChiz(550, -35);
+		initBlocChiz(680, -18);
+		initBlocChiz(730, -90);
+		initBlocChiz(730, -10);
+		initBlocChiz(730, 50);
+		initBlocChiz(920, 20);
 
 		initAllBonus();
 
 		initTunnel(1000,0);
 
 		initSkyBox();
+	}
 
-		// Mur final
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 0.0f, 10000.0f), 5000.0f, 20000.0f, 10.0f, pDispositif_, LMBOr));
-
-		// Mur d�but
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 1000.0f, -10000.0f), 5000.0f, 1300.0f, 10.0f, pDispositif_, LMBOr));
-
-		// Tremplin
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(0.0f, 600.0f, -5000.0f, PxQuat(-0.5f, PxVec3(1.0f, 0.0f, 0.0f))), 1000.0f, 1000.0f, 1000.0f, pDispositif_, LMP));
-		// Terrain
-		/*char* filename = new char[50]{ "./src/heighmap_Proj52.bmp" };
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_,scaleFixX_, scaleFixY_, scaleFixZ_, 0));
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, 1));*/
-	};
 	void Level::initJoueur() {
 
 		CChargeurOBJ* voitureCOBJ = new CChargeurOBJ(voiture);
@@ -164,14 +121,9 @@ namespace PM3D {
 		float rayon = voitureCOBJ->GetDistanceY();
 
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, posDepart_, rayon, pDispositif_, listModels));
-
-		//std::unique_ptr<CBlocEffet1> bloc = std::make_unique<CBlocEffet1>(500.0f, 500.0f, 500.0f, pDispositif_);
-		//bloc->SetTexture(TexturesManager->GetNewTexture(L".\\src\\dirt.dds", pDispositif_));
-
-		//scenePhysic_->ListeScene_.emplace_back(move(bloc));
 	}
 
-	void Level::initHM(Light_Manager _lm, int numPente, bool alpha) {
+	void Level::initHM(int numPente, bool alpha) {
 		char* filename{};
 		if (numPente == 0) {
 			filename = new char[50]{ "./src/HM_Montagne.bmp" };
@@ -229,7 +181,7 @@ namespace PM3D {
 		}
 
 	};
-	void Level::initPente(Light_Manager _lm) {
+	void Level::initPente() {
 		// Pente
 		float constexpr posX = 0; //longueur  // au centre
 		float constexpr posY = 0.0f; // largeur // au centre
@@ -241,9 +193,6 @@ namespace PM3D {
 
 		//Arrivée
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, -(0.985f * scaleFixZ_ * scaleZ_), (1.0f * scaleFixX_ * scaleX_)), PxVec3(0.0f, 1.0f, 0.01f).getNormalized()));
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, -28000.0f, 0.0f), PxVec3(0.0f, 1.0f, 0.01f).getNormalized()))
-		//scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, posZ - 50.0f, 0.0f), PxVec3(0.0f, 1.0f, 0.1f).getNormalized()));
-
 
 		//mur invisible
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(largeur / 2, 0.0f, 0.0f), PxVec3(-1.0f, 0.0f, 0.0f)));
@@ -255,7 +204,7 @@ namespace PM3D {
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<PlanStatic>(scenePhysic_, PxVec3(0.0f, scaleZ_ * scaleFixZ_ / 2, 0.0f), normPente));
 	}
 
-	void Level::initBlocChiz(Light_Manager _lm, float _x, float _y) {
+	void Level::initBlocChiz(float _x, float _y) {
 
 		CChargeurOBJ* chiz0Instance = new CChargeurOBJ(chizHDModel);
 		CChargeurOBJ* chiz1Instance = new CChargeurOBJ(chizMidModel);
@@ -274,10 +223,10 @@ namespace PM3D {
 
 
 
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels));
 	}
 
-	void Level::initBlocSnow(Light_Manager _lm, float _x, float _y) {
+	void Level::initBlocSnow(float _x, float _y) {
 
 		CChargeurOBJ* snow0Instance = new CChargeurOBJ(snowHDModel);
 		CChargeurOBJ* snow1Instance = new CChargeurOBJ(snowMidModel);
@@ -296,10 +245,10 @@ namespace PM3D {
 
 
 
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels));
 	}
 
-	void Level::initBlocRondin(Light_Manager _lm, float _x, float _y) {
+	void Level::initBlocRondin(float _x, float _y) {
 
 		CChargeurOBJ* rondin0Instance = new CChargeurOBJ(rondinHDModel);
 		CChargeurOBJ* rondin1Instance = new CChargeurOBJ(rondinMidModel);
@@ -318,33 +267,24 @@ namespace PM3D {
 
 
 
-		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels, _lm));
+		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocStatic>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), largeur, epaisseur, longueur, pDispositif_, listModels));
 	}
 
 	void Level::initAllBonus() {
 		CMoteurWindows& rMoteur = CMoteurWindows::GetInstance();
 		while (rMoteur.eraseBonus());
 
-		Light_Manager LMB{
-			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere1
-			XMVectorSet(10000.0f, 3000.0f, -10000.0f, 1.0f), // vLumiere2
-			XMVectorSet(0.0f, 0.0f, -10.0f, 1.0f), // vCamera
-			XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f), // vAEc1
-			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f), // vAMat
-			XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f), // vDEcl
-			XMVectorSet(0.4f, 0.2f, 0.0f, 1.0f) // vDMat
-		};
-		initBonus(LMB, 100, 0);
-		initBonus(LMB, 200, 0);
-		initBonus(LMB, 300, 0);
-		initBonus(LMB, 400, 0);
-		initBonus(LMB, 500, 0);
-		initBonus(LMB, 600, 0);
-		initBonus(LMB, 700, 0);
-		initBonus(LMB, 800, 0);
+		initBonus(100, 0);
+		initBonus(200, 0);
+		initBonus(300, 0);
+		initBonus(400, 0);
+		initBonus(500, 0);
+		initBonus(600, 0);
+		initBonus(700, 0);
+		initBonus(800, 0);
 	}
 
-	void Level::initBonus(Light_Manager _lm, float _x, float _y) {
+	void Level::initBonus(float _x, float _y) {
 
 		CChargeurOBJ* bonus0Instance = new CChargeurOBJ(bonusHDModel);
 		CChargeurOBJ* bonus1Instance = new CChargeurOBJ(bonusMidModel);
@@ -360,7 +300,7 @@ namespace PM3D {
 		float const posX = _x * scaleX_ - (scaleX_ * scaleFixX_) / 2;
 		float const posY = _y * scaleY_;
 
-		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels, _lm));
+		scenePhysic_->ListeScene_.push_back(std::make_unique<Bonus>(scenePhysic_, PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f))), rayon, demiHauteur, pDispositif_, listModels));
 
 	}
 
