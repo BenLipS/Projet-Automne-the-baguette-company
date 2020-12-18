@@ -98,6 +98,10 @@ namespace PM3D {
 		snowLowModel = CChargeurOBJ();
 		snowLowModel.Chargement(paramOBJSnow2);
 
+		CParametresChargement voitureOBJ = CParametresChargement("Soapbox_Car.obj", ".\\modeles\\jin\\", true, false);
+		voiture = CChargeurOBJ();
+		voiture.Chargement(voitureOBJ);
+
 		initJoueur();
 		initPente(LMB);
 		initHM(LMB, -200);
@@ -136,8 +140,8 @@ namespace PM3D {
 	};
 	void Level::initJoueur() {
 
-		CChargeurOBJ* snowInstance = new CChargeurOBJ(snowHDModel);
-		const std::vector<IChargeur*> listModels{ snowInstance };
+		CChargeurOBJ* voitureCOBJ = new CChargeurOBJ(voiture);
+		const std::vector<IChargeur*> listModels{ voitureCOBJ };
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente

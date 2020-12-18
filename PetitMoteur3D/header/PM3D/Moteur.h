@@ -450,7 +450,7 @@ namespace PM3D
 			if (!initEcranChargement_) {
 				if (!isGameStarted) {
 				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-				pAfficheurSprite->AjouterSprite(".\\src\\PressEnter.dds"s, static_cast<int>(largeur * 0.4f), static_cast<int>(hauteur * 0.6f));
+				pAfficheurSprite->AjouterSprite(".\\src\\SnowGlissSavon_8_ET.dds"s, static_cast<int>(0), static_cast<int>(hauteur), static_cast<int>(largeur), static_cast<int>(hauteur));
 				scenePhysic_->ListeScene_.clear();
 				//Level const niveau(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
 				niveau = new Level(scenePhysic_, pDispositif, 20, 20, 75.5f, &TexturesManager); // scale en X Y et Z
@@ -503,7 +503,7 @@ namespace PM3D
 				float largeur = static_cast<float>(pDispositif->GetLargeur());
 				float hauteur = static_cast<float>(pDispositif->GetHauteur());
 				std::unique_ptr<CAfficheurSprite> pAfficheurSprite = std::make_unique<CAfficheurSprite>(pDispositif);
-				pAfficheurSprite->AjouterSprite(".\\src\\EcranChargement.dds"s, static_cast<int>(0), static_cast<int>(hauteur), static_cast<int>(largeur), static_cast<int>(hauteur));
+				pAfficheurSprite->AjouterSprite(".\\src\\Chargement_Proj.dds"s, static_cast<int>(0), static_cast<int>(hauteur), static_cast<int>(largeur), static_cast<int>(hauteur));
 				scenePhysic_->ListeScene_.push_back(std::move(pAfficheurSprite));
 			}
 
