@@ -20,69 +20,69 @@ namespace PM3D {
 
 	void Level::initlevel()
 	{
-		CParametresChargement paramOBJBonus0 = CParametresChargement("bonusrocket_LOD0.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJBonus0 = CParametresChargement("bonusrocket_LOD0.obj", ".\\modeles\\", true, false);
 		bonusHDModel = CChargeurOBJ();
 		bonusHDModel.Chargement(paramOBJBonus0);
 
-		CParametresChargement paramOBJBonus1 = CParametresChargement("bonusrocket_LOD1.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJBonus1 = CParametresChargement("bonusrocket_LOD1.obj", ".\\modeles\\", true, false);
 		bonusMidModel = CChargeurOBJ();
 		bonusMidModel.Chargement(paramOBJBonus1);
 
-		CParametresChargement paramOBJBonus2 = CParametresChargement("bonusrocket_LOD2.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJBonus2 = CParametresChargement("bonusrocket_LOD2.obj", ".\\modeles\\", true, false);
 		bonusLowModel = CChargeurOBJ();
 		bonusLowModel.Chargement(paramOBJBonus2);
 
-		CParametresChargement paramOBJSky = CParametresChargement("skybox.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJSky = CParametresChargement("skybox.obj", ".\\modeles\\", true, false);
 		skyboxModel = CChargeurOBJ();
 		skyboxModel.Chargement(paramOBJSky);
 
-		CParametresChargement paramOBJ3 = CParametresChargement("tunnelMoinsSimple.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJ3 = CParametresChargement("tunnelMoinsSimple.obj", ".\\modeles\\", true, false);
 		tunnelModel = CChargeurOBJ();
 		tunnelModel.Chargement(paramOBJ3);
 
-		CParametresChargement paramOBJChiz0 = CParametresChargement("chizbox_LOD0.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJChiz0 = CParametresChargement("chizbox_LOD0.obj", ".\\modeles\\", true, false);
 		chizHDModel = CChargeurOBJ();
 		chizHDModel.Chargement(paramOBJChiz0);
 
-		CParametresChargement paramOBJChiz1 = CParametresChargement("chizbox_LOD1.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJChiz1 = CParametresChargement("chizbox_LOD1.obj", ".\\modeles\\", true, false);
 		chizMidModel = CChargeurOBJ();
 		chizMidModel.Chargement(paramOBJChiz1);
 
-		CParametresChargement paramOBJChiz2 = CParametresChargement("chizbox_LOD2.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJChiz2 = CParametresChargement("chizbox_LOD2.obj", ".\\modeles\\", true, false);
 		chizLowModel = CChargeurOBJ();
 		chizLowModel.Chargement(paramOBJChiz2);
 
-		CParametresChargement paramOBJSnow0 = CParametresChargement("snowbox_LOD0.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJSnow0 = CParametresChargement("snowbox_LOD0.obj", ".\\modeles\\", true, false);
 		snowHDModel = CChargeurOBJ();
 		snowHDModel.Chargement(paramOBJSnow0);
 
-		CParametresChargement paramOBJSnow1 = CParametresChargement("snowbox_LOD1.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJSnow1 = CParametresChargement("snowbox_LOD1.obj", ".\\modeles\\", true, false);
 		snowMidModel = CChargeurOBJ();
 		snowMidModel.Chargement(paramOBJSnow1);
 
-		CParametresChargement paramOBJSnow2 = CParametresChargement("snowbox_LOD2.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJSnow2 = CParametresChargement("snowbox_LOD2.obj", ".\\modeles\\", true, false);
 		snowLowModel = CChargeurOBJ();
 		snowLowModel.Chargement(paramOBJSnow2);
 
-		CParametresChargement voitureOBJ = CParametresChargement("UdeSSavon8.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement voitureOBJ = CParametresChargement("UdeSSavon8.obj", ".\\modeles\\", true, false);
 		voiture = CChargeurOBJ();
 		voiture.Chargement(voitureOBJ);
 
-		CParametresChargement paramOBJrondin0 = CParametresChargement("rond1_LOD0.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJrondin0 = CParametresChargement("rond1_LOD0.obj", ".\\modeles\\", true, false);
 		rondinHDModel = CChargeurOBJ();
 		rondinHDModel.Chargement(paramOBJrondin0);
 
-		CParametresChargement paramOBJrondin1 = CParametresChargement("rond1_LOD1.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJrondin1 = CParametresChargement("rond1_LOD1.obj", ".\\modeles\\", true, false);
 		rondinMidModel = CChargeurOBJ();
 		rondinMidModel.Chargement(paramOBJrondin1);
 
-		CParametresChargement paramOBJrondin2 = CParametresChargement("rond1_LOD2.obj", ".\\modeles\\jin\\", true, false);
+		CParametresChargement paramOBJrondin2 = CParametresChargement("rond1_LOD2.obj", ".\\modeles\\", true, false);
 		rondinLowModel = CChargeurOBJ();
 		rondinLowModel.Chargement(paramOBJrondin2);
 
 		initJoueur();
 		initPente();
-		initHM( -200);
+		//initHM( -200);
 		initHM( 0, true);
 		initHM( 1, true);
 		initHM( 2, true);
@@ -245,7 +245,7 @@ namespace PM3D {
 			scenePhysic_->ListeScene_.emplace_back(move(HM));
 		}
 		else {
-			filename = new char[50]{ "./src/heighmap_Proj52_part2_prairie.bmp" };
+			filename = new char[50]{ "./src/HM_DDD.bmp" };
 
 			std::unique_ptr<Terrain> HM = std::make_unique<Terrain>(filename, XMFLOAT3(scaleX_, scaleZ_, scaleY_), pDispositif_, scaleFixX_, scaleFixY_, scaleFixZ_, numPente, alpha);
 			if (!alpha) {
