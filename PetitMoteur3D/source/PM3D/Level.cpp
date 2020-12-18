@@ -143,7 +143,7 @@ namespace PM3D {
 		initBlocRondin( 75, -20);
 		initBlocRondin(75, 20);
 		initBlocRondin( 150, -20);
-		initBlocRondin( 150, 0);
+		initBlocRondin( 150, 0.1f);
 		initBlocRondin( 200, 7.5);
 		initBlocRondin(200, 20);
 		initBlocRondin( 500, 20);
