@@ -192,11 +192,11 @@ namespace PM3D {
 
 		// Joueur
 		float const posX = -scaleX_ * scaleFixX_ / 2 + scaleZ_ + 150.f; //longueur  // -scaleX_ * 1000 / 2 = pos du debut de la pente
-		float constexpr posY = 0.0f; // largeur // au centre de la pente
-		float const posZ = scaleFixZ_ * scaleZ_ + 20; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
+		float constexpr posY = 0.0f ; // largeur // au centre de la pente
+		float const posZ = scaleFixZ_ * scaleZ_ -150.f; // hauteur // scaleFixZ_ * scaleZ_ = hauteur du debut de la pente
 		posDepart_ = PxTransform(posY, posZ, posX, PxQuat(anglePente_, PxVec3(1.0f, 0.0f, 0.0f)));
 
-		float rayon = voitureCOBJ->GetDistanceY() - 10.f;
+		float rayon = voitureCOBJ->GetDistanceY() - 40.f;
 
 		scenePhysic_->ListeScene_.emplace_back(std::make_unique<BlocRollerDynamic>(scenePhysic_, posDepart_, rayon, pDispositif_, listModels));
 	}

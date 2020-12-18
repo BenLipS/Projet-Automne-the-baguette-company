@@ -91,9 +91,9 @@ namespace PM3D
 			n.x -= sumX; 
 			n.y -= sumY;
 			n.z -= sumZ;
-			n.x *= 150; 
-			n.y *= 150; 
-			n.z *= 150; 
+			n.x *= 120; 
+			n.y *= 120; 
+			n.z *= 120; 
 
 			minX = min(n.x, minX);
 			minY = min(n.y, minY);
